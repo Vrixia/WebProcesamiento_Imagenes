@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BéisbAR MX — Escanea</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="phone-shell">
+
+  <!-- FONDO: aquí irá el <video> en vivo de la cámara del usuario (MindAR / getUserMedia) -->
+  <div class="ar-screen">
+
+    <a href="index.html" class="header-back" style="position:absolute; top:18px; left:18px; color:#151420;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg>
+      Inicio
+    </a>
+
+    <h1 class="ar-title">¡Escanea!</h1>
+
+    <!-- MARCADOR: recuadro guía para apuntar la cámara al logotipo del equipo -->
+    <div class="ar-target"></div>
+
+      <div class="ar-actions">
+        <div class="ar-action-group">
+
+          <button class="ar-action-btn" aria-label="Animación de baile">
+            <img src="imagenes/bailar.png" alt="Bailar" class="accionARbailar">
+          </button>
+
+        </div>
+        <div class="ar-action-group">
+
+          <button class="ar-action-btn" aria-label="Animación de saludo">
+            <img src="imagenes/saludar.png" alt="Saludar" class="accionARsaludar">
+          </button>
+
+        </div>
+      </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
