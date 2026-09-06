@@ -7,13 +7,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+
+<!-- Mapa de importaciones: le dice al navegador de dónde bajar three.js, sus addons (OBJLoader) y MindAR -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+    "mindar-image-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+  }
+}
+</script>
 </head>
 <body>
 
 <div class="phone-shell">
 
-  <!-- FONDO: aquí irá el <video> en vivo de la cámara del usuario (MindAR / getUserMedia) -->
   <div class="ar-screen">
+
+    <!-- Aquí MindAR va a inyectar automáticamente el <video> de la cámara y el <canvas> 3D -->
+    <div id="ar-container" class="ar-camera-container"></div>
 
     <a href="index.html" class="header-back" style="position:absolute; top:18px; left:18px; color:#151420;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg>
@@ -22,29 +35,135 @@
 
     <h1 class="ar-title">¡Escanea!</h1>
 
-    <!-- MARCADOR: recuadro guía para apuntar la cámara al logotipo del equipo -->
-    <div class="ar-target"></div>
-
-      <div class="ar-actions">
-        <div class="ar-action-group">
-
-          <button class="ar-action-btn" aria-label="Animación de baile">
-            <img src="imagenes/bailar.png" alt="Bailar" class="accionARbailar">
-          </button>
-
-        </div>
-        <div class="ar-action-group">
-
-          <button class="ar-action-btn" aria-label="Animación de saludo">
-            <img src="imagenes/saludar.png" alt="Saludar" class="accionARsaludar">
-          </button>
-
-        </div>
+    <div class="ar-actions">
+      <div class="ar-action-group">
+        <button class="ar-action-btn" id="btnBailar" aria-label="Animación de baile">
+          <img src="imagenes/bailar.png" alt="Bailar" class="accionARbailar">
+        </button>
       </div>
+      <div class="ar-action-group">
+        <button class="ar-action-btn" id="btnSaludar" aria-label="Animación de saludo">
+          <img src="imagenes/saludar.png" alt="Saludar" class="accionARsaludar">
+        </button>
+      </div>
+    </div>
 
   </div>
 
 </div>
+
+<script type="module">
+  import * as THREE from 'three';
+  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+  import { MindARThree } from 'mindar-image-three';
+
+  // -----------------------------------------------------------------
+  // 1) Arrancar MindAR apuntando al archivo .mind ya compilado
+  //    (el logo de Sultanes). Ver nota al final sobre cómo generarlo.
+  // -----------------------------------------------------------------
+  const mindarThree = new MindARThree({
+    container: document.querySelector("#ar-container"),
+    imageTargetSrc: "targets/targets.mind"
+  });
+
+  const { renderer, scene, camera } = mindarThree;
+
+  // Luces: necesarias porque el material del modelo reacciona a la luz
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.2));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  dirLight.position.set(0.5, 1, 0.7);
+  scene.add(dirLight);
+
+  // -----------------------------------------------------------------
+  // 2) Anclar el contenido al target índice 0 (el único logo por ahora)
+  // -----------------------------------------------------------------
+  const anchor = mindarThree.addAnchor(0);
+
+  // Grupo que vamos a mover/animar al presionar los botones
+  const perroGrupo = new THREE.Group();
+  anchor.group.add(perroGrupo);
+
+  // -----------------------------------------------------------------
+  // 3) Cargar el modelo OBJ + sus 3 texturas y armar el material
+  // -----------------------------------------------------------------
+  const textureLoader = new THREE.TextureLoader();
+
+  const mapaColor = textureLoader.load('Modelos3D/PerroSultan/Texturas/Perro_Sultan_Albedo.png');
+  mapaColor.colorSpace = THREE.SRGBColorSpace;
+  const mapaNormal = textureLoader.load('Modelos3D/PerroSultan/Texturas/Perro_Sultan_Normal.png');
+  const mapaRugosidad = textureLoader.load('Modelos3D/PerroSultan/Texturas/Perro_Sultan_Roughness.png');
+
+  const material = new THREE.MeshStandardMaterial({
+    map: mapaColor,
+    normalMap: mapaNormal,
+    roughnessMap: mapaRugosidad,
+  });
+
+  const objLoader = new OBJLoader();
+  objLoader.load(
+    'Modelos3D/PerroSultan/PerroSultanOBJ.obj',
+    (objeto) => {
+      objeto.traverse((hijo) => {
+        if (hijo.isMesh) hijo.material = material;
+      });
+
+      // Ajustes de tamaño/orientación: probablemente necesites afinar estos 3 valores
+      // según cómo se vea tu modelo específico sobre el logo.
+      objeto.scale.set(0.25, 0.25, 0.25);       // tamaño relativo al logo (1 unidad = ancho del logo)
+      objeto.position.set(0, 0, 0);              // centrado sobre el logo
+      objeto.rotation.x = Math.PI / 2;           // "para de pie" en vez de acostado sobre el logo
+
+      perroGrupo.add(objeto);
+    },
+    undefined,
+    (error) => console.error('No se pudo cargar el modelo OBJ:', error)
+  );
+
+  // -----------------------------------------------------------------
+  // 4) Animaciones simples de "bailar" y "saludar"
+  //    (el OBJ no trae animaciones internas, así que las simulamos
+  //    moviendo el objeto por código durante unos segundos).
+  // -----------------------------------------------------------------
+  let animacionActiva = null;   // 'bailar' | 'saludar' | null
+  let animacionInicio = 0;
+
+  document.getElementById('btnBailar').addEventListener('click', () => {
+    animacionActiva = 'bailar';
+    animacionInicio = performance.now();
+  });
+  document.getElementById('btnSaludar').addEventListener('click', () => {
+    animacionActiva = 'saludar';
+    animacionInicio = performance.now();
+  });
+
+  function actualizarAnimacion() {
+    if (!animacionActiva) return;
+    const transcurrido = (performance.now() - animacionInicio) / 1000; // segundos
+
+    if (animacionActiva === 'bailar') {
+      const duracion = 2.2;
+      if (transcurrido > duracion) { animacionActiva = null; perroGrupo.rotation.z = 0; perroGrupo.position.y = 0; return; }
+      perroGrupo.rotation.z = Math.sin(transcurrido * 10) * 0.25;
+      perroGrupo.position.y = Math.abs(Math.sin(transcurrido * 10)) * 0.08;
+    }
+
+    if (animacionActiva === 'saludar') {
+      const duracion = 1.6;
+      if (transcurrido > duracion) { animacionActiva = null; perroGrupo.rotation.y = 0; return; }
+      perroGrupo.rotation.y = Math.sin(transcurrido * 8) * 0.35;
+    }
+  }
+
+  // -----------------------------------------------------------------
+  // 5) Iniciar cámara + escaneo automático (no requiere botón)
+  // -----------------------------------------------------------------
+  await mindarThree.start();
+
+  renderer.setAnimationLoop(() => {
+    actualizarAnimacion();
+    renderer.render(scene, camera);
+  });
+</script>
 
 </body>
 </html>
