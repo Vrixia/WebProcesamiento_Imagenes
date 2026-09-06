@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BéisbAR MX — Ayuda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="phone-shell">
+
+  <div class="ayuda-screen" id="ayudaScreen">
+    <img src="imagenes/ayuda1.png" id="ayudaImg" alt="Ayuda, paso 1 de 6">
+    <p class="ayuda-tap">Pica en cualquier lugar para continuar</p>
+  </div>
+
+</div>
+
+<script>
+  var pasosAyuda = [
+    'imagenes/ayuda1.png',
+    'imagenes/ayuda2.png',
+    'imagenes/ayuda3.png',
+    'imagenes/ayuda4.png',
+    'imagenes/ayuda5.png',
+    'imagenes/ayuda6.png',
+    'imagenes/ayuda7.png',
+    'imagenes/ayuda8.png'
+  ];
+  var pasoActual = 0;
+  var imgAyuda = document.getElementById('ayudaImg');
+
+  document.getElementById('ayudaScreen').addEventListener('click', function () {
+    pasoActual++;
+    if (pasoActual >= pasosAyuda.length) {
+      window.location.href = 'index.html';
+    } else {
+      imgAyuda.src = pasosAyuda[pasoActual];
+      imgAyuda.alt = 'Ayuda, paso ' + (pasoActual + 1) + ' de 8';
+    }
+  });
+</script>
+
+</body>
+</html>

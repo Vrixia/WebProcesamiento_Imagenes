@@ -1,0 +1,732 @@
+/* ==========================================================================
+   BéisbAR MX — Hoja de estilos global
+   Tipografía: Anton (títulos) + Inter (cuerpo) — cargadas vía Google Fonts
+   ========================================================================== */
+
+:root{
+  /* Paleta base de la app */
+  --bg-app:        #101018;
+  --bg-app-2:      #171725;
+  --bg-header:     #0c1830;
+  --maroon:        #6e1b34;
+  --maroon-dark:   #401021;
+  --red-seam:      #c8102e;
+  --gold:          #d9a441;
+
+  --text:          #f4f3f7;
+  --text-muted:    #a6a4b8;
+  --text-dim:      #6f6d82;
+
+  --card-bg:       #1b1b2a;
+  --card-bg-2:     #21212f;
+  --card-border:   #2c2c40;
+
+  --radius-xl:      32px;
+  --radius-lg:      22px;
+  --radius-md:      16px;
+  --radius-sm:      10px;
+
+  --font-display:  "Anton", "Arial Narrow", sans-serif;
+  --font-body:      "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Color de acento "de equipo" — sobreescrito por .team-* en páginas de equipo */
+  --team: var(--maroon);
+  --team-dark: var(--maroon-dark);
+}
+
+*{ box-sizing:border-box; }
+
+html,body{
+  margin:0;
+  padding:0;
+  background:#08080c;
+  color:var(--text);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+}
+
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; cursor:pointer; }
+img{ max-width:100%; display:block; }
+
+/* ---------- Marco tipo "teléfono" que envuelve cada pantalla ---------- */
+.phone-shell{
+  max-width:430px;
+  min-height:100vh;
+  margin:0 auto;
+  background:var(--bg-app);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+}
+
+@media (min-width:520px){
+  body{ padding:32px 0; }
+  .phone-shell{
+    min-height:844px;
+    border-radius:44px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 10px #050508;
+    overflow:hidden;
+  }
+}
+
+/* ---------- Encabezado superior de la app ---------- */
+.app-header{
+  background:linear-gradient(180deg, var(--maroon) 0%, var(--maroon-dark) 100%);
+  padding:6px 20px 9px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-shrink:0;
+}
+.imgheader{
+  text-align: center;
+}
+.app-header img{
+  width:45%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+.app-header.header--navy{
+  background:linear-gradient(180deg, var(--bg-header) 0%, #060d1c 100%);
+}
+.app-header.header--team{
+  background:linear-gradient(180deg, var(--team) 0%, var(--team-dark) 100%);
+}
+
+.header-back{
+  font-family:var(--font-display);
+  font-size:1rem;
+  letter-spacing:.5px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:var(--text);
+  opacity:.9;
+  margin-top:4%;
+  margin-left:10px;
+}
+.header-back svg{ width:16px; height:16px; }
+
+/* ---------- Contenido principal, con scroll ---------- */
+.app-main{
+  flex:1;
+  padding:22px 20px 110px;
+  overflow-y:auto;
+}
+.linea-punteada{
+  border: none;
+  border-top:2px dotted white;
+  margin-top: 4%;
+  margin-bottom: 4%;
+}
+
+/* ---------- Botón inferior "Inicio" (footer simple de una sola acción) ---------- */
+.footer-bar{
+  flex-shrink:0;
+  background:#e8e6ea;
+  color:#141420;
+}
+.footer-bar a{
+  display:block;
+  text-align:center;
+  padding:16px;
+  font-family:var(--font-display);
+  letter-spacing:.5px;
+  font-size:1.05rem;
+  color:#141420;
+}
+
+/* ---------- Barra de navegación inferior (pantallas de equipo) ---------- */
+.bottom-nav{
+  flex-shrink:0;
+  background:#e8e6ea;
+  display:flex;
+}
+.bottom-nav a{
+  flex:1;
+  text-align:center;
+  padding:12px 4px 14px;
+  font-size:.72rem;
+  font-weight:600;
+  color:#5b5968;
+  letter-spacing:.2px;
+}
+.bottom-nav a.is-active{
+  color:var(--team, #141420);
+  font-weight:800;
+}
+.bottom-nav a span.icon img{
+  width:22px;
+  height:22px;
+  object-fit:contain;
+  display:block;
+  margin:0 auto 3px;
+}
+
+/* ---------- Botón rojo "Trivia" ---------- */
+.pill-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:var(--red-seam);
+  border:2px dashed rgba(255,255,255,.55);
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:1.5rem;
+  letter-spacing:3px;
+  padding:3px 22px;
+  border-radius:999px;
+  text-transform:uppercase;
+}
+
+.btn-submit{
+  display:block;
+  width:100%;
+  max-width:280px;
+  margin:0 auto;
+  background:var(--red-seam);
+  border:none;
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:14px 22px;
+  border-radius:999px;
+}
+
+/* ---------- Botón circular (colección / cámara) ---------- */
+.icon-btn{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:#20203a;
+  border:2px solid #4a4aa0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+}
+.icon-btn img{ width:30px; height:auto; }
+
+/* ---------- Botón flotante de ayuda (esquina inferior izquierda) ---------- */
+.ayuda-fab{
+  position:absolute;
+  left:20px;
+  bottom:10px;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#20203a;
+  border:2px solid #4a4aa0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.ayuda-fab img{ width:60%; height:auto; }
+
+/* ---------- Pantalla de ayuda (tutorial de 6 pasos) ---------- */
+.ayuda-screen{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  background:var(--bg-app);
+  padding:20px;
+  cursor:pointer;
+}
+.ayuda-screen img{
+  max-width:100%;
+  border-radius:var(--radius-lg);
+}
+.ayuda-tap{
+  font-size:.85rem;
+  letter-spacing:.3px;
+  color:rgba(255,255,255,.75);
+  animation:pulse 1.8s ease-in-out infinite;
+}
+
+/* ---------- Fila superior del menú principal ---------- */
+.menu-top-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:6px;
+}
+
+/* ---------- Fila de botones de categoría (Historia + equipos) ---------- */
+.opcionesmenuprincipal{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-direction: column;
+}
+.boton-imagen{
+  width: 60%;
+  height: auto;
+}
+
+.boton-beisbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.boton-beisbar-titulo {
+  font-family: 'Anton', sans-serif;
+  font-size: 42px;
+  line-height: 1;
+  color: #fff;
+  -webkit-text-stroke: 2px #000;
+  text-shadow: 3px 3px 0 #000;
+  margin-bottom: 8px;
+}
+
+.boton-beisbar-scanner {
+  position: relative;
+  width: 225px;
+  height: 130px;
+  background: #fff;
+  border: 4px dashed #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.boton-beisbar-scanner img {
+  width: 140px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ---------- Títulos de sección estándar ---------- */
+h1.section-title{
+  font-family:var(--font-display);
+  font-size:1.8rem;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  margin:0 0 12px;
+}
+h2.subsection-title{
+  font-family:var(--font-display);
+  font-size:1.15rem;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  margin:0 0 8px;
+  color:var(--team, var(--red-seam));
+}
+p.body-text{
+  font-size:.92rem;
+  line-height:1.55;
+  color:var(--text-muted);
+  margin:0 0 14px;
+}
+
+/* ---------- Placeholder de imagen (recuadro punteado) ---------- */
+.img-placeholder{
+  border:2px dashed #4a4a63;
+  border-radius:var(--radius-sm);
+  background:#191926;
+  color:#5c5a72;
+  font-size:.75rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:10px;
+}
+
+/* ---------- Colores representativos de cada equipo ---------- */
+.team-sultanes{ --team:#16305e; --team-dark:#0a1830; }
+.team-toros{ --team:#43474f; --team-dark:#232529; }
+.team-algodoneros{ --team:#84234a; --team-dark:#3f0f22; }
+.team-tecolotes{ --team:#2f2472; --team-dark:#17123a; }
+
+/* ---------- Splash screen ---------- */
+.splash{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  background:radial-gradient(120% 120% at 50% 0%, var(--maroon) 0%, var(--maroon-dark) 55%, #17070f 100%);
+  padding:10px 30px;
+  cursor:pointer;
+}
+.splash-logo{
+  width:100%;
+  height:30%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-bottom: 10%;
+}
+.splash-logo .accent{ color:var(--red-seam); -webkit-text-stroke:1px #fff2; }
+.splash-logo-box{
+  width:90%;
+  height:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.splash-tap{
+  font-size:.85rem;
+  letter-spacing:.3px;
+  color:rgba(255,255,255,.75);
+  animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{ opacity:.45; }
+  50%{ opacity:1; }
+}
+
+.menu-screen{ display:none; }
+.menu-screen.is-visible{ display:flex; flex-direction:column; flex:1; }
+.splash-screen.is-hidden{ display:none; }
+
+/* ---------- Colección de cartas ---------- */
+.collection-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+.collection-topbar .count{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-family:var(--font-display);
+  font-size:1.1rem;
+}
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:12px;
+}
+.card-slot{
+  aspect-ratio:3/4;
+  border-radius:var(--radius-md);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.6rem;
+}
+.card-slot.is-unlocked{
+  background:#3ddc6b;
+  border:3px solid #8a7ee8;
+  color:#0a3d1c;
+}
+.card-slot.is-locked{
+  background:#28283a;
+  border:3px solid #33334a;
+  color:#4a4a63;
+}
+.memorama-fab{
+  position:absolute;
+  right:20px;
+  bottom:96px;
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  background:#20203a;
+  border:3px solid #8a7ee8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.3rem;
+  color:#fff;
+}
+.memorama-fab img{
+  width: 70%;
+  height: auto;
+}
+
+/* ---------- Vista de carta individual (3D) ---------- */
+.card-viewer{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+  padding-top:10px;
+}
+.card-viewer-stage{
+  width:100%;
+  aspect-ratio:3/4;
+  border-radius:var(--radius-lg);
+  background:#3ddc6b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#0a3d1c;
+  font-size:.9rem;
+  text-align:center;
+  padding:16px;
+}
+.rotate-hint{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  color:var(--text-muted);
+  font-size:.85rem;
+}
+.rotate-hint svg{ width:34px; height:34px; color:#8a7ee8; }
+
+/* ---------- Memorama ---------- */
+.memorama-intro{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:18px;
+  padding-top:8px;
+}
+.memorama-title{
+  height:30%;
+}
+.memorama-icon{
+  width:200px;
+  height:200px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:3rem;
+  margin-bottom:20px;
+}
+.memorama-cta{
+  background:var(--red-seam);
+  border:2px dashed rgba(255,255,255,.5);
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:1.05rem;
+  padding:12px 28px;
+  border-radius:999px;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+}
+.memorama-stake{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-family:var(--font-display);
+  font-size:1.1rem;
+}
+.memorama-stake img{
+  height:30px;
+  width: auto;
+}
+.memorama-note{
+  font-size:.85rem;
+  color:var(--text-muted);
+}
+
+.memorama-timer{
+  text-align:center;
+  font-family:var(--font-display);
+  font-size:2.4rem;
+  letter-spacing:1px;
+  color:var(--red-seam);
+  margin-bottom:18px;
+}
+.memory-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
+}
+.memory-card{
+  aspect-ratio:3/4;
+  border-radius:var(--radius-sm);
+  background: #89213e;
+  border:1px solid rgba(255,255,255,.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.memory-card img{
+ opacity: 0.75;
+}
+
+/* ---------- BéisbAR (escaneo con cámara) ---------- */
+.ar-screen{
+  flex:1;
+  background:repeating-linear-gradient(135deg, #9a9aa0 0 2px, #8c8c92 2px 4px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  padding:40px 24px 32px;
+  position:relative;
+}
+.ar-title{
+  font-family:var(--font-display);
+  font-size:1.7rem;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  color:#151420;
+  text-align:center;
+}
+.ar-target{
+  width:200px;
+  height:200px;
+  border:3px dashed #151420;
+  border-radius:var(--radius-md);
+  background:rgba(255,255,255,.35);
+}
+.ar-actions{
+  display:flex;
+  gap:122px;
+}
+.ar-action-btn{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  background:#8a7ee8;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.4rem;
+  border:none;
+}
+.accionARbailar{
+  width:40px;
+  height:auto;
+}
+.accionARsaludar{
+  width:70px;
+  height:auto;
+}
+
+.ar-action-group{ display:flex; flex-direction:column; align-items:center; }
+
+/* ---------- Trivia ---------- */
+.trivia-question{
+  margin-bottom:20px;
+}
+.trivia-question p{
+  font-weight:700;
+  font-size:.92rem;
+  line-height:1.5;
+  margin:0 0 10px;
+}
+.trivia-answers{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.trivia-answers label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:.88rem;
+  color:var(--text-muted);
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius-sm);
+  padding:10px 14px;
+}
+.trivia-answers input{ accent-color:var(--red-seam); }
+.trivia-media{
+  width:100%;
+  aspect-ratio:16/10;
+  margin-bottom:14px;
+}
+
+/* ---------- Historia ---------- */
+.history-block{ margin-bottom:24px; }
+.history-block .img-placeholder{ width:100%; aspect-ratio:16/9; margin-top:10px; }
+.history-block--split{
+  display:grid;
+  grid-template-columns:1fr 92px;
+  gap:14px;
+  align-items:start;
+}
+.history-block--split .img-placeholder{ aspect-ratio:3/4; margin-top:0; height:100%; }
+
+/* ---------- Páginas de equipo: Equipo / Jugadores / Campeonatos / Videos ---------- */
+.stat-line{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid var(--card-border);
+  font-size:.88rem;
+}
+.stat-line span:first-child{ color:var(--text-muted); }
+.stat-line span:last-child{ font-weight:700; }
+
+.player-card{
+  display:grid;
+  grid-template-columns:1fr 92px;
+  gap:14px;
+  align-items:start;
+  margin-bottom:20px;
+}
+.player-card h3{
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:1rem;
+  letter-spacing:.3px;
+  margin:0 0 4px;
+  text-transform:uppercase;
+}
+.player-card .img-placeholder{ aspect-ratio:4/3; }
+
+.trophy-card{ margin-bottom:20px; }
+.trophy-card .img-placeholder{ width:100%; aspect-ratio:16/9; margin-top:8px; }
+
+.video-card{ margin-bottom:26px; }
+.video-card h3{
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:1.05rem;
+  text-transform:uppercase;
+  margin:0 0 10px;
+}
+.video-stage{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:var(--radius-md);
+  background:var(--team, var(--red-seam));
+  opacity:.9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:10px;
+  color:#fff;
+}
+.video-stage svg{ width:44px; height:44px; }
+.video-filters{
+  display:flex;
+  gap:10px;
+}
+.video-filters button{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.1rem;
+}
+.video-filters button img{
+  width:20px;
+  height:20px;
+  object-fit:contain;
+}
+.video-filters button.is-active{
+  border-color:var(--team, var(--red-seam));
+  background:var(--team, var(--red-seam));
+}

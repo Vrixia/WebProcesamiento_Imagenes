@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BéisbAR MX — Inicio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="phone-shell">
+
+  <!-- ============ PANTALLA 1: SPLASH ============ -->
+  <div class="splash splash-screen" id="splashScreen">
+    <div class="splash-logo-box">
+      <img src="imagenes/LogoBeisbAR.png">
+    </div>
+
+    <div class="splash-logo">
+      <img src="imagenes/LogoBeisbARLetrasrz.png">
+    </div>
+    <p class="splash-tap">Pica en cualquier lugar para continuar</p>
+  </div>
+
+  <!-- ============ PANTALLA 2: MENÚ PRINCIPAL ============ -->
+  <div class="menu-screen" id="menuScreen">
+
+    <header class="app-header header--navy">
+      <div class="imgheader">
+        <img src="imagenes/LogoBeisbARLetrasrz.png">
+      </div>
+      
+    </header>
+
+    <main class="app-main" style="position:relative;">
+
+      <!-- Botón flotante de ayuda -->
+      <a href="ayuda.html" class="ayuda-fab" aria-label="Ayuda">
+        <img src="imagenes/ayuda.png" alt="Ayuda">
+      </a>
+
+      <!-- Fila superior: Trivia + acceso a Colección de cartas -->
+      <div class="menu-top-row">
+        <a href="trivia.html" class="pill-btn" style="flex:1;">
+          Trivia
+        </a>
+        <a href="coleccion.html" class="icon-btn" aria-label="Colección de cartas">
+          <img src="imagenes/cartas.png">
+        </a>
+      </div>
+
+      <hr class="linea-punteada">
+
+      <div class="opcionesmenuprincipal">
+        <a href="historia.html" class="boton-imagen">
+          <img src="imagenes/imghistoria2.png" alt="Historia">
+        </a>
+
+        <a href="equipos/sultanes/equipo.html" class="boton-imagen">
+          <img src="imagenes/imgsultanes.png" alt="Sultanes">
+        </a>
+
+        <a href="equipos/toros/equipo.html" class="boton-imagen">
+          <img src="imagenes/imgtoros.png" alt="Toros">
+        </a>
+
+        <a href="equipos/algodoneros/equipo.html" class="boton-imagen">
+          <img src="imagenes/imgalgodoneros.png" alt="Algodoneros">
+        </a>
+
+        <a href="equipos/tecolotes/equipo.html" class="boton-imagen">
+          <img src="imagenes/imgtecolotes.png" alt="Tecolotes">
+        </a>
+      </div>
+
+
+      <hr class="linea-punteada">
+      <div class="boton-beisbar">
+        <span class="boton-beisbar-titulo">BéisbAR</span>
+
+        <a href="beisbar.html" class="boton-beisbar-scanner">
+          <img src="imagenes/scanner.png" alt="Escáner BéisbAR">
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+</div>
+
+<script>
+  // Única interacción funcional de esta pantalla: tocar el splash pasa al menú principal.
+  document.getElementById('splashScreen').addEventListener('click', function () {
+    this.classList.add('is-hidden');
+    var menu = document.getElementById('menuScreen');
+    menu.classList.add('is-visible');
+  });
+</script>
+
+</body>
+</html>
