@@ -78,6 +78,8 @@
   // 2) Anclar el contenido al target índice 0 (el único logo por ahora)
   // -----------------------------------------------------------------
   const anchor = mindarThree.addAnchor(0);
+  anchor.onTargetFound = () => console.log('[BéisbAR] Logo de Sultanes detectado ✅');
+  anchor.onTargetLost = () => console.log('[BéisbAR] Se perdió de vista el logo');
 
   // Grupo que vamos a mover/animar al presionar los botones
   const perroGrupo = new THREE.Group();
@@ -103,20 +105,36 @@
   objLoader.load(
     'Modelos3D/PerroSultan/PerroSultanOBJ.obj',
     (objeto) => {
+      console.log('[BéisbAR] Modelo OBJ cargado ✅', objeto);
+
       objeto.traverse((hijo) => {
         if (hijo.isMesh) hijo.material = material;
       });
 
-      // Ajustes de tamaño/orientación: probablemente necesites afinar estos 3 valores
-      // según cómo se vea tu modelo específico sobre el logo.
-      objeto.scale.set(0.25, 0.25, 0.25);       // tamaño relativo al logo (1 unidad = ancho del logo)
-      objeto.position.set(0, 0, 0);              // centrado sobre el logo
-      objeto.rotation.x = Math.PI / 2;           // "para de pie" en vez de acostado sobre el logo
+      // --- Autoajuste de tamaño y centrado ---
+      // En vez de adivinar una escala fija, medimos el modelo real y lo
+      // ajustamos para que su lado más grande mida ~0.6 unidades
+      // (recuerda: 1 unidad = el ancho completo del logo escaneado).
+      const caja = new THREE.Box3().setFromObject(objeto);
+      const tamano = new THREE.Vector3();
+      caja.getSize(tamano);
+      const centro = new THREE.Vector3();
+      caja.getCenter(centro);
+
+      const ladoMasGrande = Math.max(tamano.x, tamano.y, tamano.z);
+      const tamanoDeseado = 0.6;
+      const escala = tamanoDeseado / ladoMasGrande;
+
+      console.log('[BéisbAR] Tamaño original del modelo:', tamano, '→ escala aplicada:', escala);
+
+      objeto.position.sub(centro);           // centra el modelo en su propio origen
+      objeto.scale.setScalar(escala);         // aplica la escala calculada
+      objeto.rotation.x = Math.PI / 2;        // "para de pie" en vez de acostado sobre el logo
 
       perroGrupo.add(objeto);
     },
     undefined,
-    (error) => console.error('No se pudo cargar el modelo OBJ:', error)
+    (error) => console.error('[BéisbAR] No se pudo cargar el modelo OBJ:', error)
   );
 
   // -----------------------------------------------------------------
@@ -158,6 +176,7 @@
   // 5) Iniciar cámara + escaneo automático (no requiere botón)
   // -----------------------------------------------------------------
   await mindarThree.start();
+  console.log('[BéisbAR] Cámara y escaneo iniciados ✅ — buscando el logo...');
 
   renderer.setAnimationLoop(() => {
     actualizarAnimacion();
