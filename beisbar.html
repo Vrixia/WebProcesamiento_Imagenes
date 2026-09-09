@@ -63,7 +63,10 @@
   // -----------------------------------------------------------------
   const mindarThree = new MindARThree({
     container: document.querySelector("#ar-container"),
-    imageTargetSrc: "targets/targets.mind"
+    imageTargetSrc: "targets/targets.mind",
+    uiScanning: "no",
+    uiLoading: "no",
+    uiError: "no",
   });
 
   const { renderer, scene, camera } = mindarThree;
