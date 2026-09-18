@@ -599,7 +599,19 @@ p.body-text{
 }
 .ar-actions{
   display:flex;
-  gap:122px;
+  gap:26px;
+  justify-content:center;
+  width:100%;
+}
+
+/* Capa del confeti: va encima de todo pero deja pasar los clicks */
+.ar-screen > canvas.confeti-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:2;
+  pointer-events:none;
 }
 .ar-action-btn{
   width:80px;
@@ -620,6 +632,10 @@ p.body-text{
 .accionARsaludar{
   width:70px;
   height:auto;
+}
+.accionARconfeti{
+  width:42px;
+  height:42px;
 }
 
 .ar-action-group{ display:flex; flex-direction:column; align-items:center; }
