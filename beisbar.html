@@ -111,11 +111,11 @@
       });
 
       // --- Orientación del modelo sobre el logo ---
-      objeto.scale.set(0.12, 0.12, 0.12);   // tamaño relativo al logo (1 unidad = ancho del logo)
+      objeto.scale.set(0.18, 0.18, 0.18);   // tamaño relativo al logo (1 unidad = ancho del logo)
       objeto.position.set(0, 0, 0);       // centrado sobre el logo
       objeto.rotation.x = Math.PI / 2;   // lo para de pie (no tocar)
       objeto.rotation.z = 0;             // 👈 regrésalo a 0, esto lo estaba acostando
-      objeto.rotation.y = 0;             // 👈 este es el que gira hacia dónde mira
+      objeto.rotation.y = Math.PI;             // 👈 este es el que gira hacia dónde mira
       perroGrupo.add(objeto);
     },
     undefined,
