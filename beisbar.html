@@ -110,13 +110,19 @@
         if (hijo.isMesh) hijo.material = material;
       });
 
-      // Ajustes de tamaño/orientación: probablemente necesites afinar estos 3 valores
-      // según cómo se vea tu modelo específico sobre el logo.
-      objeto.scale.set(0.3, 0.3, 0.3);       // tamaño relativo al logo (1 unidad = ancho del logo)
-      objeto.position.set(0, 0, 0);              // centrado sobre el logo
-      objeto.rotation.x = Math.PI / 2;           // "para de pie" en vez de acostado sobre el logo
-      //entre 2 para que vea de frente lets goooo
+      // --- Orientación del modelo sobre el logo ---
+      objeto.scale.set(0.3, 0.3, 0.3);   // tamaño relativo al logo (1 unidad = ancho del logo)
+      objeto.position.set(0, 0, 0);       // centrado sobre el logo
+      objeto.rotation.x = Math.PI / 2;    // lo para de pie (no tocar)
 
+      // 👉 ESTE es el valor para elegir hacia dónde mira.
+      //    Three.js aplica Z primero, así que este es el eje que gira
+      //    al perro sobre sus propias patas. Prueba estos 4 valores:
+      //      0              → como estaba
+      //      Math.PI / 2    → un cuarto de vuelta
+      //     -Math.PI / 2    → un cuarto de vuelta al otro lado
+      //      Math.PI        → media vuelta
+      objeto.rotation.z = Math.PI / 2;
       perroGrupo.add(objeto);
     },
     undefined,
