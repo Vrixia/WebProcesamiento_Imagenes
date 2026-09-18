@@ -111,18 +111,11 @@
       });
 
       // --- Orientación del modelo sobre el logo ---
-      objeto.scale.set(0.3, 0.3, 0.3);   // tamaño relativo al logo (1 unidad = ancho del logo)
+      objeto.scale.set(0.12, 0.12, 0.12);   // tamaño relativo al logo (1 unidad = ancho del logo)
       objeto.position.set(0, 0, 0);       // centrado sobre el logo
-      objeto.rotation.x = Math.PI / 2;    // lo para de pie (no tocar)
-
-      // 👉 ESTE es el valor para elegir hacia dónde mira.
-      //    Three.js aplica Z primero, así que este es el eje que gira
-      //    al perro sobre sus propias patas. Prueba estos 4 valores:
-      //      0              → como estaba
-      //      Math.PI / 2    → un cuarto de vuelta
-      //     -Math.PI / 2    → un cuarto de vuelta al otro lado
-      //      Math.PI        → media vuelta
-      objeto.rotation.z = Math.PI / 2;
+      objeto.rotation.x = Math.PI / 2;   // lo para de pie (no tocar)
+      objeto.rotation.z = 0;             // 👈 regrésalo a 0, esto lo estaba acostando
+      objeto.rotation.y = 0;             // 👈 este es el que gira hacia dónde mira
       perroGrupo.add(objeto);
     },
     undefined,
