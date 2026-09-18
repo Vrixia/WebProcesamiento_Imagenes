@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 
-<!-- Mapa de importaciones: le dice al navegador de dónde bajar three.js, sus addons (OBJLoader) y MindAR -->
+<!-- Mapa de importaciones: le dice al navegador de dónde bajar three.js, sus addons (GLTFLoader) y MindAR -->
 <script type="importmap">
 {
   "imports": {
@@ -69,12 +69,11 @@
 
 <script type="module">
   import * as THREE from 'three';
-  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   import { MindARThree } from 'mindar-image-three';
 
   // -----------------------------------------------------------------
   // 1) Arrancar MindAR apuntando al archivo .mind ya compilado
-  //    (el logo de Sultanes). Ver nota al final sobre cómo generarlo.
   // -----------------------------------------------------------------
   const mindarThree = new MindARThree({
     container: document.querySelector("#ar-container"),
@@ -93,92 +92,154 @@
   scene.add(dirLight);
 
   // -----------------------------------------------------------------
-  // 2) Anclar el contenido al target índice 0 (el único logo por ahora)
+  // 2) Anclar el contenido al target (el logo de Sultanes)
   // -----------------------------------------------------------------
   const anchor = mindarThree.addAnchor(0);
 
-  // Grupo que vamos a mover/animar al presionar los botones
   const perroGrupo = new THREE.Group();
   anchor.group.add(perroGrupo);
 
+  // 👉 AJUSTES que puedes cambiar si el modelo no queda como quieres:
+  const TAMANO      = 0.6;   // qué tanto del ancho del logo ocupa (1 = todo el logo)
+  const GIRO_Y      = 0;     // hacia dónde mira: 0, Math.PI/2, -Math.PI/2 o Math.PI
+  const PARAR_DE_PIE = 0;    // si sale acostado, prueba Math.PI/2 o -Math.PI/2
+
   // -----------------------------------------------------------------
-  // 3) Cargar el modelo OBJ + sus 3 texturas y armar el material
+  // 3) Cargar el modelo GLB (ya trae sus texturas y animaciones dentro)
   // -----------------------------------------------------------------
-  const textureLoader = new THREE.TextureLoader();
+  let mixer = null;              // el "reproductor" de animaciones de Three.js
+  const acciones = {};           // { idle, bailar, saludar }
+  let accionActual = null;       // la que se está reproduciendo ahora
+  let animacionActiva = null;    // 'bailar' | 'saludar' | null  (null = está en idle)
 
-  const mapaColor = textureLoader.load('Modelos3D/PerroSultan/Texturas/Perro_Sultan_Albedo.png');
-  mapaColor.colorSpace = THREE.SRGBColorSpace;
-  const mapaNormal = textureLoader.load('Modelos3D/PerroSultan/Texturas/Perro_Sultan_Normal.png');
-  const mapaRugosidad = textureLoader.load('Modelos3D/PerroSultan/Texturas/Perro_Sultan_Roughness.png');
+  const reloj = new THREE.Clock();
 
-  const material = new THREE.MeshStandardMaterial({
-    map: mapaColor,
-    normalMap: mapaNormal,
-    roughnessMap: mapaRugosidad,
-  });
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.load(
+    'Modelos3D/PerroSultan/PerroSultanGLB.glb',
+    (gltf) => {
+      const modelo = gltf.scene;
+      console.log('[BéisbAR] Modelo GLB cargado ✅');
+      console.log('[BéisbAR] Animaciones encontradas:', gltf.animations.map(a => a.name));
 
-  const objLoader = new OBJLoader();
-  objLoader.load(
-    'Modelos3D/PerroSultan/PerroSultanOBJ.obj',
-    (objeto) => {
-      objeto.traverse((hijo) => {
-        if (hijo.isMesh) hijo.material = material;
+      // --- Autoajuste de tamaño y centrado ---
+      const caja = new THREE.Box3().setFromObject(modelo);
+      const tamano = new THREE.Vector3();
+      const centro = new THREE.Vector3();
+      caja.getSize(tamano);
+      caja.getCenter(centro);
+
+      const escala = TAMANO / Math.max(tamano.x, tamano.y, tamano.z);
+      modelo.scale.setScalar(escala);
+
+      // Lo centra horizontalmente y lo apoya sobre el logo (no flotando)
+      modelo.position.set(
+        -centro.x * escala,
+        -caja.min.y * escala,
+        -centro.z * escala
+      );
+
+      const soporte = new THREE.Group();
+      soporte.rotation.x = PARAR_DE_PIE;
+      soporte.rotation.y = GIRO_Y;
+      soporte.add(modelo);
+      perroGrupo.add(soporte);
+
+      // --- Preparar las animaciones ---
+      mixer = new THREE.AnimationMixer(modelo);
+
+      gltf.animations.forEach((clip) => {
+        const accion = mixer.clipAction(clip);
+        acciones[clip.name] = accion;
+
+        if (clip.name === 'idle') {
+          accion.loop = THREE.LoopRepeat;          // el idle se repite para siempre
+        } else {
+          accion.loop = THREE.LoopOnce;            // bailar y saludar se hacen una vez
+          accion.clampWhenFinished = true;
+        }
       });
 
-      // --- Orientación del modelo sobre el logo ---
-      objeto.scale.set(0.18, 0.18, 0.18);   // tamaño relativo al logo (1 unidad = ancho del logo)
-      objeto.position.set(0, 0, 0);       // centrado sobre el logo
-      objeto.rotation.x = Math.PI / 2;   // lo para de pie (no tocar)
-      objeto.rotation.z = 0;             //esto lo estaba acostando
-      objeto.rotation.y = Math.PI/2;             //este es el que gira hacia dónde mira
-      perroGrupo.add(objeto);
+      // Arranca en idle
+      if (acciones['idle']) {
+        accionActual = acciones['idle'];
+        accionActual.play();
+      }
+
+      // Cuando una animación de una sola vez termina, regresa sola a idle
+      mixer.addEventListener('finished', (e) => {
+        // Solo si la que terminó es la que sigue activa (si el usuario ya
+        // cambió a otra o la canceló, este aviso se ignora)
+        if (!animacionActiva) return;
+        if (e.action !== acciones[animacionActiva]) return;
+        volverAIdle();
+      });
     },
     undefined,
-    (error) => console.error('No se pudo cargar el modelo OBJ:', error)
+    (error) => console.error('[BéisbAR] No se pudo cargar el modelo GLB:', error)
   );
 
   // -----------------------------------------------------------------
-  // 4) Animaciones simples de "bailar" y "saludar"
-  //    (el OBJ no trae animaciones internas, así que las simulamos
-  //    moviendo el objeto por código durante unos segundos).
+  // 4) Control de animaciones con los botones
   // -----------------------------------------------------------------
-  let animacionActiva = null;   // 'bailar' | 'saludar' | null
-  let animacionInicio = 0;
+  const botones = {
+    bailar:  document.getElementById('btnBailar'),
+    saludar: document.getElementById('btnSaludar'),
+  };
 
-  document.getElementById('btnBailar').addEventListener('click', () => {
-    animacionActiva = 'bailar';
-    animacionInicio = performance.now();
-  });
-  document.getElementById('btnSaludar').addEventListener('click', () => {
-    animacionActiva = 'saludar';
-    animacionInicio = performance.now();
-  });
+  // Cambia de una animación a otra con una transición suave
+  function cambiarA(nuevaAccion, duracion = 0.25) {
+    if (!nuevaAccion || nuevaAccion === accionActual) return;
 
-  function actualizarAnimacion() {
-    if (!animacionActiva) return;
-    const transcurrido = (performance.now() - animacionInicio) / 1000; // segundos
+    nuevaAccion.reset();
+    nuevaAccion.setEffectiveTimeScale(1);
+    nuevaAccion.setEffectiveWeight(1);
+    nuevaAccion.play();
 
-    if (animacionActiva === 'bailar') {
-      const duracion = 2.2;
-      if (transcurrido > duracion) { animacionActiva = null; perroGrupo.rotation.z = 0; perroGrupo.position.y = 0; return; }
-      perroGrupo.rotation.z = Math.sin(transcurrido * 10) * 0.25;
-      perroGrupo.position.y = Math.abs(Math.sin(transcurrido * 10)) * 0.08;
-    }
+    if (accionActual) accionActual.crossFadeTo(nuevaAccion, duracion, false);
+    accionActual = nuevaAccion;
+  }
 
-    if (animacionActiva === 'saludar') {
-      const duracion = 1.6;
-      if (transcurrido > duracion) { animacionActiva = null; perroGrupo.rotation.y = 0; return; }
-      perroGrupo.rotation.y = Math.sin(transcurrido * 8) * 0.35;
+  function volverAIdle() {
+    animacionActiva = null;
+    cambiarA(acciones['idle'], 0.3);
+    pintarBotones();
+  }
+
+  // Oscurece el botón de la animación que esté activa
+  function pintarBotones() {
+    for (const nombre in botones) {
+      if (!botones[nombre]) continue;
+      botones[nombre].classList.toggle('is-activo', animacionActiva === nombre);
     }
   }
 
+  function alPresionar(nombre) {
+    if (!mixer || !acciones[nombre]) return;   // el modelo todavía no carga
+
+    if (animacionActiva === nombre) {
+      // Mismo botón otra vez → se cancela y vuelve a idle
+      volverAIdle();
+    } else {
+      // Botón distinto (o ninguna activa) → corta lo anterior y pone esta
+      animacionActiva = nombre;
+      cambiarA(acciones[nombre], 0.2);
+      pintarBotones();
+    }
+  }
+
+  botones.bailar.addEventListener('click',  () => alPresionar('bailar'));
+  botones.saludar.addEventListener('click', () => alPresionar('saludar'));
+
   // -----------------------------------------------------------------
-  // 5) Iniciar cámara + escaneo automático (no requiere botón)
+  // 5) Iniciar cámara + escaneo automático
   // -----------------------------------------------------------------
   await mindarThree.start();
+  console.log('[BéisbAR] Cámara y escaneo iniciados ✅ — buscando el logo...');
 
   renderer.setAnimationLoop(() => {
-    actualizarAnimacion();
+    const dt = reloj.getDelta();
+    if (mixer) mixer.update(dt);     // hace avanzar la animación
     renderer.render(scene, camera);
   });
 </script>

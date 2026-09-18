@@ -625,6 +625,9 @@ p.body-text{
   font-size:1.4rem;
   border:none;
 }
+.ar-action-btn.is-activo{
+  background:#544a9c;
+}
 .accionARbailar{
   width:40px;
   height:auto;
