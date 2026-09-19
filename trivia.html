@@ -24,43 +24,22 @@
       <span class="pill-btn" style="font-size:1.3rem; padding:12px 34px;">Trivia</span>
     </div>
 
-    <!-- 5 preguntas aleatorias de un banco de 20. Se muestran 3 como ejemplo de estructura. -->
-    <div class="trivia-question">
-      <p>1.- ¿En qué año se jugó el primer partido oficial de la Liga Mexicana de Beisbol?</p>
-      <div class="trivia-answers">
-        <label><input type="radio" name="q1"> Respuesta 1</label>
-        <label><input type="radio" name="q1"> Respuesta 2</label>
-        <label><input type="radio" name="q1"> Respuesta 3</label>
-        <label><input type="radio" name="q1"> Respuesta 4</label>
-      </div>
-    </div>
+    <p class="body-text" style="text-align:center; margin-bottom:18px;">10 preguntas al azar de un banco de 20.</p>
 
-    <div class="trivia-question">
-      <p>2.- ¿Cuál es la mascota de los Sultanes de Monterrey?</p>
-      <!-- IMAGEN opcional de apoyo para la pregunta -->
-      <div class="img-placeholder trivia-media">Imagen de apoyo</div>
-      <div class="trivia-answers">
-        <label><input type="radio" name="q2"> Respuesta 1</label>
-        <label><input type="radio" name="q2"> Respuesta 2</label>
-        <label><input type="radio" name="q2"> Respuesta 3</label>
-        <label><input type="radio" name="q2"> Respuesta 4</label>
-      </div>
-    </div>
+    <!-- Las preguntas se generan desde JavaScript -->
+    <div id="preguntas"></div>
 
-    <div class="trivia-question">
-      <p>3.- ¿En qué estadio juegan los Toros de Tijuana?</p>
-      <div class="trivia-answers">
-        <label><input type="radio" name="q3"> Respuesta 1</label>
-        <label><input type="radio" name="q3"> Respuesta 2</label>
-        <label><input type="radio" name="q3"> Respuesta 3</label>
-        <label><input type="radio" name="q3"> Respuesta 4</label>
-      </div>
-    </div>
-    
     <div style="text-align:center; margin-top:24px;">
-        <button type="button" class="btn-submit">Enviar</button>
+        <button type="button" class="btn-submit" id="btnEnviar">Enviar</button>
     </div>
 
+    <div id="resultado" class="trivia-resultado oculto">
+      <p class="trivia-marcador" id="marcador">0 / 10</p>
+      <p class="body-text" id="mensajeResultado" style="text-align:center;"></p>
+      <div style="text-align:center; margin-top:16px;">
+        <button type="button" class="btn-submit" id="btnOtra">Jugar de nuevo</button>
+      </div>
+    </div>
 
   </main>
 
@@ -69,6 +48,190 @@
   </footer>
 
 </div>
+
+<script>
+(function () {
+
+  // ---------------------------------------------------------------
+  // Banco de 20 preguntas. "correcta" es el índice (0-3) de la
+  // respuesta correcta dentro del arreglo "opciones".
+  // ---------------------------------------------------------------
+  var BANCO = [
+    { p: '¿En qué año se jugó el primer partido oficial de la Liga Mexicana de Beisbol?',
+      opciones: ['1910', '1925', '1939', '1947'], correcta: 1 },
+
+    { p: '¿Quiénes fundaron la Liga Mexicana de Beisbol?',
+      opciones: ['Ernesto Carmona y Alejandro Aguilar Reyes', 'Martín Dihigo y Lázaro Salazar', 'Jorge Pasquel y Héctor Espino', 'Nazario Ortiz y José F. Ortiz'], correcta: 0 },
+
+    { p: '¿Cuál es la mascota de los Sultanes de Monterrey?',
+      opciones: ['El Toro Torín', 'El Perro Sultán', 'Tico el Teco', 'El Pollo Algodonero'], correcta: 1 },
+
+    { p: '¿Cómo se llama popularmente el estadio de los Sultanes de Monterrey?',
+      opciones: ['El Infierno Verde', 'El Palacio Sultán', 'La Casa del Rey', 'El Coloso del Norte'], correcta: 1 },
+
+    { p: '¿Cuántos campeonatos de liga tienen los Sultanes de Monterrey?',
+      opciones: ['5', '8', '10', '13'], correcta: 2 },
+
+    { p: '¿Qué logro consiguieron los Sultanes entre 1947 y 1949?',
+      opciones: ['El único tricampeonato de la LMB', 'Tres subcampeonatos seguidos', 'Su primer título de zona', 'Un récord de asistencia'], correcta: 0 },
+
+    { p: '¿En qué estadio juegan los Toros de Tijuana?',
+      opciones: ['Estadio Revolución', 'Parque La Junta', 'Toros Mobil Park', 'Estadio Panamericano'], correcta: 2 },
+
+    { p: '¿Cuál es la mascota de los Toros de Tijuana?',
+      opciones: ['Toro Torín', 'El Pollo Algodonero', 'El Perro Sultán', 'Tico el Teco'], correcta: 0 },
+
+    { p: '¿A qué equipo vencieron los Toros de Tijuana en la Serie del Rey 2026?',
+      opciones: ['Diablos Rojos del México', 'Olmecas de Tabasco', 'Leones de Yucatán', 'Pericos de Puebla'], correcta: 1 },
+
+    { p: '¿En qué años ganaron los Toros de Tijuana sus campeonatos de liga?',
+      opciones: ['2015, 2019 y 2024', '2017, 2021 y 2026', '2016, 2020 y 2025', '2018, 2022 y 2026'], correcta: 1 },
+
+    { p: '¿Cuál es el estadio más antiguo de la LMB que sigue en uso?',
+      opciones: ['Estadio de la Revolución', 'Parque La Junta', 'Estadio Monterrey', 'Estadio Chevron'], correcta: 0 },
+
+    { p: '¿En qué año fue inaugurado el Estadio de la Revolución, en Torreón?',
+      opciones: ['1925', '1932', '1940', '1950'], correcta: 1 },
+
+    { p: '¿Cuál es la mascota de los Algodoneros de Unión Laguna?',
+      opciones: ['El Pollo Algodonero', 'El Perro Sultán', 'Toro Torín', 'Tico el Teco'], correcta: 0 },
+
+    { p: '¿En qué año consiguieron los Algodoneros su campeonato más reciente?',
+      opciones: ['1942', '1950', '1978', '2023'], correcta: 1 },
+
+    { p: '¿Qué legendario pelotero cubano dirigió a los Algodoneros al título de 1942?',
+      opciones: ['Lázaro Salazar', 'Martín Dihigo', 'Roenis Elías', 'Cool Papa Bell'], correcta: 1 },
+
+    { p: '¿Qué tiene de especial a los Tecolotes de los Dos Laredos?',
+      opciones: ['Es el equipo más antiguo de la liga', 'Juega como local en dos países', 'Nunca ha ganado un campeonato', 'Tiene dos mascotas oficiales'], correcta: 1 },
+
+    { p: '¿Cuál es la mascota de los Tecolotes de los Dos Laredos?',
+      opciones: ['Tico el Teco', 'El Búho Laredo', 'Toro Torín', 'El Pollo Algodonero'], correcta: 0 },
+
+    { p: '¿Cuántos campeonatos de liga tienen los Tecolotes de los Dos Laredos?',
+      opciones: ['2', '3', '5', '7'], correcta: 2 },
+
+    { p: '¿Cuál fue el primer equipo mexicano de beisbol formado oficialmente?',
+      opciones: ['Club México, en 1887', 'Diablos Rojos, en 1940', 'Carta Blanca, en 1939', 'Unión Laguna, en 1940'], correcta: 0 },
+
+    { p: '¿En qué año la LMB obtuvo la clasificación Clase AAA?',
+      opciones: ['1955', '1967', '1975', '1990'], correcta: 1 }
+  ];
+
+  var TOTAL = 10;   // cuántas preguntas se muestran por partida
+
+  var contenedor = document.getElementById('preguntas');
+  var resultado  = document.getElementById('resultado');
+  var marcador   = document.getElementById('marcador');
+  var mensaje    = document.getElementById('mensajeResultado');
+
+  var seleccionadas = [];
+  var bloqueada = false;   // true cuando ya se envió la partida
+
+  function barajar(lista) {
+    for (var i = lista.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = lista[i]; lista[i] = lista[j]; lista[j] = t;
+    }
+    return lista;
+  }
+
+  // ---------------------------------------------------------------
+  // Armar la partida: 5 preguntas al azar, con sus opciones revueltas
+  // ---------------------------------------------------------------
+  function nuevaPartida() {
+    resultado.classList.add('oculto');
+    contenedor.innerHTML = '';
+
+    // Se reactiva todo por si la partida anterior quedó bloqueada
+    bloqueada = false;
+    contenedor.classList.remove('esta-bloqueada');
+    document.getElementById('btnEnviar').disabled = false;
+
+    seleccionadas = barajar(BANCO.slice()).slice(0, TOTAL);
+
+    seleccionadas.forEach(function (pregunta, i) {
+      // Se revuelven las opciones sin perder cuál era la correcta
+      var opciones = pregunta.opciones.map(function (texto, indice) {
+        return { texto: texto, esCorrecta: indice === pregunta.correcta };
+      });
+      barajar(opciones);
+      pregunta.opcionesRevueltas = opciones;
+
+      var bloque = document.createElement('div');
+      bloque.className = 'trivia-question';
+
+      var html = '<p>' + (i + 1) + '.- ' + pregunta.p + '</p><div class="trivia-answers">';
+      opciones.forEach(function (op, j) {
+        html += '<label><input type="radio" name="q' + i + '" value="' + j + '"> ' + op.texto + '</label>';
+      });
+      html += '</div>';
+
+      bloque.innerHTML = html;
+      contenedor.appendChild(bloque);
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // Calificar
+  // ---------------------------------------------------------------
+  function calificar() {
+    if (bloqueada) return;   // ya se envió esta partida
+
+    var aciertos = 0;
+    var sinContestar = 0;
+
+    seleccionadas.forEach(function (pregunta, i) {
+      var marcada = document.querySelector('input[name="q' + i + '"]:checked');
+      if (!marcada) { sinContestar++; return; }
+      if (pregunta.opcionesRevueltas[marcada.value].esCorrecta) aciertos++;
+    });
+
+    // Si falta contestar, se avisa pero NO se bloquea todavía
+    if (sinContestar > 0) {
+      mensaje.textContent = 'Te falta contestar ' + sinContestar +
+        (sinContestar === 1 ? ' pregunta.' : ' preguntas.');
+      marcador.textContent = '—';
+      resultado.classList.remove('oculto');
+      return;
+    }
+
+    bloquearRespuestas();
+
+    marcador.textContent = aciertos + ' / ' + TOTAL;
+
+    if (aciertos === TOTAL) {
+      mensaje.textContent = '¡Perfecto! Desbloqueaste una carta nueva.';
+    } else if (aciertos >= Math.ceil(TOTAL * 0.6)) {
+      mensaje.textContent = 'Bien, pero necesitas ' + TOTAL + ' de ' + TOTAL + ' para ganar una carta.';
+    } else {
+      mensaje.textContent = 'Repasa las secciones de historia y equipos, y vuelve a intentarlo.';
+    }
+
+    resultado.classList.remove('oculto');
+    resultado.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Deja las respuestas fijas: ya no se pueden cambiar tras enviar
+  function bloquearRespuestas() {
+    bloqueada = true;
+
+    var opciones = contenedor.querySelectorAll('input[type="radio"]');
+    for (var i = 0; i < opciones.length; i++) {
+      opciones[i].disabled = true;
+    }
+
+    contenedor.classList.add('esta-bloqueada');
+    document.getElementById('btnEnviar').disabled = true;
+  }
+
+  document.getElementById('btnEnviar').addEventListener('click', calificar);
+  document.getElementById('btnOtra').addEventListener('click', nuevaPartida);
+
+  nuevaPartida();
+
+})();
+</script>
 
 </body>
 </html>

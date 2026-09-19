@@ -19,34 +19,255 @@
   </header>
 
   <main class="app-main" style="background:linear-gradient(180deg, #ff8fae 0%, #9f2f4e 90%); margin:0; padding-top:30px;">
-    <p class="memorama-timer">01:00</p>
+    <p class="memorama-timer" id="reloj">00:30</p>
 
-    <!-- Tablero 4x4: 2 tarjetas repetidas del usuario + 1 nueva, repetidas para formar pares -->
-    <div class="memory-grid">
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-      <div class="memory-card"><img src="imagenes/LogoBeisbAR.png"></div>
-    </div>
+    <!-- El tablero se genera desde JavaScript -->
+    <div class="memory-grid" id="tablero"></div>
   </main>
 
   <footer class="footer-bar">
     <a href="index.html">Inicio</a>
   </footer>
 
+  <!-- Cuenta regresiva de inicio -->
+  <div class="memorama-overlay" id="overlayCuenta">
+    <p class="memorama-overlay-texto">Prepárate</p>
+    <p class="memorama-cuenta" id="numeroCuenta">3</p>
+  </div>
+
+  <!-- Aviso de victoria o de tiempo agotado -->
+  <div class="memorama-overlay oculto" id="overlayFinal">
+    <p class="memorama-overlay-titulo" id="tituloFinal">¡Ganaste!</p>
+    <p class="memorama-overlay-texto" id="textoFinal">Completaste el memorama.</p>
+    <div class="memorama-overlay-botones">
+      <button type="button" class="memorama-btn" id="btnReintentar">Jugar de nuevo</button>
+      <a href="memorama.html" class="memorama-btn memorama-btn--suave">Salir</a>
+    </div>
+  </div>
+
 </div>
+
+<script>
+(function () {
+
+  // ---------------------------------------------------------------
+  // Configuración
+  // ---------------------------------------------------------------
+  var JUGADORES = [
+    'cade_gotta', 'hector_espino', 'justin_turner', 'martin_dihigo',
+    'oliver_perez', 'ramiro_cuevas', 'ramiro_pena', 'roenis_elias'
+  ];
+  var RUTA      = 'imagenes/Memorama/';
+  var REVERSO   = 'imagenes/Memorama/LogoReversoCartasP.png';
+  var SEGUNDOS  = 30;    // duración de la partida
+  var CUENTA    = 3;     // segundos de cuenta regresiva al entrar
+  var ESPERA    = 900;   // milisegundos que se quedan visibles dos cartas que no son par
+
+  // ---------------------------------------------------------------
+  // Estado del juego
+  // ---------------------------------------------------------------
+  var primeraCarta     = null;
+  var segundaCarta     = null;
+  var bloqueado        = true;   // arranca bloqueado por la cuenta regresiva
+  var paresEncontrados = 0;
+  var tiempoRestante   = SEGUNDOS;
+  var intervaloReloj   = null;
+  var intervaloCuenta  = null;
+
+  var tablero        = document.getElementById('tablero');
+  var reloj          = document.getElementById('reloj');
+  var overlayCuenta  = document.getElementById('overlayCuenta');
+  var numeroCuenta   = document.getElementById('numeroCuenta');
+  var overlayFinal   = document.getElementById('overlayFinal');
+  var tituloFinal    = document.getElementById('tituloFinal');
+  var textoFinal     = document.getElementById('textoFinal');
+
+  // ---------------------------------------------------------------
+  // Barajar (algoritmo de Fisher-Yates)
+  // ---------------------------------------------------------------
+  function barajar(lista) {
+    for (var i = lista.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = lista[i];
+      lista[i] = lista[j];
+      lista[j] = temp;
+    }
+    return lista;
+  }
+
+  // ---------------------------------------------------------------
+  // Armar el tablero: cada jugador dos veces, todo revuelto
+  // ---------------------------------------------------------------
+  function construirTablero() {
+    var mazo = barajar(JUGADORES.concat(JUGADORES));
+
+    tablero.innerHTML = '';
+
+    mazo.forEach(function (jugador) {
+      var carta = document.createElement('button');
+      carta.type = 'button';
+      carta.className = 'memory-card';
+      carta.dataset.jugador = jugador;
+      carta.setAttribute('aria-label', 'Carta oculta');
+
+      carta.innerHTML =
+        '<div class="memory-card-inner">' +
+          '<div class="memory-face memory-back"><img src="' + REVERSO + '" alt=""></div>' +
+          '<div class="memory-face memory-front"><img src="' + RUTA + jugador + '.jpg" alt=""></div>' +
+        '</div>';
+
+      carta.addEventListener('click', function () { alVoltear(carta); });
+      tablero.appendChild(carta);
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // Voltear una carta
+  // ---------------------------------------------------------------
+  function alVoltear(carta) {
+    if (bloqueado) return;                                  // hay dos cartas resolviéndose
+    if (carta === primeraCarta) return;                     // ya está elegida
+    if (carta.classList.contains('volteada')) return;       // ya estaba boca arriba
+    if (carta.classList.contains('encontrada')) return;     // ya formó par
+
+    carta.classList.add('volteada');
+
+    if (!primeraCarta) {
+      primeraCarta = carta;
+      return;
+    }
+
+    segundaCarta = carta;
+    bloqueado = true;   // se bloquea mientras se comprueba
+
+    if (primeraCarta.dataset.jugador === segundaCarta.dataset.jugador) {
+      acertar();
+    } else {
+      fallar();
+    }
+  }
+
+  function acertar() {
+    var a = primeraCarta;
+    var b = segundaCarta;
+
+    paresEncontrados++;
+
+    // Se deja un momento para que el jugador vea el par antes de que desaparezca
+    setTimeout(function () {
+      a.classList.add('encontrada');
+      b.classList.add('encontrada');
+
+      limpiarSeleccion();
+
+      if (paresEncontrados === JUGADORES.length) {
+        terminar(true);
+      }
+    }, 450);
+  }
+
+  function fallar() {
+    var a = primeraCarta;
+    var b = segundaCarta;
+
+    setTimeout(function () {
+      a.classList.remove('volteada');
+      b.classList.remove('volteada');
+      limpiarSeleccion();
+    }, ESPERA);
+  }
+
+  function limpiarSeleccion() {
+    primeraCarta = null;
+    segundaCarta = null;
+    bloqueado = false;
+  }
+
+  // ---------------------------------------------------------------
+  // Reloj de la partida
+  // ---------------------------------------------------------------
+  function pintarReloj() {
+    var minutos = Math.floor(tiempoRestante / 60);
+    var segundos = tiempoRestante % 60;
+    reloj.textContent =
+      (minutos < 10 ? '0' : '') + minutos + ':' +
+      (segundos < 10 ? '0' : '') + segundos;
+  }
+
+  function arrancarReloj() {
+    pintarReloj();
+    intervaloReloj = setInterval(function () {
+      tiempoRestante--;
+      pintarReloj();
+
+      if (tiempoRestante <= 10) reloj.classList.add('urgente');
+
+      if (tiempoRestante <= 0) {
+        terminar(false);
+      }
+    }, 1000);
+  }
+
+  // ---------------------------------------------------------------
+  // Cuenta regresiva de inicio
+  // ---------------------------------------------------------------
+  function arrancarCuenta() {
+    var restante = CUENTA;
+    numeroCuenta.textContent = restante;
+
+    intervaloCuenta = setInterval(function () {
+      restante--;
+
+      if (restante > 0) {
+        numeroCuenta.textContent = restante;
+        // reinicia la animación de pulso
+        numeroCuenta.classList.remove('late');
+        void numeroCuenta.offsetWidth;
+        numeroCuenta.classList.add('late');
+      } else {
+        clearInterval(intervaloCuenta);
+        numeroCuenta.textContent = '¡Ya!';
+        setTimeout(function () {
+          overlayCuenta.classList.add('oculto');
+          bloqueado = false;      // ahora sí se puede jugar
+          arrancarReloj();
+        }, 500);
+      }
+    }, 1000);
+  }
+
+  // ---------------------------------------------------------------
+  // Fin de la partida
+  // ---------------------------------------------------------------
+  function terminar(gano) {
+    clearInterval(intervaloReloj);
+    bloqueado = true;
+
+    if (gano) {
+      tituloFinal.textContent = '¡Ganaste!';
+      textoFinal.textContent  = 'Completaste el memorama con ' + tiempoRestante + ' segundos de sobra. Ganaste una carta nueva.';
+      overlayFinal.classList.add('es-victoria');
+    } else {
+      tituloFinal.textContent = 'Se acabó el tiempo';
+      textoFinal.textContent  = 'Te faltaron ' + (JUGADORES.length - paresEncontrados) + ' pares. Perdiste las 2 cartas que apostaste.';
+      overlayFinal.classList.remove('es-victoria');
+    }
+
+    overlayFinal.classList.remove('oculto');
+  }
+
+  document.getElementById('btnReintentar').addEventListener('click', function () {
+    window.location.reload();
+  });
+
+  // ---------------------------------------------------------------
+  // Arranque
+  // ---------------------------------------------------------------
+  construirTablero();
+  arrancarCuenta();
+
+})();
+</script>
 
 </body>
 </html>
