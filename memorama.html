@@ -30,7 +30,7 @@
 
       <div class="memorama-stake">
        <img src="imagenes/cartas2.png">
-       <span>Tienes 5</span>
+       <span id="cuantasTengo">Tienes 0</span>
       </div>
 
       <p class="memorama-note">¡Supera el reto y gana una nueva carta!</p>
@@ -42,6 +42,18 @@
   </footer>
 
 </div>
+
+<script src="js/cartas.js"></script>
+<script>
+  (function () {
+    var etiqueta = document.getElementById('cuantasTengo');
+    function pintar() {
+      etiqueta.textContent = 'Tienes ' + Cartas.contarDistintas() + ' de ' + Cartas.LISTA.length;
+    }
+    pintar();
+    window.addEventListener('pageshow', pintar);
+  })();
+</script>
 
 </body>
 </html>

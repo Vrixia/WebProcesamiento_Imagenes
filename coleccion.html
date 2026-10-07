@@ -24,21 +24,14 @@
       <h1 class="section-title" style="margin:0;">Mi colección:</h1>
       <div class="count">
         <img src="imagenes/cartas2.png" width="25px" height="auto">
-        <span>5</span>
+        <span id="contador">0 / 12</span>
       </div>
     </div>
 
-    <div class="card-grid">
-      <a href="carta.html" class="card-slot is-unlocked"></a>
-      <a href="carta.html" class="card-slot is-unlocked"></a>
-      <a href="carta.html" class="card-slot is-unlocked"></a>
-      <a href="carta.html" class="card-slot is-unlocked"></a>
-      <a href="carta.html" class="card-slot is-unlocked"></a>
-      <div class="card-slot is-locked">🔒</div>
-      <div class="card-slot is-locked">🔒</div>
-      <div class="card-slot is-locked">🔒</div>
-      <div class="card-slot is-locked">🔒</div>
-    </div>
+    <!-- La cuadrícula se genera desde JavaScript -->
+    <div class="card-grid" id="cuadricula"></div>
+
+    <p class="coleccion-aviso" id="aviso"></p>
 
     <!-- Botón flotante para entrar al memorama -->
     <a href="memorama.html" class="memorama-fab" aria-label="Entrar al memorama">
@@ -53,6 +46,62 @@
   </footer>
 
 </div>
+
+<script src="js/cartas.js"></script>
+<script>
+(function () {
+
+  var cuadricula = document.getElementById('cuadricula');
+  var contador   = document.getElementById('contador');
+  var aviso      = document.getElementById('aviso');
+
+  function pintar() {
+    cuadricula.innerHTML = '';
+
+    Cartas.LISTA.forEach(function (carta) {
+      var laTengo = Cartas.tiene(carta.id);
+
+      if (laTengo) {
+        // Carta desbloqueada: se ve y se puede abrir en 3D
+        var enlace = document.createElement('a');
+        enlace.className = 'card-slot is-unlocked';
+        enlace.href = 'carta.html?id=' + encodeURIComponent(carta.id);
+        enlace.setAttribute('aria-label', 'Ver ' + carta.nombre + ' en 3D');
+        enlace.innerHTML = '<img src="' + Cartas.rutaThumb(carta.id) + '" alt="' + carta.nombre + '">';
+        cuadricula.appendChild(enlace);
+
+      } else {
+        // Carta bloqueada: solo el reverso oscurecido con un candado
+        var hueco = document.createElement('div');
+        hueco.className = 'card-slot is-locked';
+        hueco.setAttribute('aria-label', 'Carta bloqueada');
+        hueco.innerHTML =
+          '<img src="' + Cartas.rutaReverso() + '" alt="">' +
+          '<span class="candado">🔒</span>';
+        cuadricula.appendChild(hueco);
+      }
+    });
+
+    var tengo = Cartas.contarDistintas();
+    contador.textContent = tengo + ' / ' + Cartas.LISTA.length;
+
+    if (tengo === 0) {
+      aviso.textContent = 'Todavía no tienes cartas. Consigue de 8 a 10 aciertos en la trivia o gana el memorama para desbloquear la primera.';
+    } else if (tengo === Cartas.LISTA.length) {
+      aviso.textContent = '¡Completaste la colección! Tienes las 12 cartas.';
+    } else {
+      aviso.textContent = 'Te faltan ' + (Cartas.LISTA.length - tengo) + ' cartas por conseguir.';
+    }
+  }
+
+  pintar();
+
+  // Si el usuario regresa con el botón "atrás", se vuelve a pintar por
+  // si ganó una carta mientras tanto
+  window.addEventListener('pageshow', pintar);
+
+})();
+</script>
 
 </body>
 </html>
