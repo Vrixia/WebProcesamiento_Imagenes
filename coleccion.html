@@ -62,7 +62,7 @@
       var laTengo = Cartas.tiene(carta.id);
 
       if (laTengo) {
-        // Carta desbloqueada: se ve y se puede abrir en 3D
+        // Carta desbloqueada, se ve y se puede abrir en 3D
         var enlace = document.createElement('a');
         enlace.className = 'card-slot is-unlocked';
         enlace.href = 'carta.html?id=' + encodeURIComponent(carta.id);
@@ -71,7 +71,7 @@
         cuadricula.appendChild(enlace);
 
       } else {
-        // Carta bloqueada: solo el reverso oscurecido con un candado
+        // Carta bloqueada
         var hueco = document.createElement('div');
         hueco.className = 'card-slot is-locked';
         hueco.setAttribute('aria-label', 'Carta bloqueada');
@@ -96,8 +96,6 @@
 
   pintar();
 
-  // Si el usuario regresa con el botón "atrás", se vuelve a pintar por
-  // si ganó una carta mientras tanto
   window.addEventListener('pageshow', pintar);
 
 })();

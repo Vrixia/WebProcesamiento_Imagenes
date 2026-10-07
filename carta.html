@@ -69,7 +69,7 @@
   document.title = 'BéisbAR MX — ' + carta.nombre;
 
   // -----------------------------------------------------------------
-  // Montar el visor 3D
+  // visor 3D
   // -----------------------------------------------------------------
   var visor = document.createElement('model-viewer');
   visor.setAttribute('src', Cartas.rutaModelo(carta.id));
@@ -79,7 +79,7 @@
   visor.setAttribute('shadow-intensity', '0.8');
   visor.setAttribute('exposure', '1');
   visor.setAttribute('environment-image', 'neutral');
-  visor.setAttribute('camera-orbit', '0deg 90deg auto');
+  visor.setAttribute('camera-orbit', '90deg 90deg auto');
   visor.setAttribute('min-field-of-view', '20deg');
   visor.setAttribute('max-field-of-view', '50deg');
   visor.setAttribute('interaction-prompt', 'none');
