@@ -62,10 +62,8 @@
 <script>
 (function () {
 
-  // ---------------------------------------------------------------
-  // Banco de 20 preguntas. "correcta" es el índice (0-3) de la
-  // respuesta correcta dentro del arreglo "opciones".
-  // ---------------------------------------------------------------
+  // Banco de 20 preguntas. "correcta" es el índice (0-3)
+
   var BANCO = [
     { p: '¿En qué año se jugó el primer partido oficial de la Liga Mexicana de Beisbol?',
       opciones: ['1910', '1925', '1939', '1947'], correcta: 1 },
@@ -128,8 +126,8 @@
       opciones: ['1955', '1967', '1975', '1990'], correcta: 1 }
   ];
 
-  var TOTAL = 10;          // cuántas preguntas se muestran por partida
-  var MINIMO_PREMIO = 8;   // aciertos necesarios para ganar una carta
+  var TOTAL = 10;          // total de preguntas de una trivia
+  var MINIMO_PREMIO = 8;   // aciertos minimos para ganar una carta
 
   var contenedor = document.getElementById('preguntas');
   var resultado  = document.getElementById('resultado');
@@ -152,9 +150,9 @@
     return lista;
   }
 
-  // ---------------------------------------------------------------
-  // Armar la partida: 5 preguntas al azar, con sus opciones revueltas
-  // ---------------------------------------------------------------
+
+  // Armar la partida
+
   function nuevaPartida() {
     resultado.classList.add('oculto');
     contenedor.innerHTML = '';
@@ -168,7 +166,7 @@
     seleccionadas = barajar(BANCO.slice()).slice(0, TOTAL);
 
     seleccionadas.forEach(function (pregunta, i) {
-      // Se revuelven las opciones sin perder cuál era la correcta
+      // Se revuelven las opciones
       var opciones = pregunta.opciones.map(function (texto, indice) {
         return { texto: texto, esCorrecta: indice === pregunta.correcta };
       });
@@ -189,9 +187,8 @@
     });
   }
 
-  // ---------------------------------------------------------------
   // Calificar
-  // ---------------------------------------------------------------
+
   function calificar() {
     if (bloqueada) return;   // ya se envió esta partida
 
@@ -204,7 +201,7 @@
       if (pregunta.opcionesRevueltas[marcada.value].esCorrecta) aciertos++;
     });
 
-    // Si falta contestar, se avisa pero NO se bloquea todavía
+    // Si falta contestar, se avisa pero no se bloquea todavía
     if (sinContestar > 0) {
       mensaje.textContent = 'Te falta contestar ' + sinContestar +
         (sinContestar === 1 ? ' pregunta.' : ' preguntas.');
@@ -217,8 +214,7 @@
 
     marcador.textContent = aciertos + ' / ' + TOTAL;
 
-    // De 8 aciertos en adelante se gana una carta al azar.
-    // Puede tocar una que el jugador ya tenga.
+    // De 8 aciertos en adelante se gana una carta al azar que puede ser repetida
     if (aciertos >= MINIMO_PREMIO) {
       if (aciertos === TOTAL) {
         mensaje.textContent = '¡Perfecto! Ganaste una carta.';
@@ -248,7 +244,7 @@
     premio.style.display = '';
   }
 
-  // Deja las respuestas fijas: ya no se pueden cambiar tras enviar
+  // Deja las respuestas fijasno modificables
   function bloquearRespuestas() {
     bloqueada = true;
 

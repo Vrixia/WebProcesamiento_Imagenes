@@ -108,9 +108,8 @@
     return lista;
   }
 
-  // ---------------------------------------------------------------
-  // Armar el tablero: cada jugador dos veces, todo revuelto
-  // ---------------------------------------------------------------
+  // Armar el tablero con cada carta 2 veces revueltas
+ 
   function construirTablero() {
     var mazo = barajar(JUGADORES.concat(JUGADORES));
 
@@ -134,9 +133,9 @@
     });
   }
 
-  // ---------------------------------------------------------------
+
   // Voltear una carta
-  // ---------------------------------------------------------------
+
   function alVoltear(carta) {
     if (bloqueado) return;                                  // hay dos cartas resolviéndose
     if (carta === primeraCarta) return;                     // ya está elegida
@@ -166,7 +165,7 @@
 
     paresEncontrados++;
 
-    // Se deja un momento para que el jugador vea el par antes de que desaparezca
+    // Se deja un tiempo la carta al hacer el match
     setTimeout(function () {
       a.classList.add('encontrada');
       b.classList.add('encontrada');
@@ -196,9 +195,8 @@
     bloqueado = false;
   }
 
-  // ---------------------------------------------------------------
   // Reloj de la partida
-  // ---------------------------------------------------------------
+
   function pintarReloj() {
     var minutos = Math.floor(tiempoRestante / 60);
     var segundos = tiempoRestante % 60;
@@ -221,9 +219,8 @@
     }, 1000);
   }
 
-  // ---------------------------------------------------------------
-  // Cuenta regresiva de inicio
-  // ---------------------------------------------------------------
+  // Cuenta regresiva del inicio
+
   function arrancarCuenta() {
     var restante = CUENTA;
     numeroCuenta.textContent = restante;
@@ -249,9 +246,8 @@
     }, 1000);
   }
 
-  // ---------------------------------------------------------------
   // Fin de la partida
-  // ---------------------------------------------------------------
+
   function terminar(gano) {
     clearInterval(intervaloReloj);
     bloqueado = true;
@@ -260,7 +256,7 @@
       tituloFinal.textContent = '¡Ganaste!';
       overlayFinal.classList.add('es-victoria');
 
-      // Al ganar SIEMPRE se entrega una carta que el jugador no tenga
+      // Al ganar se entrega una carta que el jugador no tenga
       var ganada = Cartas.darNueva();
 
       if (ganada) {
@@ -290,9 +286,8 @@
     window.location.reload();
   });
 
-  // ---------------------------------------------------------------
   // Arranque
-  // ---------------------------------------------------------------
+
   construirTablero();
   arrancarCuenta();
 
