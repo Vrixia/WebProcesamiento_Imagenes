@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 </head>
 <body>
 
@@ -25,12 +26,17 @@
 
   <main class="app-main">
     <div class="card-viewer">
-      <!-- MODELO 3D: aquí se cargará el <model-viewer> de la carta del jugador -->
-      <div class="card-viewer-stage"></div>
+
+      <h1 class="carta-nombre" id="nombreCarta">Cargando…</h1>
+
+      <!-- Aquí se inserta el <model-viewer> con el .glb de la carta -->
+      <div class="card-viewer-stage" id="escena"></div>
+
       <div class="rotate-hint">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4"/></svg>
         <span>Arrastra la pantalla para rotar el modelo 3D</span>
       </div>
+
     </div>
   </main>
 
@@ -39,6 +45,63 @@
   </footer>
 
 </div>
+
+<script src="js/cartas.js"></script>
+<script>
+(function () {
+
+  var escena = document.getElementById('escena');
+  var titulo = document.getElementById('nombreCarta');
+
+  // ¿Qué carta pidió el usuario? Viene en la URL: carta.html?id=...
+  var parametros = new URLSearchParams(window.location.search);
+  var id = parametros.get('id');
+
+  var carta = id ? Cartas.buscar(id) : null;
+
+  // Sin carta válida, o una que todavía no desbloquea: de regreso
+  if (!carta || !Cartas.tiene(carta.id)) {
+    window.location.replace('coleccion.html');
+    return;
+  }
+
+  titulo.textContent = carta.nombre;
+  document.title = 'BéisbAR MX — ' + carta.nombre;
+
+  // -----------------------------------------------------------------
+  // Montar el visor 3D
+  // -----------------------------------------------------------------
+  var visor = document.createElement('model-viewer');
+  visor.setAttribute('src', Cartas.rutaModelo(carta.id));
+  visor.setAttribute('alt', 'Carta 3D de ' + carta.nombre);
+  visor.setAttribute('camera-controls', '');        // arrastrar para rotar
+  visor.setAttribute('touch-action', 'none');       // el dedo rota, no hace scroll
+  visor.setAttribute('shadow-intensity', '0.8');
+  visor.setAttribute('exposure', '1');
+  visor.setAttribute('environment-image', 'neutral');
+  visor.setAttribute('camera-orbit', '0deg 90deg auto');
+  visor.setAttribute('min-field-of-view', '20deg');
+  visor.setAttribute('max-field-of-view', '50deg');
+  visor.setAttribute('interaction-prompt', 'none');
+  visor.className = 'visor-carta';
+
+  // Mientras descarga el .glb (son varios MB) se avisa
+  var cargando = document.createElement('div');
+  cargando.className = 'visor-cargando';
+  cargando.textContent = 'Cargando modelo 3D…';
+  escena.appendChild(cargando);
+
+  visor.addEventListener('load', function () {
+    cargando.remove();
+  });
+  visor.addEventListener('error', function () {
+    cargando.textContent = 'No se pudo cargar el modelo de esta carta.';
+  });
+
+  escena.appendChild(visor);
+
+})();
+</script>
 
 </body>
 </html>

@@ -39,6 +39,15 @@
   <div class="memorama-overlay oculto" id="overlayFinal">
     <p class="memorama-overlay-titulo" id="tituloFinal">¡Ganaste!</p>
     <p class="memorama-overlay-texto" id="textoFinal">Completaste el memorama.</p>
+
+    <!-- Carta ganada (solo al ganar) -->
+    <div class="premio" id="premio" style="display:none;">
+      <img id="premioImg" alt="">
+      <p class="premio-nombre" id="premioNombre"></p>
+      <p class="premio-estado">¡Carta nueva para tu colección!</p>
+      <a href="coleccion.html" class="premio-link">Ver mi colección</a>
+    </div>
+
     <div class="memorama-overlay-botones">
       <button type="button" class="memorama-btn" id="btnReintentar">Jugar de nuevo</button>
       <a href="memorama.html" class="memorama-btn memorama-btn--suave">Salir</a>
@@ -47,6 +56,7 @@
 
 </div>
 
+<script src="js/cartas.js"></script>
 <script>
 (function () {
 
@@ -81,6 +91,9 @@
   var overlayFinal   = document.getElementById('overlayFinal');
   var tituloFinal    = document.getElementById('tituloFinal');
   var textoFinal     = document.getElementById('textoFinal');
+  var premio         = document.getElementById('premio');
+  var premioImg      = document.getElementById('premioImg');
+  var premioNombre   = document.getElementById('premioNombre');
 
   // ---------------------------------------------------------------
   // Barajar (algoritmo de Fisher-Yates)
@@ -245,12 +258,29 @@
 
     if (gano) {
       tituloFinal.textContent = '¡Ganaste!';
-      textoFinal.textContent  = 'Completaste el memorama con ' + tiempoRestante + ' segundos de sobra. Ganaste una carta nueva.';
       overlayFinal.classList.add('es-victoria');
+
+      // Al ganar SIEMPRE se entrega una carta que el jugador no tenga
+      var ganada = Cartas.darNueva();
+
+      if (ganada) {
+        textoFinal.textContent = 'Completaste el memorama con ' + tiempoRestante + ' segundos de sobra.';
+        premioImg.src = Cartas.rutaThumb(ganada.carta.id);
+        premioImg.alt = ganada.carta.nombre;
+        premioNombre.textContent = ganada.carta.nombre;
+        premio.style.display = '';
+      } else {
+        // Ya tenía las 12: no hay carta nueva que dar
+        textoFinal.textContent = 'Completaste el memorama con ' + tiempoRestante +
+          ' segundos de sobra, y ya tienes la colección completa.';
+        premio.style.display = 'none';
+      }
+
     } else {
       tituloFinal.textContent = 'Se acabó el tiempo';
-      textoFinal.textContent  = 'Te faltaron ' + (JUGADORES.length - paresEncontrados) + ' pares. Perdiste las 2 cartas que apostaste.';
+      textoFinal.textContent  = 'Te faltaron ' + (JUGADORES.length - paresEncontrados) + ' pares. Inténtalo de nuevo.';
       overlayFinal.classList.remove('es-victoria');
+      premio.style.display = 'none';
     }
 
     overlayFinal.classList.remove('oculto');

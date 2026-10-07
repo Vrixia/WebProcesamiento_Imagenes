@@ -36,6 +36,15 @@
     <div id="resultado" class="trivia-resultado oculto">
       <p class="trivia-marcador" id="marcador">0 / 10</p>
       <p class="body-text" id="mensajeResultado" style="text-align:center;"></p>
+
+      <!-- Carta ganada (solo aparece con 8 o más aciertos) -->
+      <div class="premio" id="premio" style="display:none;">
+        <img id="premioImg" alt="">
+        <p class="premio-nombre" id="premioNombre"></p>
+        <p class="premio-estado" id="premioEstado"></p>
+        <a href="coleccion.html" class="premio-link">Ver mi colección</a>
+      </div>
+
       <div style="text-align:center; margin-top:16px;">
         <button type="button" class="btn-submit" id="btnOtra">Jugar de nuevo</button>
       </div>
@@ -49,6 +58,7 @@
 
 </div>
 
+<script src="js/cartas.js"></script>
 <script>
 (function () {
 
@@ -118,12 +128,18 @@
       opciones: ['1955', '1967', '1975', '1990'], correcta: 1 }
   ];
 
-  var TOTAL = 10;   // cuántas preguntas se muestran por partida
+  var TOTAL = 10;          // cuántas preguntas se muestran por partida
+  var MINIMO_PREMIO = 8;   // aciertos necesarios para ganar una carta
 
   var contenedor = document.getElementById('preguntas');
   var resultado  = document.getElementById('resultado');
   var marcador   = document.getElementById('marcador');
   var mensaje    = document.getElementById('mensajeResultado');
+
+  var premio       = document.getElementById('premio');
+  var premioImg    = document.getElementById('premioImg');
+  var premioNombre = document.getElementById('premioNombre');
+  var premioEstado = document.getElementById('premioEstado');
 
   var seleccionadas = [];
   var bloqueada = false;   // true cuando ya se envió la partida
@@ -147,6 +163,7 @@
     bloqueada = false;
     contenedor.classList.remove('esta-bloqueada');
     document.getElementById('btnEnviar').disabled = false;
+    premio.style.display = 'none';
 
     seleccionadas = barajar(BANCO.slice()).slice(0, TOTAL);
 
@@ -200,16 +217,35 @@
 
     marcador.textContent = aciertos + ' / ' + TOTAL;
 
-    if (aciertos === TOTAL) {
-      mensaje.textContent = '¡Perfecto! Desbloqueaste una carta nueva.';
-    } else if (aciertos >= Math.ceil(TOTAL * 0.6)) {
-      mensaje.textContent = 'Bien, pero necesitas ' + TOTAL + ' de ' + TOTAL + ' para ganar una carta.';
+    // De 8 aciertos en adelante se gana una carta al azar.
+    // Puede tocar una que el jugador ya tenga.
+    if (aciertos >= MINIMO_PREMIO) {
+      if (aciertos === TOTAL) {
+        mensaje.textContent = '¡Perfecto! Ganaste una carta.';
+      } else {
+        mensaje.textContent = '¡Muy bien! Ganaste una carta.';
+      }
+      entregarCarta();
     } else {
-      mensaje.textContent = 'Repasa las secciones de historia y equipos, y vuelve a intentarlo.';
+      mensaje.textContent = 'Necesitas al menos ' + MINIMO_PREMIO + ' aciertos para ganar una carta. Repasa las secciones de historia y equipos.';
+      premio.style.display = 'none';
     }
 
     resultado.classList.remove('oculto');
     resultado.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Entrega la carta y la muestra en pantalla
+  function entregarCarta() {
+    var ganada = Cartas.darAleatoria();
+
+    premioImg.src = Cartas.rutaThumb(ganada.carta.id);
+    premioImg.alt = ganada.carta.nombre;
+    premioNombre.textContent = ganada.carta.nombre;
+    premioEstado.textContent = ganada.esNueva
+      ? '¡Carta nueva para tu colección!'
+      : 'Ya tenías esta carta, ahora tienes una repetida.';
+    premio.style.display = '';
   }
 
   // Deja las respuestas fijas: ya no se pueden cambiar tras enviar
