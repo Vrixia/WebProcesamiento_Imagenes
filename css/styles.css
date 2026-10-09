@@ -1034,8 +1034,9 @@ html.sin-splash .menu-screen{
   margin-bottom:10px;
   color:#fff;
 }
-/* El <video> llena el recuadro. El filtro de COLOR se le pone al <video>
-   (no al recuadro) para que no tiña ni desenfoque las capas de efectos. */
+/* El <video> llena su lienzo (ver REPRODUCTOR PROPIO). El filtro de COLOR
+   se le pone al <video> y no al recuadro, para que no tiña ni desenfoque
+   las capas de efectos. */
 .video-stage video{
   width:100%;
   height:100%;
@@ -1184,8 +1185,8 @@ html.sin-splash .menu-screen{
   position:absolute;
   left:50%;
   top:0;
-  width:40px;
-  height:40px;
+  width:17%;               /* en proporción, para que crezca en pantalla completa */
+  aspect-ratio:1 / 1;
   transform:translate(-50%,-50%);
   border-radius:50%;
   background:radial-gradient(circle,
@@ -1273,12 +1274,12 @@ html.sin-splash .menu-screen{
 /* 4. Letrero de transmisión con el punto rojo parpadeando */
 .fx-envivo{
   position:absolute;
-  top:8px;
-  left:8px;
+  top:3.8%;                /* en % y em para que todo crezca junto */
+  left:2.15%;
   align-items:center;
-  gap:5px;
-  padding:4px 8px 4px 7px;
-  border-radius:4px;
+  gap:.5em;
+  padding:.42em .8em .42em .7em;
+  border-radius:.4em;
   background:rgba(8,8,14,.68);
   color:#fff;
   font-family:var(--font-display);
@@ -1288,8 +1289,8 @@ html.sin-splash .menu-screen{
   animation:fxAparecer .4s ease-out;
 }
 .fx-envivo i{
-  width:7px;
-  height:7px;
+  width:.7em;
+  height:.7em;
   border-radius:50%;
   background:#ff2b2b;
   box-shadow:0 0 6px #ff2b2b;
@@ -1299,3 +1300,163 @@ html.sin-splash .menu-screen{
   0%, 100%{ opacity:1; }
   50%     { opacity:.25; }
 }
+
+/* ---------- Video en pausa: el deportivo se queda quieto ----------
+   js/filtros.js le pone la clase fx-pausado al recuadro mientras el video
+   está en pausa. animation-play-state:paused congela cada animación justo
+   donde va, y al quitar la clase siguen desde ese mismo punto.
+   Los reflectores tienen DOS animaciones (aparecer y balancearse): con
+   "running, paused" se deja terminar la de aparecer y se congela solo el
+   balanceo, para que se vean aunque se elija el filtro con el video quieto. */
+.fx-pausado .fx-reflector{ animation-play-state:running, paused; }
+.fx-pausado .fx-destello,
+.fx-pausado .fx-flash,
+.fx-pausado .fx-envivo i{ animation-play-state:paused; }
+
+/* =====================================================================
+   REPRODUCTOR PROPIO (js/reproductor.js)
+   ---------------------------------------------------------------------
+   Los controles del navegador agrandaban solo el <video> en pantalla
+   completa y dejaban fuera las capas de efectos. Estos controles ponen
+   en pantalla completa el recuadro entero, con video y capas.
+   ===================================================================== */
+
+/* El lienzo envuelve al video y a su capa de efectos */
+.rep-lienzo{
+  position:relative;
+  width:100%;
+  height:100%;
+  cursor:pointer;
+  touch-action:manipulation;   /* dos toques rápidos no hacen zoom a la página */
+}
+
+/* Botón grande del centro: solo se ve con el video en pausa */
+.rep-centro{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:58px;
+  height:58px;
+  margin:-29px 0 0 -29px;
+  padding:0;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.85);
+  background:rgba(10,10,18,.55);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:3;               /* encima de las capas de efectos */
+  opacity:0;
+  pointer-events:none;
+  transform:scale(.85);
+  transition:opacity .2s ease, transform .2s ease;
+}
+.rep-centro svg{
+  width:30px;
+  height:30px;
+  fill:currentColor;
+  margin-left:3px;         /* el triángulo de play se ve más centrado así */
+}
+.rep-pausado .rep-centro{
+  opacity:1;
+  pointer-events:auto;
+  transform:scale(1);
+}
+
+/* Barra de abajo: play, avance, tiempo, sonido y pantalla completa */
+.rep-controles{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:22px 6px 4px;
+  /* degradado oscuro para que los íconos blancos se lean sobre cualquier imagen */
+  background:linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0));
+  transition:opacity .25s ease;
+}
+.rep-btn{
+  flex-shrink:0;
+  width:34px;
+  height:34px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:transparent;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.rep-btn svg{
+  width:21px;
+  height:21px;
+  fill:currentColor;
+}
+.rep-btn:active{ background:rgba(255,255,255,.18); }
+@media (hover:hover){
+  .rep-btn:hover{ background:rgba(255,255,255,.14); }
+}
+.rep-avance{
+  flex:1;
+  min-width:0;
+  height:18px;
+  margin:0 4px;
+  accent-color:var(--red-seam);   /* pinta la barra con el rojo de la app */
+  cursor:pointer;
+}
+.rep-tiempo{
+  flex-shrink:0;
+  margin-right:2px;
+  font-size:.7rem;
+  font-variant-numeric:tabular-nums;   /* los números no "bailan" al cambiar */
+  color:rgba(255,255,255,.92);
+  white-space:nowrap;
+}
+
+/* Mientras se reproduce y nadie mueve nada, la barra se esconde */
+.rep-oculto .rep-controles{
+  opacity:0;
+  pointer-events:none;
+}
+.rep-oculto .rep-lienzo{ cursor:none; }
+
+/* ---------- Pantalla completa (real o simulada) ---------- */
+.video-stage.rep-pantalla{
+  border-radius:0;
+  margin:0;
+}
+
+/* Simulada (iPhone, que no deja agrandar nada más que el video solo):
+   el recuadro se estira sobre toda la ventana */
+.video-stage.rep-pantalla-simulada{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  aspect-ratio:auto;
+  z-index:1000;
+  touch-action:none;
+}
+/* ...y la página de atrás no se desplaza mientras tanto */
+html.rep-sin-scroll .app-main{ overflow:hidden; }
+
+/* A esa escala, los controles y el letrero crecen un poco */
+.rep-pantalla .rep-controles{
+  gap:10px;
+  padding:40px 18px 14px;
+}
+.rep-pantalla .rep-btn{ width:46px; height:46px; }
+.rep-pantalla .rep-btn svg{ width:28px; height:28px; }
+.rep-pantalla .rep-tiempo{ font-size:.95rem; }
+.rep-pantalla .rep-centro{
+  width:84px;
+  height:84px;
+  margin:-42px 0 0 -42px;
+}
+.rep-pantalla .rep-centro svg{ width:44px; height:44px; }
+.rep-pantalla .fx-envivo{ font-size:clamp(.68rem, 1.4vw, 1.2rem); }
