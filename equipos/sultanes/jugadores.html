@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../css/styles.css">
+<script src="../../js/animaciones.js"></script>
 </head>
 <body class="team-sultanes">
 
@@ -21,29 +22,434 @@
   <main class="app-main">
 
     <h1 class="section-title">Jugadores</h1>
+    <p class="body-text">El roster completo de Sultanes de Monterrey: 36 jugadores. Las cifras son de la temporada regular 2026.</p>
 
-    <p class="body-text">Cinco jugadores del roster de la temporada 2026.</p>
+    <!-- Índice de posiciones: cada enlace baja a su sección -->
+    <nav class="roster-indice" aria-label="Posiciones">
+      <a href="#lanzadores">Lanzadores <span>20</span></a>
+      <a href="#receptores">Receptores <span>4</span></a>
+      <a href="#cuadro">Cuadro <span>9</span></a>
+      <a href="#jardineros">Jardineros <span>3</span></a>
+    </nav>
 
-    <div class="player-card">
-      <div><h3>Josh Lester</h3><p class="body-text" style="margin:0;">Primera base &middot; Líder de jonrones del equipo en 2026, con 15.</p></div>
-      <div class="img-placeholder">Foto Lester</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Gustavo Nuñez</h3><p class="body-text" style="margin:0;">Shortstop &middot; Mejor promedio de bateo del equipo: .321, con 30 bases robadas.</p></div>
-      <div class="img-placeholder">Foto Nuñez</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Ramiro Peña</h3><p class="body-text" style="margin:0;">Tercera base &middot; Veterano con experiencia en Grandes Ligas con los Yankees.</p></div>
-      <div class="img-placeholder">Foto Peña</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Omar Narváez</h3><p class="body-text" style="margin:0;">Receptor &middot; Receptor venezolano con más de 500 juegos en Grandes Ligas.</p></div>
-      <div class="img-placeholder">Foto Narváez</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Manny Bañuelos</h3><p class="body-text" style="margin:0;">Lanzador &middot; Zurdo mexicano, selección nacional y ex prospecto de los Yankees.</p></div>
-      <div class="img-placeholder">Foto Bañuelos</div>
-    </div>
+    <section class="roster-grupo" id="lanzadores">
+      <h2 class="subsection-title">Lanzadores <small>20</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/alejandro-castro.webp" alt="Alejandro Castro" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#46</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Alejandro Castro</h3>
+            <p class="jugador-pos">Lanzador derecho · Cuba</p>
+            <p class="jugador-texto">Nacido en La Habana; subió al equipo grande en mayo. Relevista: 28 juegos y 46 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/alexis-vera.webp" alt="Alexis Vera" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#28</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Alexis Vera</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Relevista: 29 juegos, 0.39 de efectividad y 22 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/alonso-becerra.webp" alt="Alonso Becerra" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#66</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Alonso Becerra</h3>
+            <p class="jugador-pos">Lanzador · México</p>
+            <p class="jugador-texto">Abrió 5 de sus 25 juegos: marca de 1-1 y 5.31 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/chris-ellis.webp" alt="Chris Ellis" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#75</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Chris Ellis</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Cerrador del equipo: 20 salvamentos y 2.79 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/daniel-cruz.webp" alt="Daniel Cruz" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#80</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Daniel Cruz</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Abrió 11 de sus 22 juegos: marca de 3-3 y 4.07 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/daniel-mengden.webp" alt="Daniel Mengden" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#73</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Daniel Mengden</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Abrió 5 juegos con Sultanes (2-2) y 14 con Tecos, donde tuvo 5-1 y 2.31 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/geovani-lucero.webp" alt="Geovani Lucero" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#82</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Geovani Lucero</h3>
+            <p class="jugador-pos">Lanzador derecho</p>
+            <p class="jugador-texto">El más joven del roster: nació en noviembre de 2005. No lanzó con el equipo grande en la temporada.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/geronimo-franzua.webp" alt="Gerónimo Franzua" width="360" height="360" loading="lazy" decoding="async">
+          </div>
+          <div class="jugador-info">
+            <h3>Gerónimo Franzua</h3>
+            <p class="jugador-pos">Lanzador zurdo · República Dominicana</p>
+            <p class="jugador-texto">Relevista: 34 juegos, 4.88 de efectividad y 24 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/jacob-higginbotham.webp" alt="Jacob Higginbotham" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#12</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Jacob Higginbotham</h3>
+            <p class="jugador-pos">Lanzador zurdo · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 18 juegos, 3.68 de efectividad y 19 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/jesus-pirela.webp" alt="Jesús Pirela" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#41</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Jesús Pirela</h3>
+            <p class="jugador-pos">Lanzador derecho · Venezuela</p>
+            <p class="jugador-texto">Relevista: 15 juegos, 4.73 de efectividad y 9 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/joe-riley.webp" alt="Joe Riley" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#99</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Joe Riley</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 9 juegos, 7.59 de efectividad y 12 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/jose-miranda.webp" alt="José Miranda" width="360" height="360" loading="lazy" decoding="async">
+          </div>
+          <div class="jugador-info">
+            <h3>José Miranda</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Relevista: 7 juegos, 7.53 de efectividad y 14 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/juan-gamez.webp" alt="Juan Gámez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#43</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Juan Gámez</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 23 juegos, 9.30 de efectividad y 11 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/junior-fernandez.webp" alt="Junior Fernández" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#97</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Junior Fernández</h3>
+            <p class="jugador-pos">Lanzador derecho · República Dominicana</p>
+            <p class="jugador-texto">Lanzó en 1 juego (1 entrada).</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/justus-sheffield.webp" alt="Justus Sheffield" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#61</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Justus Sheffield</h3>
+            <p class="jugador-pos">Lanzador zurdo · Estados Unidos</p>
+            <p class="jugador-texto">Abridor: marca de 5-2, 3.83 de efectividad y 33 ponches en 12 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/manny-banuelos.webp" alt="Manny Bañuelos" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#92</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Manny Bañuelos</h3>
+            <p class="jugador-pos">Lanzador zurdo · México</p>
+            <p class="jugador-texto">Zurdo de la selección mexicana. Sus 7 victorias fueron las más del equipo.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/manuel-urias.webp" alt="Manuel Urías" width="360" height="360" loading="lazy" decoding="async">
+          </div>
+          <div class="jugador-info">
+            <h3>Manuel Urías</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Abridor: marca de 1-0, 2.70 de efectividad y 6 ponches en 2 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/oliver-ortega.webp" alt="Oliver Ortega" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#44</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Oliver Ortega</h3>
+            <p class="jugador-pos">Lanzador derecho · República Dominicana</p>
+            <p class="jugador-texto">Relevista: 32 juegos, 3.27 de efectividad y 44 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/richard-rodriguez.webp" alt="Richard Rodríguez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#48</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Richard Rodríguez</h3>
+            <p class="jugador-pos">Lanzador derecho · República Dominicana</p>
+            <p class="jugador-texto">Relevista: 21 juegos, 3.72 de efectividad y 22 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/ronaldo-alesandro.webp" alt="Ronaldo Alesandro" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#54</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Ronaldo Alesandro</h3>
+            <p class="jugador-pos">Lanzador derecho · República Dominicana</p>
+            <p class="jugador-texto">Relevista: 49 juegos, 3.50 de efectividad y 38 ponches.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="receptores">
+      <h2 class="subsection-title">Receptores <small>4</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/carlos-soto.webp" alt="Carlos Soto" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#8</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Carlos Soto</h3>
+            <p class="jugador-pos">Receptor · México</p>
+            <p class="jugador-texto">Bateó .235 con 3 jonrones en 26 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/omar-narvaez.webp" alt="Omar Narváez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#38</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Omar Narváez</h3>
+            <p class="jugador-pos">Receptor · Venezuela</p>
+            <p class="jugador-texto">Receptor con más de 500 juegos en Grandes Ligas. Bateó .358 en 33 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/omar-renteria.webp" alt="Omar Rentería" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#40</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Omar Rentería</h3>
+            <p class="jugador-pos">Receptor · México</p>
+            <p class="jugador-texto">Bateó .167 con 1 jonrón en 10 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/ricardo-genoves.webp" alt="Ricardo Genovés" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#39</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Ricardo Genovés</h3>
+            <p class="jugador-pos">Receptor · Venezuela</p>
+            <p class="jugador-texto">Bateó .268 con 3 jonrones y 29 producidas en 56 juegos.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="cuadro">
+      <h2 class="subsection-title">Cuadro interior <small>9</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/gustavo-nunez.webp" alt="Gustavo Nuñez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#4</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Gustavo Nuñez</h3>
+            <p class="jugador-pos">Shortstop · República Dominicana</p>
+            <p class="jugador-texto">El mejor promedio del equipo (.321), además de 30 bases robadas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/javier-salazar.webp" alt="Javier Salazar" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#2</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Javier Salazar</h3>
+            <p class="jugador-pos">Cuadro interior · México</p>
+            <p class="jugador-texto">Bateó .245 con 4 jonrones y 24 producidas en 60 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/johan-lopez.webp" alt="Johan López" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#3</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Johan López</h3>
+            <p class="jugador-pos">Cuadro interior · México</p>
+            <p class="jugador-texto">Bateó .195 en 35 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/josh-lester.webp" alt="Josh Lester" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#58</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Josh Lester</h3>
+            <p class="jugador-pos">Primera base · Estados Unidos</p>
+            <p class="jugador-texto">Líder de jonrones del equipo: bateó .290 con 15 y 51 producidas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/luis-santos.webp" alt="Luis Santos" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#62</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Luis Santos</h3>
+            <p class="jugador-pos">Shortstop · México</p>
+            <p class="jugador-texto">Bateó .257 con 1 jonrón en 24 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/maikel-franco.webp" alt="Maikel Franco" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#65</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Maikel Franco</h3>
+            <p class="jugador-pos">Tercera base · República Dominicana</p>
+            <p class="jugador-texto">Bateó .272 con 3 jonrones y 15 producidas en 33 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/ramiro-pena.webp" alt="Ramiro Peña" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#19</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Ramiro Peña</h3>
+            <p class="jugador-pos">Tercera base · México</p>
+            <p class="jugador-texto">Veterano con experiencia en Grandes Ligas con los Yankees. Bateó .261 con 6 jonrones.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/victor-mendoza.webp" alt="Víctor Mendoza" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#25</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Víctor Mendoza</h3>
+            <p class="jugador-pos">Primera base · México</p>
+            <p class="jugador-texto">Bateó .289 con 13 jonrones y 67 producidas en 87 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/yonny-hernandez.webp" alt="Yonny Hernández" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#29</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Yonny Hernández</h3>
+            <p class="jugador-pos">Shortstop · Venezuela</p>
+            <p class="jugador-texto">Jugó 3 juegos.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="jardineros">
+      <h2 class="subsection-title">Jardineros <small>3</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/harold-ramirez.webp" alt="Harold Ramírez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#45</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Harold Ramírez</h3>
+            <p class="jugador-pos">Jardín derecho · Colombia</p>
+            <p class="jugador-texto">Bateó .411 en 27 juegos con Sultanes; también jugó 66 con Tecos, donde bateó .350.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/hector-jacquez.webp" alt="Héctor Jacquez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#79</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Héctor Jacquez</h3>
+            <p class="jugador-pos">Jardinero · México</p>
+            <p class="jugador-texto">Participó en 37 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto jugador-foto--recorte">
+            <img src="../../imagenes/Jugadores/thumbs/sultanes/socrates-brito.webp" alt="Sócrates Brito" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#30</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Sócrates Brito</h3>
+            <p class="jugador-pos">Jardín derecho · República Dominicana</p>
+            <p class="jugador-texto">Bateó .261 con 8 jonrones y 37 producidas en 91 juegos.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <p class="roster-fuente">Estadísticas oficiales de la Liga Mexicana de Beisbol, temporada regular 2026.</p>
 
   </main>
 

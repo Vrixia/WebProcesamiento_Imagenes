@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../css/styles.css">
+<script src="../../js/animaciones.js"></script>
 </head>
 <body class="team-algodoneros">
 
@@ -21,29 +22,435 @@
   <main class="app-main">
 
     <h1 class="section-title">Jugadores</h1>
+    <p class="body-text">El roster completo de Algodoneros de Unión Laguna: 36 jugadores. Las cifras son de la temporada regular 2026.</p>
 
-    <p class="body-text">Cinco jugadores del roster de la temporada 2026.</p>
+    <!-- Índice de posiciones: cada enlace baja a su sección -->
+    <nav class="roster-indice" aria-label="Posiciones">
+      <a href="#lanzadores">Lanzadores <span>19</span></a>
+      <a href="#receptores">Receptores <span>3</span></a>
+      <a href="#cuadro">Cuadro <span>7</span></a>
+      <a href="#jardineros">Jardineros <span>7</span></a>
+    </nav>
 
-    <div class="player-card">
-      <div><h3>Mason Martin</h3><p class="body-text" style="margin:0;">Primera base &middot; Líder de jonrones y de producidas del equipo en 2026: 18 y 68.</p></div>
-      <div class="img-placeholder">Foto Martin</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Albert Lara</h3><p class="body-text" style="margin:0;">Cuadro interior &middot; Mejor promedio del equipo: .344, y líder en carreras anotadas con 68.</p></div>
-      <div class="img-placeholder">Foto Lara</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Didi Gregorius</h3><p class="body-text" style="margin:0;">Shortstop &middot; Shortstop neerlandés con nueve temporadas en Grandes Ligas, la mayoría con los Yankees.</p></div>
-      <div class="img-placeholder">Foto Gregorius</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Edward Olivares</h3><p class="body-text" style="margin:0;">Jardín derecho &middot; Jardinero venezolano con paso por Padres, Royals y Pirates.</p></div>
-      <div class="img-placeholder">Foto Olivares</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Aldo Montes</h3><p class="body-text" style="margin:0;">Lanzador &middot; Lanzador mexicano formado en la propia Liga Mexicana de Beisbol.</p></div>
-      <div class="img-placeholder">Foto Montes</div>
-    </div>
+    <section class="roster-grupo" id="lanzadores">
+      <h2 class="subsection-title">Lanzadores <small>19</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/aldo-montes.webp" alt="Aldo Montes" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#37</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Aldo Montes</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Abridor: marca de 1-4, 7.54 de efectividad y 40 ponches en 12 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/austin-pope.webp" alt="Austin Pope" width="360" height="360" loading="lazy" decoding="async">
+          </div>
+          <div class="jugador-info">
+            <h3>Austin Pope</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 37 juegos, 3.82 de efectividad y 29 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/cristhofer-lozoya.webp" alt="Cristhofer Lozoya" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#90</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Cristhofer Lozoya</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Relevista: 5 juegos, 8.53 de efectividad y 3 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/dario-agrazal.webp" alt="Darío Agrazal" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#38</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Darío Agrazal</h3>
+            <p class="jugador-pos">Lanzador derecho · Panamá</p>
+            <p class="jugador-texto">Abridor: marca de 0-2, 9.33 de efectividad y 9 ponches en 5 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/fabian-cota.webp" alt="Fabián Cota" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#32</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Fabián Cota</h3>
+            <p class="jugador-pos">Lanzador zurdo · México</p>
+            <p class="jugador-texto">Relevista: 12 juegos, 6.23 de efectividad y 4 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/fernando-abad.webp" alt="Fernando Abad" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#60</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Fernando Abad</h3>
+            <p class="jugador-pos">Lanzador zurdo · República Dominicana</p>
+            <p class="jugador-texto">Relevista: 13 juegos, 5.40 de efectividad y 6 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/hector-perez.webp" alt="Héctor Pérez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#8</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Héctor Pérez</h3>
+            <p class="jugador-pos">Lanzador derecho · República Dominicana</p>
+            <p class="jugador-texto">Abrió 5 de sus 24 juegos: marca de 2-3 y 5.93 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/jacob-barnes.webp" alt="Jacob Barnes" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#67</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Jacob Barnes</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 47 juegos, 1.94 de efectividad y 45 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/jaime-barria.webp" alt="Jaime Barría" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#51</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Jaime Barría</h3>
+            <p class="jugador-pos">Lanzador derecho · Panamá</p>
+            <p class="jugador-texto">Abridor: marca de 3-6, 6.23 de efectividad y 38 ponches en 16 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/joel-rangel.webp" alt="Joel Rangel" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#30</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Joel Rangel</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Relevista: 13 juegos, 3.50 de efectividad y 11 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/jose-torres.webp" alt="José Torres" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#76</span>
+          </div>
+          <div class="jugador-info">
+            <h3>José Torres</h3>
+            <p class="jugador-pos">Lanzador zurdo · Venezuela</p>
+            <p class="jugador-texto">Relevista: 22 juegos, 6.23 de efectividad y 22 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/lupe-chavez.webp" alt="Lupe Chávez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#98</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Lupe Chávez</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Abrió 5 de sus 38 juegos: marca de 2-4 y 5.79 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/matt-foster.webp" alt="Matt Foster" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#80</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Matt Foster</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Cerrador del equipo: 18 salvamentos y 2.74 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/miguel-leon.webp" alt="Miguel León" width="360" height="360" loading="lazy" decoding="async">
+          </div>
+          <div class="jugador-info">
+            <h3>Miguel León</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Lanzó en 4 juegos (2 2/3 entradas).</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/miguel-vazquez.webp" alt="Miguel Vázquez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#56</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Miguel Vázquez</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Relevista: 36 juegos, 5.30 de efectividad y 24 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/omar-araujo.webp" alt="Omar Araujo" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#46</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Omar Araujo</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Relevista: 31 juegos, 6.23 de efectividad y 35 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/ricardo-sanchez.webp" alt="Ricardo Sánchez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#57</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Ricardo Sánchez</h3>
+            <p class="jugador-pos">Lanzador zurdo · Venezuela</p>
+            <p class="jugador-texto">Abridor: marca de 3-4, 6.30 de efectividad y 52 ponches en 12 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/thomas-mcilraith.webp" alt="Thomas McIlraith" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#95</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Thomas McIlraith</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 44 juegos, 1.97 de efectividad y 51 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/touki-toussaint.webp" alt="Touki Toussaint" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#88</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Touki Toussaint</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Abridor: marca de 5-4, 6.16 de efectividad y 65 ponches en 18 aperturas.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="receptores">
+      <h2 class="subsection-title">Receptores <small>3</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/dean-nevarez.webp" alt="Dean Nevárez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#5</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Dean Nevárez</h3>
+            <p class="jugador-pos">Receptor · México</p>
+            <p class="jugador-texto">Bateó .229 con 4 jonrones y 26 producidas en 60 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/hendrik-clementina.webp" alt="Hendrik Clementina" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#12</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Hendrik Clementina</h3>
+            <p class="jugador-pos">Receptor · Curazao</p>
+            <p class="jugador-texto">Bateó .236 con 4 producidas en 31 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/joseph-sequera.webp" alt="Joseph Sequera" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#70</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Joseph Sequera</h3>
+            <p class="jugador-pos">Receptor · México</p>
+            <p class="jugador-texto">Jugó 5 juegos.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="cuadro">
+      <h2 class="subsection-title">Cuadro interior <small>7</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/adrian-tovalin.webp" alt="Adrian Tovalin" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#99</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Adrian Tovalin</h3>
+            <p class="jugador-pos">Primera base · Estados Unidos</p>
+            <p class="jugador-texto">Bateó .241 con 3 jonrones en 28 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/albert-lara.webp" alt="Albert Lara" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#62</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Albert Lara</h3>
+            <p class="jugador-pos">Cuadro interior · Cuba</p>
+            <p class="jugador-texto">El mejor promedio del equipo (.344), con 11 jonrones y 55 producidas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/didi-gregorius.webp" alt="Didi Gregorius" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#18</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Didi Gregorius</h3>
+            <p class="jugador-pos">Shortstop · Países Bajos</p>
+            <p class="jugador-texto">Fue el shortstop titular de los Yankees de 2015 a 2019.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/eguy-rosario.webp" alt="Eguy Rosario" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#13</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Eguy Rosario</h3>
+            <p class="jugador-pos">Tercera base · República Dominicana</p>
+            <p class="jugador-texto">Bateó .273 con 12 jonrones y 40 producidas en 59 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/emmanuel-rivera.webp" alt="Emmanuel Rivera" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#26</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Emmanuel Rivera</h3>
+            <p class="jugador-pos">Tercera base · Puerto Rico</p>
+            <p class="jugador-texto">Bateó .263 con 6 jonrones y 31 producidas en 63 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/isan-diaz.webp" alt="Isan Díaz" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#1</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Isan Díaz</h3>
+            <p class="jugador-pos">Segunda base · Puerto Rico</p>
+            <p class="jugador-texto">Bateó .300 con 11 jonrones y 49 producidas en 87 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/mason-martin.webp" alt="Mason Martin" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#31</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Mason Martin</h3>
+            <p class="jugador-pos">Primera base · Estados Unidos</p>
+            <p class="jugador-texto">Líder del equipo en jonrones (18) y carreras producidas (68).</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="jardineros">
+      <h2 class="subsection-title">Jardineros <small>7</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/alberth-martinez.webp" alt="Alberth Martínez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#27</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Alberth Martínez</h3>
+            <p class="jugador-pos">Jardín central · Venezuela</p>
+            <p class="jugador-texto">Bateó .230 con 3 jonrones y 14 producidas en 39 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/edgar-robles.webp" alt="Edgar Robles" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#66</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Edgar Robles</h3>
+            <p class="jugador-pos">Jardinero · México</p>
+            <p class="jugador-texto">Bateó .282 con 13 producidas en 57 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/edward-olivares.webp" alt="Edward Olivares" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#53</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Edward Olivares</h3>
+            <p class="jugador-pos">Jardín derecho · Venezuela</p>
+            <p class="jugador-texto">Con pasado en Grandes Ligas con Padres, Royals y Pirates. Bateó .315.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/julian-escobedo.webp" alt="Julian Escobedo" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#3</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Julian Escobedo</h3>
+            <p class="jugador-pos">Jardín central · Estados Unidos</p>
+            <p class="jugador-texto">Bateó .247 con 8 jonrones y 30 producidas en 84 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/ramon-mora.webp" alt="Ramón Mora" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#2</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Ramón Mora</h3>
+            <p class="jugador-pos">Jardinero · México</p>
+            <p class="jugador-texto">Jugó 7 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/valentin-hernandez.webp" alt="Valentín Hernández" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#54</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Valentín Hernández</h3>
+            <p class="jugador-pos">Jardinero · México</p>
+            <p class="jugador-texto">Bateó .280 con 1 jonrón y 3 producidas en 39 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/algodoneros/yadir-drake.webp" alt="Yadir Drake" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#33</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Yadir Drake</h3>
+            <p class="jugador-pos">Jardinero · Cuba</p>
+            <p class="jugador-texto">Bateó .342 con 5 jonrones y 35 producidas en 54 juegos.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <p class="roster-fuente">Estadísticas oficiales de la Liga Mexicana de Beisbol, temporada regular 2026.</p>
 
   </main>
 

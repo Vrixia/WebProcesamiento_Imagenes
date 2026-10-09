@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<script src="js/animaciones.js"></script>
 <script>
   // Se ejecuta antes de dibujar nada. Si el splash ya se vio en esta sesion,
   // marca el <html> y el CSS se encarga de enseñar el menú de una vez.
@@ -127,9 +128,24 @@
   }
 
   function mostrarMenu() {
+    if (splash.classList.contains('saliendo')) return;   // ya se picó
+    recordar();
+
+    // Con "reducir movimiento" se cambia de golpe; si no, el splash se
+    // agranda y se desvanece (animación .saliendo del CSS) y luego aparece el menú
+    var reducir = window.matchMedia &&
+                  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducir) {
+      cambiarAlMenu();
+    } else {
+      splash.classList.add('saliendo');
+      setTimeout(cambiarAlMenu, 330);   // lo mismo que dura la animación
+    }
+  }
+
+  function cambiarAlMenu() {
     splash.classList.add('is-hidden');
     menu.classList.add('is-visible');
-    recordar();
   }
 
   if (yaLoVio()) {
