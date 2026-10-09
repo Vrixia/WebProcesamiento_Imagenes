@@ -7,6 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<script>
+  // Se ejecuta antes de dibujar nada. Si el splash ya se vio en esta sesion,
+  // marca el <html> y el CSS se encarga de enseñar el menú de una vez.
+  try {
+    if (sessionStorage.getItem('beisbarSplashVisto') === 'si') {
+      document.documentElement.className += ' sin-splash';
+    }
+  } catch (e) {}
+</script>
 </head>
 <body>
 
@@ -19,7 +28,7 @@
     </div>
 
     <div class="splash-logo">
-      <img src="imagenes/LogoBeisbARLetrasrz.png">
+      <img src="imagenes/LogoBeisbARLetrasrz.png" alt="BéisbAR MX">
     </div>
     <p class="splash-tap">Pica en cualquier lugar para continuar</p>
   </div>
@@ -29,17 +38,12 @@
 
     <header class="app-header header--navy">
       <div class="imgheader">
-        <img src="imagenes/LogoBeisbARLetrasrz.png">
+        <a href="index.html" aria-label="Ir al inicio"><img src="imagenes/LogoBeisbARLetrasrz.png" alt="BéisbAR MX"></a>
       </div>
       
     </header>
 
     <main class="app-main" style="position:relative;">
-
-      <!-- Botón flotante de ayuda -->
-      <a href="ayuda.html" class="ayuda-fab" aria-label="Ayuda">
-        <img src="imagenes/ayuda.png" alt="Ayuda">
-      </a>
 
       <!-- Fila superior: Trivia + acceso a Colección de cartas -->
       <div class="menu-top-row">
@@ -86,17 +90,58 @@
       </div>
 
     </main>
+
+    <!-- Botón de ayuda. Cuelga de .menu-screen para quedarse fijo mientras
+         el contenido hace scroll (y para no aparecer encima del splash). -->
+    <a href="ayuda.html" class="ayuda-fab" aria-label="Ayuda">
+      <img src="imagenes/ayuda.png" alt="Ayuda">
+    </a>
   </div>
 
 </div>
 
 <script>
-  // Única interacción funcional de esta pantalla: tocar el splash pasa al menú principal.
-  document.getElementById('splashScreen').addEventListener('click', function () {
-    this.classList.add('is-hidden');
-    var menu = document.getElementById('menuScreen');
+/* ------------------------------------------------------------------
+   El splash (logo grande con el degradado vino) se muestra UNA sola
+   vez: cuando el usuario apenas abre la pagina web.
+
+   Se usa sessionStorage y no localStorage porque sessionStorage se
+   borra solo al cerrar la pestaña. Asi:
+     - Abre la web  -> ve el splash, pica, pasa al menu.
+     - Le da a Inicio desde cualquier pantalla -> entra directo al menu.
+     - Cierra la pestaña y vuelve a entrar -> ve el splash otra vez.
+------------------------------------------------------------------ */
+(function () {
+
+  var CLAVE  = 'beisbarSplashVisto';
+  var splash = document.getElementById('splashScreen');
+  var menu   = document.getElementById('menuScreen');
+
+  // sessionStorage puede fallar en modo incognito, por eso va en try/catch.
+  function yaLoVio() {
+    try { return sessionStorage.getItem(CLAVE) === 'si'; }
+    catch (e) { return false; }
+  }
+  function recordar() {
+    try { sessionStorage.setItem(CLAVE, 'si'); } catch (e) {}
+  }
+
+  function mostrarMenu() {
+    splash.classList.add('is-hidden');
     menu.classList.add('is-visible');
-  });
+    recordar();
+  }
+
+  if (yaLoVio()) {
+    // La clase 'sin-splash' del <head> ya enseñó el menú; solo falta
+    // dejar el estado consistente por si algo consulta las clases.
+    splash.classList.add('is-hidden');
+    menu.classList.add('is-visible');
+  } else {
+    splash.addEventListener('click', mostrarMenu);
+  }
+
+})();
 </script>
 
 </body>

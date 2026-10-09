@@ -14,7 +14,7 @@
 
   <header class="app-header">
       <div class="imgheader">
-        <img src="imagenes/LogoBeisbARLetrasrz.png">
+        <a href="index.html" aria-label="Ir al inicio"><img src="imagenes/LogoBeisbARLetrasrz.png" alt="BéisbAR MX"></a>
       </div>
   </header>
 
@@ -33,13 +33,16 @@
 
     <p class="coleccion-aviso" id="aviso"></p>
 
-    <!-- Botón flotante para entrar al memorama -->
-    <a href="memorama.html" class="memorama-fab" aria-label="Entrar al memorama">
-      <!-- ICONO: mazo de cartas volteadas -->
-        <img src="imagenes/memorama.png">
-    </a>
+    <!-- Cartas repetidas: son las que se gastan para entrar al memorama -->
+    <p class="coleccion-repetidas" id="repetidas"></p>
 
   </main>
+
+  <!-- Botón del memorama. Cuelga de .phone-shell (no de .app-main) para que
+       se quede fijo en pantalla mientras el contenido hace scroll. -->
+  <a href="memorama.html" class="memorama-fab" aria-label="Entrar al memorama">
+    <img src="imagenes/memorama.png">
+  </a>
 
   <footer class="footer-bar">
     <a href="index.html">Inicio</a>
@@ -54,6 +57,7 @@
   var cuadricula = document.getElementById('cuadricula');
   var contador   = document.getElementById('contador');
   var aviso      = document.getElementById('aviso');
+  var repetidas  = document.getElementById('repetidas');
 
   function pintar() {
     cuadricula.innerHTML = '';
@@ -92,6 +96,10 @@
     } else {
       aviso.textContent = 'Te faltan ' + (Cartas.LISTA.length - tengo) + ' cartas por conseguir.';
     }
+
+    var comodines = Cartas.repetidas();
+    repetidas.textContent = 'Cartas repetidas: ' + comodines +
+      ' · cada partida de memorama cuesta ' + Cartas.COSTO_MEMORAMA + '.';
   }
 
   pintar();

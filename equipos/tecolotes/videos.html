@@ -14,7 +14,7 @@
 
   <header class="app-header header--team">
       <div class="imgheader">
-        <img src="../../imagenes/LogoBeisbARLetrasrz.png">
+        <a href="../../index.html" aria-label="Ir al inicio"><img src="../../imagenes/LogoBeisbARLetrasrz.png" alt="BéisbAR MX"></a>
       </div>
   </header>
 
@@ -22,30 +22,34 @@
 
     <h1 class="section-title">Videos</h1>
 
+    <p class="body-text">Pica los botones de abajo de cada video para cambiarle el filtro de color.</p>
+
+    <!-- Los dos huecos usan el mismo video de prueba (videos/test.mp4).
+         Para poner el definitivo basta con cambiar el src del <video>. -->
+
     <div class="video-card">
-      <h3>Título de video</h3>
-      <!-- VIDEO: aquí irá el elemento <video controls> con el clip real -->
+      <h3>Lo mejor de los Tecolotes en 2026</h3>
       <div class="video-stage">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <video src="../../videos/test.mp4" controls playsinline preload="metadata"></video>
       </div>
       <div class="video-filters">
-        <button aria-label="Filtro deportivo"><img src="../../imagenes/bate.png" alt=""></button>
-        <button aria-label="Filtro desenfoque"><img src="../../imagenes/borroso.png" alt=""></button>
-        <button aria-label="Filtro frío"><img src="../../imagenes/frio.png" alt=""></button>
-        <button aria-label="Filtro cálido"><img src="../../imagenes/calido.png" alt=""></button>
+        <button type="button" data-filtro="deportivo" aria-label="Filtro deportivo"><img src="../../imagenes/bate.png" alt=""></button>
+        <button type="button" data-filtro="borroso" aria-label="Filtro desenfoque"><img src="../../imagenes/borroso.png" alt=""></button>
+        <button type="button" data-filtro="frio" aria-label="Filtro frío"><img src="../../imagenes/frio.png" alt=""></button>
+        <button type="button" data-filtro="calido" aria-label="Filtro cálido"><img src="../../imagenes/calido.png" alt=""></button>
       </div>
     </div>
 
     <div class="video-card">
-      <h3>Título de video</h3>
+      <h3>Dos países, un mismo equipo</h3>
       <div class="video-stage">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <video src="../../videos/test.mp4" controls playsinline preload="metadata"></video>
       </div>
       <div class="video-filters">
-        <button aria-label="Filtro deportivo"><img src="../../imagenes/bate.png" alt=""></button>
-        <button aria-label="Filtro desenfoque"><img src="../../imagenes/borroso.png" alt=""></button>
-        <button aria-label="Filtro frío"><img src="../../imagenes/frio.png" alt=""></button>
-        <button aria-label="Filtro cálido"><img src="../../imagenes/calido.png" alt=""></button>
+        <button type="button" data-filtro="deportivo" aria-label="Filtro deportivo"><img src="../../imagenes/bate.png" alt=""></button>
+        <button type="button" data-filtro="borroso" aria-label="Filtro desenfoque"><img src="../../imagenes/borroso.png" alt=""></button>
+        <button type="button" data-filtro="frio" aria-label="Filtro frío"><img src="../../imagenes/frio.png" alt=""></button>
+        <button type="button" data-filtro="calido" aria-label="Filtro cálido"><img src="../../imagenes/calido.png" alt=""></button>
       </div>
     </div>
 
@@ -55,12 +59,14 @@
       <a href="../../index.html"><span class="icon"><img src="../../imagenes/inicio.png" alt="Inicio"></span>Inicio</a>
       <a href="equipo.html"><span class="icon"><img src="../../imagenes/equipo.png" alt="Equipo"></span>Equipo</a>
       <a href="jugadores.html"><span class="icon"><img src="../../imagenes/jugadores.png" alt="Jugadores"></span>Jugadores</a>
-      <a href="campeonatos.html" class="is-active"><span class="icon"><img src="../../imagenes/campeonatos.png" alt="Campeonatos"></span>Campeonatos</a>
-      <a href="videos.html"><span class="icon"><img src="../../imagenes/videos.png" alt="Videos"></span>Videos</a>
+      <a href="campeonatos.html"><span class="icon"><img src="../../imagenes/campeonatos.png" alt="Campeonatos"></span>Campeonatos</a>
+      <a href="videos.html" class="is-active"><span class="icon"><img src="../../imagenes/videos.png" alt="Videos"></span>Videos</a>
     </nav>
 
 
 </div>
+
+<script src="../../js/filtros.js"></script>
 
 </body>
 </html>

@@ -52,7 +52,12 @@ img{ max-width:100%; display:block; }
 /* ---------- Marco tipo "teléfono" que envuelve cada pantalla ---------- */
 .phone-shell{
   max-width:430px;
-  min-height:100vh;
+  /* Altura fija: asi el scroll ocurre DENTRO de .app-main y la barra
+     de abajo se queda siempre pegada al borde inferior de la pantalla.
+     100dvh es la altura real en celular (descuenta la barra del navegador);
+     100vh queda como respaldo para navegadores que no entiendan dvh. */
+  height:100vh;
+  height:100dvh;
   margin:0 auto;
   background:var(--bg-app);
   position:relative;
@@ -64,7 +69,9 @@ img{ max-width:100%; display:block; }
 @media (min-width:520px){
   body{ padding:32px 0; }
   .phone-shell{
-    min-height:844px;
+    height:844px;
+    max-height:calc(100vh - 64px);
+    max-height:calc(100dvh - 64px);
     border-radius:44px;
     box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 10px #050508;
     overflow:hidden;
@@ -114,8 +121,10 @@ img{ max-width:100%; display:block; }
 /* ---------- Contenido principal, con scroll ---------- */
 .app-main{
   flex:1;
-  padding:22px 20px 110px;
+  min-height:0;
+  padding:22px 20px 28px;
   overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
 }
 .linea-punteada{
   border: none;
@@ -246,8 +255,9 @@ img{ max-width:100%; display:block; }
 /* ---------- Botón flotante de ayuda (esquina inferior izquierda) ---------- */
 .ayuda-fab{
   position:absolute;
-  left:20px;
-  bottom:10px;
+  left:18px;
+  bottom:18px;
+  z-index:30;
   width:40px;
   height:40px;
   border-radius:50%;
@@ -420,7 +430,18 @@ p.body-text{
 }
 
 .menu-screen{ display:none; }
-.menu-screen.is-visible{ display:flex; flex-direction:column; flex:1; }
+
+/* Cuando el splash ya se vio en esta sesion, el <head> pone la clase
+   'sin-splash' en el <html> y se entra directo al menu, sin parpadeo. */
+html.sin-splash .splash-screen{ display:none; }
+html.sin-splash .menu-screen{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+  position:relative;
+}
+.menu-screen.is-visible{ display:flex; flex-direction:column; flex:1; min-height:0; position:relative; }
 .splash-screen.is-hidden{ display:none; }
 
 /* ---------- Colección de cartas ---------- */
@@ -487,10 +508,22 @@ p.body-text{
   color:var(--text-muted);
   text-align:center;
 }
+/* Renglón que dice cuántas cartas repetidas lleva el jugador */
+.coleccion-repetidas{
+  margin:8px 0 0;
+  font-size:.85rem;
+  line-height:1.5;
+  color:var(--text-muted);
+  text-align:center;
+}
+
 .memorama-fab{
   position:absolute;
-  right:20px;
-  bottom:96px;
+  right:18px;
+  /* 22% de la altura del marco = parte media de abajo.
+     El max() evita que se encime con la barra inferior en pantallas chicas. */
+  bottom:max(96px, 22%);
+  z-index:30;
   width:54px;
   height:54px;
   border-radius:50%;
@@ -646,6 +679,15 @@ p.body-text{
   color:var(--text-muted);
 }
 
+/* Botón de entrada apagado: no alcanzan las cartas repetidas.
+   pointer-events:none impide el clic incluso antes de que corra el JavaScript. */
+.memorama-cta.esta-apagada{
+  background:#4a4a58;
+  border-color:rgba(255,255,255,.25);
+  color:rgba(255,255,255,.55);
+  pointer-events:none;
+}
+
 .memorama-timer{
   text-align:center;
   font-family:var(--font-display);
@@ -787,6 +829,20 @@ p.body-text{
 .memorama-btn--suave{
   background:transparent;
   border:2px solid rgba(255,255,255,.35);
+}
+.memorama-btn:disabled{
+  opacity:.4;
+  cursor:default;
+}
+
+/* Cuántas cartas repetidas quedan, al terminar la partida */
+.memorama-saldo{
+  margin:4px 0 14px;
+  font-size:.85rem;
+  line-height:1.5;
+  color:rgba(255,255,255,.75);
+  text-align:center;
+  max-width:300px;
 }
 
 @keyframes latido{
@@ -970,14 +1026,23 @@ p.body-text{
   aspect-ratio:16/9;
   border-radius:var(--radius-md);
   background:var(--team, var(--red-seam));
-  opacity:.9;
   display:flex;
+  overflow:hidden;
   align-items:center;
   justify-content:center;
   margin-bottom:10px;
   color:#fff;
 }
 .video-stage svg{ width:44px; height:44px; }
+/* El <video> llena el recuadro. El filtro de color se aplica al recuadro
+   (.video-stage), por eso alcanza a todo lo que lleve adentro. */
+.video-stage video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  background:#000;
+}
 .video-filters{
   display:flex;
   gap:10px;
