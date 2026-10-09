@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../css/styles.css">
+<script src="../../js/animaciones.js"></script>
 </head>
 <body class="team-toros">
 
@@ -21,29 +22,348 @@
   <main class="app-main">
 
     <h1 class="section-title">Jugadores</h1>
+    <p class="body-text">El roster completo de Toros de Tijuana: 28 jugadores. Las cifras son de la temporada regular 2026.</p>
 
-    <p class="body-text">Cinco jugadores del roster de la temporada 2026.</p>
+    <!-- Índice de posiciones: cada enlace baja a su sección -->
+    <nav class="roster-indice" aria-label="Posiciones">
+      <a href="#lanzadores">Lanzadores <span>15</span></a>
+      <a href="#receptores">Receptores <span>3</span></a>
+      <a href="#cuadro">Cuadro <span>7</span></a>
+      <a href="#jardineros">Jardineros <span>3</span></a>
+    </nav>
 
-    <div class="player-card">
-      <div><h3>Hernán Pérez</h3><p class="body-text" style="margin:0;">Shortstop &middot; Jugador Más Valioso de la Serie del Rey 2026 y líder de producidas del equipo con 60.</p></div>
-      <div class="img-placeholder">Foto Pérez</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Justin Turner</h3><p class="body-text" style="margin:0;">Primera base &middot; Campeón de Serie Mundial 2020 con los Dodgers; llegó a Tijuana en 2026.</p></div>
-      <div class="img-placeholder">Foto Turner</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Franchy Cordero</h3><p class="body-text" style="margin:0;">Jardinero &middot; Líder de jonrones del equipo en 2026, con 17.</p></div>
-      <div class="img-placeholder">Foto Cordero</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Junior Lake</h3><p class="body-text" style="margin:0;">Jardín izquierdo &middot; Mejor promedio del equipo: .323, con 22 bases robadas.</p></div>
-      <div class="img-placeholder">Foto Lake</div>
-    </div>
-    <div class="player-card">
-      <div><h3>Adonis Medina</h3><p class="body-text" style="margin:0;">Lanzador &middot; Ganó sus tres decisiones en la postemporada 2026 camino al título.</p></div>
-      <div class="img-placeholder">Foto Medina</div>
-    </div>
+    <section class="roster-grupo" id="lanzadores">
+      <h2 class="subsection-title">Lanzadores <small>15</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/adonis-medina.webp" alt="Adonis Medina" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#18</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Adonis Medina</h3>
+            <p class="jugador-pos">Lanzador derecho · República Dominicana</p>
+            <p class="jugador-texto">Marca de 8-2 en la temporada y 3-0 en la postemporada camino al título.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/aneurys-zabala.webp" alt="Aneurys Zabala" width="360" height="360" loading="lazy" decoding="async">
+          </div>
+          <div class="jugador-info">
+            <h3>Aneurys Zabala</h3>
+            <p class="jugador-pos">Lanzador derecho · República Dominicana</p>
+            <p class="jugador-texto">Relevista: 15 juegos, 3.60 de efectividad y 24 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/brady-feigl.webp" alt="Brady Feigl" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#23</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Brady Feigl</h3>
+            <p class="jugador-pos">Lanzador zurdo · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 37 juegos, 2.02 de efectividad y 37 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/brett-de-geus.webp" alt="Brett de Geus" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#63</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Brett de Geus</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Cerrador del campeón: 23 salvamentos con 1.53 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/daniel-martinez.webp" alt="Daniel Martinez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#65</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Daniel Martinez</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Abridor: marca de 7-1, 1.94 de efectividad y 70 ponches en 17 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/david-reyes.webp" alt="David Reyes" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#40</span>
+          </div>
+          <div class="jugador-info">
+            <h3>David Reyes</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Abridor: marca de 5-4, 3.98 de efectividad y 62 ponches en 16 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/florencio-serrano.webp" alt="Florencio Serrano" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#51</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Florencio Serrano</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 31 juegos, 2.41 de efectividad y 19 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/juan-hillman.webp" alt="Juan Hillman" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#11</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Juan Hillman</h3>
+            <p class="jugador-pos">Lanzador zurdo · Estados Unidos</p>
+            <p class="jugador-texto">Abrió 9 de sus 20 juegos: marca de 3-3 y 4.64 de efectividad.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/luis-marquez.webp" alt="Luis Márquez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#29</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Luis Márquez</h3>
+            <p class="jugador-pos">Lanzador zurdo · México</p>
+            <p class="jugador-texto">Relevista: 17 juegos, 2.66 de efectividad y 22 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/mario-meza.webp" alt="Mario Meza" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#50</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Mario Meza</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Relevista: 15 juegos, 3.86 de efectividad y 19 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/miguel-diaz.webp" alt="Miguel Díaz" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#45</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Miguel Díaz</h3>
+            <p class="jugador-pos">Lanzador derecho · República Dominicana</p>
+            <p class="jugador-texto">Relevista: 51 juegos, 3.04 de efectividad y 65 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/noah-skirrow.webp" alt="Noah Skirrow" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#32</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Noah Skirrow</h3>
+            <p class="jugador-pos">Lanzador derecho · Canadá</p>
+            <p class="jugador-texto">El abridor con más victorias (9) y ponches (98) del equipo.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/rafael-castaneda.webp" alt="Rafael Castañeda" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#46</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Rafael Castañeda</h3>
+            <p class="jugador-pos">Lanzador derecho · México</p>
+            <p class="jugador-texto">Relevista: 6 juegos, 8.53 de efectividad y 5 ponches.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/randy-wynne.webp" alt="Randy Wynne" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#36</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Randy Wynne</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Abridor: marca de 2-4, 5.55 de efectividad y 33 ponches en 9 aperturas.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/roel-ramirez.webp" alt="Roel Ramírez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#53</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Roel Ramírez</h3>
+            <p class="jugador-pos">Lanzador derecho · Estados Unidos</p>
+            <p class="jugador-texto">Relevista: 47 juegos, 1.76 de efectividad y 63 ponches.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="receptores">
+      <h2 class="subsection-title">Receptores <small>3</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/ali-solis.webp" alt="Alí Solís" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#4</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Alí Solís</h3>
+            <p class="jugador-pos">Receptor · México</p>
+            <p class="jugador-texto">Participó en 18 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/sergio-burruel.webp" alt="Sergio Burruel" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#12</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Sergio Burruel</h3>
+            <p class="jugador-pos">Receptor · Estados Unidos</p>
+            <p class="jugador-texto">Jugó 7 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/tomas-telis.webp" alt="Tomás Telis" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#20</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Tomás Telis</h3>
+            <p class="jugador-pos">Receptor · Venezuela</p>
+            <p class="jugador-texto">Bateó .283 con 4 jonrones y 24 producidas en 64 juegos.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="cuadro">
+      <h2 class="subsection-title">Cuadro interior <small>7</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/hernan-perez.webp" alt="Hernán Pérez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#14</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Hernán Pérez</h3>
+            <p class="jugador-pos">Shortstop · Venezuela</p>
+            <p class="jugador-texto">Jugador Más Valioso de la Serie del Rey 2026 y líder de producidas del equipo, con 60.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/isaac-rodriguez.webp" alt="Isaac Rodríguez" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#74</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Isaac Rodríguez</h3>
+            <p class="jugador-pos">Segunda base · México</p>
+            <p class="jugador-texto">Bateó .273 con 1 jonrón y 26 producidas en 79 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/jack-mayfield.webp" alt="Jack Mayfield" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#25</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Jack Mayfield</h3>
+            <p class="jugador-pos">Segunda base · Estados Unidos</p>
+            <p class="jugador-texto">Bateó .229 con 1 jonrón y 12 producidas en 49 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/jonathan-guzman.webp" alt="Jonathan Guzmán" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#7</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Jonathan Guzmán</h3>
+            <p class="jugador-pos">Shortstop · República Dominicana</p>
+            <p class="jugador-texto">Bateó .292 con 2 jonrones y 20 producidas en 73 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/justin-turner.webp" alt="Justin Turner" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#10</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Justin Turner</h3>
+            <p class="jugador-pos">Primera base · Estados Unidos</p>
+            <p class="jugador-texto">Campeón de Serie Mundial 2020 con los Dodgers. En su primer año en Tijuana bateó .295.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/phillip-evans.webp" alt="Phillip Evans" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#26</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Phillip Evans</h3>
+            <p class="jugador-pos">Tercera base · Estados Unidos</p>
+            <p class="jugador-texto">Bateó .314 con 5 jonrones y 34 producidas en 66 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/wilmer-flores.webp" alt="Wilmer Flores" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#41</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Wilmer Flores</h3>
+            <p class="jugador-pos">Primera base · Venezuela</p>
+            <p class="jugador-texto">Bateó .298 con 11 jonrones y 37 producidas en 75 juegos.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="roster-grupo" id="jardineros">
+      <h2 class="subsection-title">Jardineros <small>3</small></h2>
+      <div class="roster-grid">
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/edson-garcia.webp" alt="Edson García" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#99</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Edson García</h3>
+            <p class="jugador-pos">Jardín izquierdo · México</p>
+            <p class="jugador-texto">Bateó .253 con 2 jonrones y 23 producidas en 48 juegos.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/franchy-cordero.webp" alt="Franchy Cordero" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#38</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Franchy Cordero</h3>
+            <p class="jugador-pos">Jardinero · República Dominicana</p>
+            <p class="jugador-texto">Líder de jonrones del equipo, con 17, y .301 de promedio.</p>
+          </div>
+        </article>
+        <article class="jugador">
+          <div class="jugador-foto">
+            <img src="../../imagenes/Jugadores/thumbs/toros/junior-lake.webp" alt="Junior Lake" width="360" height="360" loading="lazy" decoding="async">
+            <span class="jugador-numero">#27</span>
+          </div>
+          <div class="jugador-info">
+            <h3>Junior Lake</h3>
+            <p class="jugador-pos">Jardín izquierdo · República Dominicana</p>
+            <p class="jugador-texto">El mejor promedio del equipo (.323) y 22 bases robadas.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <p class="roster-fuente">Estadísticas oficiales de la Liga Mexicana de Beisbol, temporada regular 2026.</p>
 
   </main>
 

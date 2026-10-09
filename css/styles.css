@@ -362,6 +362,10 @@ h2.subsection-title{
   text-transform:uppercase;
   margin:0 0 8px;
   color:var(--team, var(--red-seam));
+  /* El color del equipo mezclado con blanco: misma tonalidad, pero legible
+     sobre el fondo oscuro. Si el navegador no entiende color-mix, ignora
+     esta línea y se queda con la de arriba. */
+  color:color-mix(in srgb, var(--team, var(--red-seam)) 45%, #fff);
 }
 p.body-text{
   font-size:.92rem;
@@ -993,22 +997,126 @@ html.sin-splash .menu-screen{
 .stat-line span:first-child{ color:var(--text-muted); }
 .stat-line span:last-child{ font-weight:700; }
 
-.player-card{
-  display:grid;
-  grid-template-columns:1fr 92px;
-  gap:14px;
-  align-items:start;
-  margin-bottom:20px;
+/* =====================================================================
+   ROSTER (equipos/*/jugadores.html)
+   ===================================================================== */
+
+/* Índice de posiciones: cada enlace baja a su sección */
+.roster-indice{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:14px 0 4px;
 }
-.player-card h3{
+.roster-indice a{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 12px;
+  border-radius:999px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  font-size:.78rem;
+  font-weight:600;
+}
+.roster-indice a span{
+  min-width:22px;
+  padding:1px 6px;
+  border-radius:999px;
+  background:var(--team);
+  color:#fff;
+  font-size:.7rem;
+  text-align:center;
+}
+
+.roster-grupo{
+  margin-top:24px;
+  scroll-margin-top:14px;    /* al saltar con el índice, el título no queda pegado arriba */
+}
+.roster-grupo h2 small{
+  font-family:var(--font-body);
+  font-size:.75rem;
+  font-weight:600;
+  color:var(--text-muted);
+}
+
+/* Dos columnas de tarjetas */
+.roster-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+
+.jugador{
+  display:flex;
+  flex-direction:column;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+}
+
+/* La foto. Las de fondo blanco se funden con el blanco; las que vienen
+   recortadas (fondo transparente) llevan atrás el color del equipo. */
+.jugador-foto{
+  position:relative;
+  aspect-ratio:1 / 1;
+  background:#fff;
+  overflow:hidden;
+}
+.jugador-foto--recorte{
+  background:radial-gradient(120% 95% at 50% 18%, var(--team) 0%, var(--team-dark) 78%);
+}
+.jugador-foto img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .35s ease;
+}
+.jugador-numero{
+  position:absolute;
+  top:8px;
+  left:8px;
+  padding:2px 7px;
+  border-radius:6px;
+  background:var(--team);
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:.82rem;
+  letter-spacing:.5px;
+  box-shadow:0 2px 6px rgba(0,0,0,.3);
+}
+
+.jugador-info{ padding:10px 10px 12px; }
+.jugador-info h3{
+  margin:0 0 3px;
   font-family:var(--font-display);
   font-weight:400;
   font-size:1rem;
+  line-height:1.15;
   letter-spacing:.3px;
-  margin:0 0 4px;
   text-transform:uppercase;
 }
-.player-card .img-placeholder{ aspect-ratio:4/3; }
+.jugador-pos{
+  margin:0 0 6px;
+  font-size:.7rem;
+  font-weight:600;
+  line-height:1.35;
+  color:var(--text-muted);
+}
+.jugador-texto{
+  margin:0;
+  font-size:.74rem;
+  line-height:1.45;
+  color:rgba(244,243,247,.9);
+}
+.roster-fuente{
+  margin:24px 0 0;
+  font-size:.72rem;
+  color:var(--text-dim);
+  text-align:center;
+}
 
 .trophy-card{ margin-bottom:20px; }
 .trophy-card .img-placeholder{ width:100%; aspect-ratio:16/9; margin-top:8px; }
@@ -1460,3 +1568,282 @@ html.rep-sin-scroll .app-main{ overflow:hidden; }
 }
 .rep-pantalla .rep-centro svg{ width:44px; height:44px; }
 .rep-pantalla .fx-envivo{ font-size:clamp(.68rem, 1.4vw, 1.2rem); }
+
+
+/* =====================================================================
+   ANIMACIONES Y TRANSICIONES
+   ---------------------------------------------------------------------
+   1. Transición al cambiar de página
+   2. Aparición del contenido al entrar y al hacer scroll
+   3. Efectos al pasar el mouse (hover) y al picar (active)
+   4. Detalles: splash, botón BéisbAR, memorama, barra inferior
+   5. Movimiento reducido
+   ===================================================================== */
+
+/* ---------- 1. Transición entre páginas ----------
+   @view-transition le pide al navegador que, al pasar de una página a otra
+   del mismo sitio, haga una animación en vez de un corte seco. Lo entienden
+   Chrome, Edge y Safari recientes; los demás cambian de página como siempre
+   (y ahí se nota la aparición del punto 2).
+   Va dentro de (prefers-reduced-motion: no-preference): solo se activa si
+   el usuario NO pidió reducir el movimiento en su sistema. */
+@media (prefers-reduced-motion: no-preference){
+  @view-transition{ navigation:auto; }
+
+  /* El contenido lleva su propio nombre para animarse aparte del resto:
+     el de la página que se va sube y se desvanece, el de la que llega
+     aparece. El encabezado y la barra de abajo casi no cambian entre
+     páginas, así que se ven quietos. */
+  .app-main{ view-transition-name:contenido; }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root){ animation-duration:.28s; }
+
+  ::view-transition-old(contenido){ animation:vtSalir .22s ease-in both; }
+  ::view-transition-new(contenido){ animation:vtEntrar .32s ease-out both; }
+
+  /* Saltar a una sección del roster con el índice: desplazamiento suave */
+  .app-main{ scroll-behavior:smooth; }
+}
+@keyframes vtSalir{ to{ opacity:0; transform:translateY(-14px); } }
+@keyframes vtEntrar{ from{ opacity:0; } }
+
+/* En la pantalla completa simulada (iPhone) el video usa position:fixed;
+   se le quita el nombre al contenido para que nada lo encierre. */
+html.rep-sin-scroll .app-main{ view-transition-name:none; }
+
+/* ---------- 2. Aparición del contenido ----------
+   js/animaciones.js le pone la clase .animar al <html> y .revelar a cada
+   bloque del contenido. Cada bloque arranca transparente y un poco abajo;
+   cuando entra a la pantalla recibe .visible y sube a su lugar. Al terminar
+   se le quitan las clases, para que no estorben a sus efectos de hover. */
+html.animar .revelar{
+  opacity:0;
+  transform:translateY(18px);
+}
+html.animar .revelar.visible{
+  opacity:1;
+  transform:none;
+  transition:opacity .5s ease, transform .55s cubic-bezier(.2,.8,.2,1);
+}
+
+/* ---------- 3. Hover y al picar ----------
+   Con mouse, los elementos se levantan o brillan al pasar encima.
+   En celular no existe el hover: ahí, al picar (:active), se hunden un poco
+   para que se sienta la respuesta. @media (hover:hover) evita que en el
+   celular el efecto se quede "pegado" después de tocar. */
+.pill-btn, .btn-submit, .icon-btn, .ayuda-fab, .memorama-fab, .boton-imagen,
+.boton-beisbar-scanner, .card-slot, .jugador, .roster-indice a, .roster-indice a span,
+.footer-bar a, .bottom-nav a, .bottom-nav a .icon, .video-filters button,
+.memorama-cta, .memorama-btn, .premio-link, .trivia-answers label,
+.header-back svg, .imgheader img{
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease,
+             background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+
+/* El ícono de la barra de equipos es un <span>: como bloque ya puede moverse */
+.bottom-nav a .icon{ display:block; }
+
+@media (hover:hover){
+  /* Botones rojos: suben y brillan */
+  .pill-btn:hover,
+  .btn-submit:not(:disabled):hover,
+  .memorama-cta:hover,
+  .memorama-btn:not(:disabled):hover,
+  .premio-link:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.12);
+    box-shadow:0 8px 20px rgba(200,16,46,.35);
+  }
+  /* Botones redondos: crecen y giran un poquito */
+  .icon-btn:hover,
+  .ayuda-fab:hover,
+  .memorama-fab:hover{
+    transform:scale(1.1) rotate(-6deg);
+    box-shadow:0 0 0 4px rgba(138,126,232,.25), 0 6px 16px rgba(0,0,0,.35);
+  }
+  /* Botones del menú (Historia y equipos) */
+  .boton-imagen:hover{
+    transform:translateY(-3px) scale(1.03);
+    filter:brightness(1.1) drop-shadow(0 8px 14px rgba(0,0,0,.45));
+  }
+  .boton-beisbar-scanner:hover{
+    transform:scale(1.04);
+    box-shadow:0 0 0 6px rgba(255,255,255,.15);
+  }
+  /* Colección: la carta se levanta y se inclina; el candado tiembla */
+  .card-slot.is-unlocked:hover{
+    transform:translateY(-4px) rotate(-1.5deg);
+    box-shadow:0 10px 22px rgba(0,0,0,.45), 0 0 0 2px rgba(138,126,232,.6);
+  }
+  .card-slot.is-locked:hover .candado{ animation:candadoTiembla .45s ease; }
+  /* Roster: la tarjeta sube y la foto se acerca */
+  .jugador:hover{
+    transform:translateY(-3px);
+    border-color:var(--team);
+    box-shadow:0 10px 22px rgba(0,0,0,.4);
+  }
+  .jugador:hover .jugador-foto img{ transform:scale(1.06); }
+  .roster-indice a:hover{
+    background:var(--team);
+    border-color:var(--team);
+    color:#fff;
+  }
+  .roster-indice a:hover span{ background:#fff; color:var(--team); }
+  /* Barras de abajo */
+  .footer-bar a:hover{ background:rgba(0,0,0,.07); }
+  .bottom-nav a:hover{ color:var(--team, #141420); }
+  .bottom-nav a:hover .icon{ transform:translateY(-3px); }
+  /* Filtros de video, respuestas de la trivia, flecha de volver, logo */
+  .video-filters button:hover{
+    transform:scale(1.1);
+    border-color:rgba(255,255,255,.45);
+  }
+  .trivia-answers label:hover{
+    color:var(--text);
+    background:var(--card-bg-2);
+    border-color:rgba(255,255,255,.28);
+  }
+  .header-back:hover svg{ transform:translateX(-3px); }
+  .imgheader a:hover img{ transform:scale(1.04); }
+  /* Memorama: las cartas boca abajo se levantan */
+  .memory-card:not(.volteada):not(.encontrada):hover{ transform:translateY(-3px); }
+}
+
+/* Al picar (mouse o dedo): se hunden */
+.pill-btn:active,
+.btn-submit:not(:disabled):active,
+.memorama-cta:active,
+.memorama-btn:not(:disabled):active,
+.premio-link:active,
+.boton-imagen:active,
+.boton-beisbar-scanner:active,
+.card-slot.is-unlocked:active,
+.roster-indice a:active,
+.video-filters button:active{
+  transform:scale(.95);
+  transition-duration:.08s;
+}
+.icon-btn:active,
+.ayuda-fab:active,
+.memorama-fab:active{
+  transform:scale(.88);
+  transition-duration:.08s;
+}
+.bottom-nav a:active .icon{ transform:scale(.85); }
+.trivia-answers label:active{ transform:scale(.98); }
+
+/* Trivia: la respuesta elegida se marca con el rojo de la app.
+   :has() revisa si el <label> tiene adentro un radio marcado. */
+.trivia-answers label:has(input:checked){
+  color:var(--text);
+  background:rgba(200,16,46,.13);
+  border-color:var(--red-seam);
+}
+
+/* Navegación con teclado: contorno visible en lo que tiene el foco */
+a:focus-visible,
+button:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:3px;
+}
+.trivia-answers label:has(input:focus-visible){
+  outline:2px solid var(--gold);
+  outline-offset:2px;
+}
+
+@keyframes candadoTiembla{
+  0%, 100%{ transform:rotate(0); }
+  25%     { transform:rotate(-12deg); }
+  50%     { transform:rotate(10deg); }
+  75%     { transform:rotate(-6deg); }
+}
+
+/* ---------- 4. Detalles ---------- */
+
+/* Splash: los logos entran creciendo; al picar, la pantalla se agranda y se
+   desvanece (la clase .saliendo la pone el script de index.html) */
+.splash-logo-box img{ animation:splashLogo .8s cubic-bezier(.2,.8,.2,1) both; }
+.splash-logo img{ animation:splashLogo .8s .15s cubic-bezier(.2,.8,.2,1) both; }
+.splash-screen.saliendo{
+  animation:splashSale .33s ease-in forwards;
+  pointer-events:none;
+}
+@keyframes splashLogo{
+  from{ opacity:0; transform:scale(.85) translateY(10px); }
+}
+@keyframes splashSale{
+  to{ opacity:0; transform:scale(1.06); }
+}
+
+/* Botón BéisbAR: una línea roja recorre el recuadro, como un escáner */
+.boton-beisbar-scanner::after{
+  content:'';
+  position:absolute;
+  left:8%;
+  right:8%;
+  top:12%;
+  height:3px;
+  border-radius:3px;
+  background:linear-gradient(90deg, rgba(200,16,46,0), var(--red-seam), rgba(200,16,46,0));
+  box-shadow:0 0 10px rgba(200,16,46,.8);
+  animation:escaneo 2.6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes escaneo{
+  0%, 100%{ top:12%; }
+  50%     { top:85%; }
+}
+
+/* Memorama: el botón de entrar late con un brillo para llamar la atención
+   (solo si alcanza para jugar) */
+.memorama-cta:not(.esta-apagada){ animation:brilloCta 2.2s ease-in-out infinite; }
+@keyframes brilloCta{
+  0%, 100%{ box-shadow:0 0 0 0 rgba(200,16,46,.45); }
+  50%     { box-shadow:0 0 0 10px rgba(200,16,46,0); }
+}
+
+/* Barra de equipos: una rayita marca la pestaña activa y entra creciendo */
+.bottom-nav a{ position:relative; }
+.bottom-nav a.is-active::after{
+  content:'';
+  position:absolute;
+  left:26%;
+  right:26%;
+  top:0;
+  height:3px;
+  border-radius:0 0 3px 3px;
+  background:var(--team, var(--red-seam));
+  animation:indicador .4s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes indicador{
+  from{ transform:scaleX(0); opacity:0; }
+}
+
+/* Filtro de video: el botón da un pequeño salto al prenderse */
+.video-filters button.is-active{ animation:filtroSalto .3s ease; }
+@keyframes filtroSalto{
+  50%{ transform:scale(1.18); }
+}
+
+/* ---------- 5. Movimiento reducido ----------
+   Si el usuario activó "reducir movimiento" en su teléfono o computadora,
+   se quitan las animaciones decorativas de esta sección y los cambios de
+   hover pasan de golpe, sin desplazamiento. (La transición de páginas ya
+   quedó apagada arriba, y js/animaciones.js tampoco anima nada.) */
+@media (prefers-reduced-motion: reduce){
+  .splash-logo-box img,
+  .splash-logo img,
+  .splash-screen.saliendo,
+  .boton-beisbar-scanner::after,
+  .memorama-cta,
+  .bottom-nav a.is-active::after,
+  .video-filters button.is-active,
+  .card-slot.is-locked .candado{ animation:none !important; }
+
+  .pill-btn, .btn-submit, .icon-btn, .ayuda-fab, .memorama-fab, .boton-imagen,
+  .boton-beisbar-scanner, .card-slot, .jugador, .jugador-foto img, .roster-indice a,
+  .footer-bar a, .bottom-nav a .icon, .video-filters button, .memorama-cta,
+  .memorama-btn, .premio-link, .trivia-answers label, .header-back svg,
+  .imgheader img{ transition:none !important; }
+}
