@@ -14,7 +14,7 @@
 
   <header class="app-header header--navy">
       <div class="imgheader">
-        <img src="imagenes/LogoBeisbARLetrasrz.png">
+        <a href="index.html" aria-label="Ir al inicio"><img src="imagenes/LogoBeisbARLetrasrz.png" alt="BéisbAR MX"></a>
       </div>
   </header>
 
@@ -238,9 +238,13 @@
     premioImg.src = Cartas.rutaThumb(ganada.carta.id);
     premioImg.alt = ganada.carta.nombre;
     premioNombre.textContent = ganada.carta.nombre;
-    premioEstado.textContent = ganada.esNueva
-      ? '¡Carta nueva para tu colección!'
-      : 'Ya tenías esta carta, ahora tienes una repetida.';
+    if (ganada.esNueva) {
+      premioEstado.textContent = '¡Carta nueva para tu colección!';
+    } else {
+      // Carta duplicada: en vez de la carta se lleva un comodín para el memorama
+      premioEstado.textContent = 'Ya tenías esta carta, así que ganaste 1 carta repetida. ' +
+        'Ahora tienes ' + ganada.repetidas + '.';
+    }
     premio.style.display = '';
   }
 

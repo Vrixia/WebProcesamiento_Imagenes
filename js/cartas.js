@@ -15,7 +15,20 @@
     { id: 'ramiro penia',      nombre: 'Ramiro Peña'       }
   ];
 
-  var CLAVE = 'beisbarCartas';   // donde se guarda el progreso
+  var CLAVE = 'beisbarCartas';   // donde se guarda la colección
+
+  /* ------------------------------------------------------------------
+     CARTAS REPETIDAS (los "comodines")
+
+     Son las fichas con las que se paga la entrada al memorama.
+       - Todo usuario nuevo arranca con 5.
+       - Entrar al memorama cuesta 2, se gane o se pierda.
+       - La única forma de ganar más es en la trivia: si la carta que
+         te toca ya la tenías en la colección, se te suma 1.
+  ------------------------------------------------------------------ */
+  var CLAVE_REPETIDAS  = 'beisbarRepetidas';
+  var REPETIDAS_INICIO = 5;   // con cuántas empieza un usuario nuevo
+  var COSTO_MEMORAMA   = 2;   // cuántas cuesta una partida de memorama
 
   function rutaThumb(id, base) {
     return (base || '') + 'imagenes/Coleccion/thumbs/' + encodeURIComponent(id) + '.png';
@@ -49,6 +62,50 @@
     } catch (e) {
       return false;
     }
+  }
+
+  // ----- Cartas repetidas -----
+
+  function leerRepetidas() {
+    try {
+      var crudo = localStorage.getItem(CLAVE_REPETIDAS);
+
+      // null = nunca se ha guardado nada, o sea que es un usuario nuevo:
+      // se le entregan sus 5 de arranque y quedan guardadas.
+      if (crudo === null) {
+        guardarRepetidas(REPETIDAS_INICIO);
+        return REPETIDAS_INICIO;
+      }
+
+      var n = parseInt(crudo, 10);
+      return (isNaN(n) || n < 0) ? 0 : n;
+    } catch (e) {
+      // Modo incógnito: no se puede guardar, pero igual deja jugar
+      return REPETIDAS_INICIO;
+    }
+  }
+
+  function guardarRepetidas(n) {
+    try {
+      localStorage.setItem(CLAVE_REPETIDAS, String(n));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // ¿Alcanza para entrar al memorama?
+  function puedeJugarMemorama() {
+    return leerRepetidas() >= COSTO_MEMORAMA;
+  }
+
+  // Cobra la entrada del memorama. Devuelve false si no alcanzaba
+  // (en ese caso no descuenta nada).
+  function pagarMemorama() {
+    var n = leerRepetidas();
+    if (n < COSTO_MEMORAMA) return false;
+    guardarRepetidas(n - COSTO_MEMORAMA);
+    return true;
   }
 
   // Consultas
@@ -105,10 +162,18 @@
     return { carta: carta, esNueva: !yaLaTenia };
   }
 
-  // TRIVIA: carta al azar. Puede tocar una repetida
+  // TRIVIA: carta al azar. Puede tocar una que el jugador ya tenga.
+  // Cuando eso pasa, en vez de una carta nueva se lleva +1 carta repetida.
   function darAleatoria() {
     var carta = LISTA[Math.floor(Math.random() * LISTA.length)];
-    return sumar(carta);
+    var resultado = sumar(carta);
+
+    if (!resultado.esNueva) {
+      guardarRepetidas(leerRepetidas() + 1);
+    }
+
+    resultado.repetidas = leerRepetidas();   // cuántas lleva ya
+    return resultado;
   }
 
   // MEMORAMA: garantiza que sea una carta nueva
@@ -120,9 +185,13 @@
     return sumar(carta);
   }
 
-  // Borra todo el progreso
+  // Borra todo el progreso: colección y cartas repetidas.
+  // Sirve para probar la página desde cero (Cartas.reiniciar() en la consola).
   function reiniciar() {
-    try { localStorage.removeItem(CLAVE); } catch (e) {}
+    try {
+      localStorage.removeItem(CLAVE);
+      localStorage.removeItem(CLAVE_REPETIDAS);
+    } catch (e) {}
   }
 
   // -----------------------------------------------------------------
@@ -140,7 +209,13 @@
     tieneTodas: tieneTodas,
     darAleatoria: darAleatoria,
     darNueva: darNueva,
-    reiniciar: reiniciar
+    reiniciar: reiniciar,
+
+    // Cartas repetidas (comodines del memorama)
+    COSTO_MEMORAMA: COSTO_MEMORAMA,
+    repetidas: leerRepetidas,
+    puedeJugarMemorama: puedeJugarMemorama,
+    pagarMemorama: pagarMemorama
   };
 
 })();

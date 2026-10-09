@@ -14,7 +14,7 @@
 
   <header class="app-header" style="background:linear-gradient(180deg, var(--maroon) 0%, var(--maroon-dark) 100%);">
       <div class="imgheader">
-        <img src="imagenes/LogoBeisbARLetrasrz.png">
+        <a href="index.html" aria-label="Ir al inicio"><img src="imagenes/LogoBeisbARLetrasrz.png" alt="BéisbAR MX"></a>
       </div>
   </header>
 
@@ -47,6 +47,8 @@
       <p class="premio-estado">¡Carta nueva para tu colección!</p>
       <a href="coleccion.html" class="premio-link">Ver mi colección</a>
     </div>
+
+    <p class="memorama-saldo" id="saldoFinal"></p>
 
     <div class="memorama-overlay-botones">
       <button type="button" class="memorama-btn" id="btnReintentar">Jugar de nuevo</button>
@@ -94,6 +96,8 @@
   var premio         = document.getElementById('premio');
   var premioImg      = document.getElementById('premioImg');
   var premioNombre   = document.getElementById('premioNombre');
+  var saldoFinal     = document.getElementById('saldoFinal');
+  var btnReintentar  = document.getElementById('btnReintentar');
 
   // ---------------------------------------------------------------
   // Barajar (algoritmo de Fisher-Yates)
@@ -279,14 +283,55 @@
       premio.style.display = 'none';
     }
 
+    pintarSaldo();
     overlayFinal.classList.remove('oculto');
   }
 
-  document.getElementById('btnReintentar').addEventListener('click', function () {
+  // Dice cuántas cartas repetidas quedan y, si ya no alcanzan para otra
+  // partida, apaga el botón de "Jugar de nuevo".
+  function pintarSaldo() {
+    var quedan = Cartas.repetidas();
+    var cuesta = Cartas.COSTO_MEMORAMA;
+
+    if (Cartas.puedeJugarMemorama()) {
+      saldoFinal.textContent = 'Te quedan ' + quedan + ' cartas repetidas.';
+      btnReintentar.disabled = false;
+    } else {
+      saldoFinal.textContent = 'Te quedan ' + quedan + ' cartas repetidas, y cada partida cuesta ' +
+        cuesta + '. Gana más en la trivia.';
+      btnReintentar.disabled = true;
+    }
+  }
+
+  btnReintentar.addEventListener('click', function () {
+    if (!Cartas.puedeJugarMemorama()) return;
     window.location.reload();
   });
 
+  // Pantalla que aparece si se entra sin tener las 2 cartas repetidas
+  function sinCartas() {
+    clearInterval(intervaloCuenta);
+    overlayCuenta.classList.add('oculto');
+
+    tituloFinal.textContent = 'Te faltan cartas';
+    textoFinal.textContent  = 'Entrar al memorama cuesta ' + Cartas.COSTO_MEMORAMA +
+      ' cartas repetidas y solo tienes ' + Cartas.repetidas() + '.';
+    overlayFinal.classList.remove('es-victoria');
+    premio.style.display = 'none';
+    saldoFinal.textContent = 'Las cartas repetidas se ganan en la trivia, cuando la carta que te toca ya la tenías.';
+    btnReintentar.disabled = true;
+    overlayFinal.classList.remove('oculto');
+  }
+
   // Arranque
+  //
+  // Entrar al memorama cuesta 2 cartas repetidas y se cobran AQUÍ, al
+  // empezar la partida. Por eso se gastan igual si se gana o se pierde.
+
+  if (!Cartas.pagarMemorama()) {
+    sinCartas();
+    return;
+  }
 
   construirTablero();
   arrancarCuenta();

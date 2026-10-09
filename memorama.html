@@ -14,7 +14,7 @@
 
   <header class="app-header">
       <div class="imgheader">
-        <img src="imagenes/LogoBeisbARLetrasrz.png">
+        <a href="index.html" aria-label="Ir al inicio"><img src="imagenes/LogoBeisbARLetrasrz.png" alt="BéisbAR MX"></a>
       </div>
   </header>
 
@@ -26,14 +26,14 @@
         <img src="imagenes/memorama.png">
       </div>
 
-      <a href="memorama-juego.html" class="memorama-cta">Ingresa 2 tarjetas</a>
+      <a href="memorama-juego.html" class="memorama-cta" id="btnEntrar">Ingresa 2 tarjetas</a>
 
       <div class="memorama-stake">
        <img src="imagenes/cartas2.png">
        <span id="cuantasTengo">Tienes 0</span>
       </div>
 
-      <p class="memorama-note">¡Supera el reto y gana una nueva carta!</p>
+      <p class="memorama-note" id="nota">¡Supera el reto y gana una nueva carta!</p>
     </div>
   </main>
 
@@ -46,11 +46,41 @@
 <script src="js/cartas.js"></script>
 <script>
   (function () {
+
     var etiqueta = document.getElementById('cuantasTengo');
+    var boton    = document.getElementById('btnEntrar');
+    var nota     = document.getElementById('nota');
+
     function pintar() {
-      etiqueta.textContent = 'Tienes ' + Cartas.contarDistintas() + ' de ' + Cartas.LISTA.length;
+      var tengo  = Cartas.repetidas();
+      var cuesta = Cartas.COSTO_MEMORAMA;
+
+      etiqueta.textContent = 'Tienes ' + tengo;
+
+      if (tengo >= cuesta) {
+        // Alcanza: el botón funciona normal
+        boton.classList.remove('esta-apagada');
+        boton.removeAttribute('aria-disabled');
+        nota.textContent = '¡Supera el reto y gana una nueva carta!';
+      } else {
+        // No alcanza: se apaga el botón y se explica cómo conseguir más
+        boton.classList.add('esta-apagada');
+        boton.setAttribute('aria-disabled', 'true');
+        nota.textContent = 'Necesitas ' + cuesta + ' cartas repetidas para entrar. ' +
+          'Se ganan en la trivia, cuando la carta que te toca ya la tenías.';
+      }
     }
+
+    // Si el botón está apagado, no deja pasar
+    boton.addEventListener('click', function (evento) {
+      if (boton.classList.contains('esta-apagada')) {
+        evento.preventDefault();
+      }
+    });
+
     pintar();
+    // pageshow (y no solo load) para que el contador se actualice también
+    // cuando el usuario regresa con el botón "atrás" del navegador
     window.addEventListener('pageshow', pintar);
   })();
 </script>
