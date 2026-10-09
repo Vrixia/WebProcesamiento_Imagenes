@@ -19,6 +19,14 @@
    La capa tiene pointer-events:none: los clics la atraviesan y los
    controles del video (play, pausa, volumen) siguen funcionando.
 
+   La capa se pone JUNTO al video (en su mismo contenedor). reproductor.js
+   mete el video en un "lienzo" que es lo que se agranda en pantalla
+   completa, así que las capas se agrandan con él. Por eso en el HTML
+   reproductor.js va antes que este archivo.
+
+   Cuando el video está en pausa, el filtro deportivo se queda quieto:
+   ver sincronizarConVideo() más abajo.
+
    Picar el mismo botón otra vez quita el filtro.
 ------------------------------------------------------------------ */
 (function () {
@@ -52,7 +60,9 @@
 
     if (!recuadro || !video) return;
 
-    var capa = crearCapa(recuadro);
+    // La capa va junto al video: dentro del lienzo de reproductor.js, o
+    // directo en el recuadro si ese archivo no estuviera.
+    var capa = crearCapa(video.parentNode);
 
     // Todo lo que esta tarjeta necesita recordar
     var estado = {
@@ -67,11 +77,13 @@
       // Función aparte para que cada botón recuerde cuál es el suyo
       conectar(botones[j], botones, estado);
     }
+
+    sincronizarConVideo(estado);
   }
 
   // Arma la capa de efectos. Trae las piezas de todos los filtros;
   // el CSS solo deja ver las del filtro activo.
-  function crearCapa(recuadro) {
+  function crearCapa(contenedor) {
     var capa = document.createElement('div');
     capa.className = 'fx-capa';
     capa.setAttribute('aria-hidden', 'true');   // es decoración
@@ -85,7 +97,7 @@
       '<div class="fx-destello"></div>' +
       '<div class="fx-flashes"></div>' +
       '<div class="fx-envivo"><i></i>EN VIVO</div>';
-    recuadro.appendChild(capa);
+    contenedor.appendChild(capa);
     return capa;
   }
 
@@ -114,7 +126,9 @@
     estado.video.style.filter = COLOR[nombre] || '';
     estado.recuadro.classList.add('fx-' + nombre);   // el CSS prende sus capas
 
-    if (nombre === 'deportivo') {
+    // Los flashes solo salen si el video está corriendo; si está en pausa
+    // el deportivo aparece quieto y arranca cuando se le dé play.
+    if (nombre === 'deportivo' && !estaPausado(estado.video)) {
       arrancarFlashes(estado);
     }
   }
@@ -125,7 +139,45 @@
     }
     estado.activo = null;
     estado.video.style.filter = '';
-    pararFlashes(estado);
+    detenerLanzador(estado);
+    borrarFlashes(estado);
+  }
+
+  // ---------------------------------------------------------------
+  // Pausa: el deportivo se queda quieto mientras el video no avanza
+  //
+  // Se escuchan los eventos del propio <video>, así funciona igual si la
+  // pausa vino del botón, de tocar la imagen o de que el video terminó.
+  //   - En pausa: el recuadro recibe la clase fx-pausado, y el CSS congela
+  //     las animaciones (animation-play-state: paused). Además dejan de
+  //     salir flashes nuevos; los que ya estaban se quedan congelados.
+  //   - Al reanudar: se quita la clase y todo sigue desde donde se quedó.
+  // ---------------------------------------------------------------
+  function sincronizarConVideo(estado) {
+    function alPausar() {
+      estado.recuadro.classList.add('fx-pausado');
+      detenerLanzador(estado);
+    }
+
+    function alReproducir() {
+      estado.recuadro.classList.remove('fx-pausado');
+      if (estado.activo === 'deportivo') {
+        arrancarFlashes(estado);
+      }
+    }
+
+    estado.video.addEventListener('pause', alPausar);
+    estado.video.addEventListener('ended', alPausar);
+    estado.video.addEventListener('play',  alReproducir);
+
+    // Al cargar la página el video todavía no arranca: empieza en pausa
+    if (estaPausado(estado.video)) {
+      estado.recuadro.classList.add('fx-pausado');
+    }
+  }
+
+  function estaPausado(video) {
+    return video.paused || video.ended;
   }
 
   // ---------------------------------------------------------------
@@ -136,7 +188,7 @@
   // cuando la animación termina.
   // ---------------------------------------------------------------
   function arrancarFlashes(estado) {
-    pararFlashes(estado);
+    detenerLanzador(estado);
 
     function siguiente() {
       lanzarFlash(estado.flashes);
@@ -148,10 +200,15 @@
     estado.temporizador = setTimeout(siguiente, 350);
   }
 
-  function pararFlashes(estado) {
+  // Deja de lanzar flashes nuevos (los que ya están siguen ahí)
+  function detenerLanzador(estado) {
     clearTimeout(estado.temporizador);
     estado.temporizador = null;
-    estado.flashes.innerHTML = '';   // borra los que se quedaron a medias
+  }
+
+  // Borra los flashes que se quedaron a medias
+  function borrarFlashes(estado) {
+    estado.flashes.innerHTML = '';
   }
 
   function lanzarFlash(contenedor) {
@@ -163,7 +220,10 @@
     var flash = document.createElement('span');
     flash.className = 'fx-flash';
 
-    var tam = 10 + Math.random() * 18;              // entre 10 y 28 px
+    // Tamaño proporcional al ancho del video: en la tarjeta mide de 10 a
+    // 28 px, y en pantalla completa crece en la misma proporción.
+    var ancho = contenedor.clientWidth || 372;
+    var tam = ancho * (0.027 + Math.random() * 0.048);
     flash.style.width  = tam + 'px';
     flash.style.height = tam + 'px';
     flash.style.left = (5 + Math.random() * 90) + '%';
