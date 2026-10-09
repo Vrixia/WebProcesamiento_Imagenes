@@ -1022,10 +1022,11 @@ html.sin-splash .menu-screen{
   margin:0 0 10px;
 }
 .video-stage{
+  position:relative;          /* ancla de la capa de efectos (.fx-capa) */
   width:100%;
   aspect-ratio:16/9;
   border-radius:var(--radius-md);
-  background:var(--team, var(--red-seam));
+  background:#000;
   display:flex;
   overflow:hidden;
   align-items:center;
@@ -1033,15 +1034,15 @@ html.sin-splash .menu-screen{
   margin-bottom:10px;
   color:#fff;
 }
-.video-stage svg{ width:44px; height:44px; }
-/* El <video> llena el recuadro. El filtro de color se aplica al recuadro
-   (.video-stage), por eso alcanza a todo lo que lleve adentro. */
+/* El <video> llena el recuadro. El filtro de COLOR se le pone al <video>
+   (no al recuadro) para que no tiña ni desenfoque las capas de efectos. */
 .video-stage video{
   width:100%;
   height:100%;
   object-fit:cover;
   display:block;
   background:#000;
+  transition:filter .35s ease;   /* el color entra y sale suave */
 }
 .video-filters{
   display:flex;
@@ -1067,4 +1068,234 @@ html.sin-splash .menu-screen{
 .video-filters button.is-active{
   border-color:var(--team, var(--red-seam));
   background:var(--team, var(--red-seam));
+}
+
+/* =====================================================================
+   EFECTOS DE LOS FILTROS DE VIDEO
+   ---------------------------------------------------------------------
+   js/filtros.js mete un <div class="fx-capa"> encima de cada video y le
+   pone al recuadro una clase según el filtro: fx-deportivo, fx-frio,
+   fx-calido o fx-borroso. Aquí se decide qué se ve con cada una.
+   ===================================================================== */
+
+/* La capa cubre el video completo. pointer-events:none hace que los
+   clics la atraviesen: play, pausa y volumen siguen funcionando.
+
+   OJO: esta capa NO lleva z-index. Un z-index crearía un grupo aislado y
+   los mix-blend-mode de adentro se mezclarían contra el vacío en vez de
+   contra el video: el tinte se vería como una lámina de color encima.
+   Sin z-index igual queda arriba del video, porque va después en el HTML. */
+.fx-capa{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+/* Todo apagado por defecto: cada filtro prende solo sus piezas */
+.fx-capa > *{ display:none; }
+
+.fx-deportivo .fx-vineta,
+.fx-deportivo .fx-reflector,
+.fx-deportivo .fx-destello,
+.fx-deportivo .fx-flashes{ display:block; }
+.fx-deportivo .fx-envivo{ display:flex; }
+
+.fx-frio .fx-tinte,
+.fx-frio .fx-vineta,
+.fx-calido .fx-tinte,
+.fx-calido .fx-vineta{ display:block; }
+
+@keyframes fxAparecer{
+  from{ opacity:0; }
+  to  { opacity:1; }
+}
+
+/* ---------- FRÍO y CÁLIDO ---------- */
+
+/* Tinte: baña toda la imagen de azul o de naranja.
+   mix-blend-mode:soft-light mezcla el color con el video en vez de
+   taparlo: respeta las sombras y las luces, como un filtro de cámara. */
+.fx-tinte{
+  position:absolute;
+  inset:0;
+  mix-blend-mode:soft-light;
+  animation:fxAparecer .45s ease-out;
+}
+.fx-frio   .fx-tinte{ background:rgba(70,150,255,.45); }
+.fx-calido .fx-tinte{ background:rgba(255,155,60,.45); }
+
+/* Viñeta: el centro queda limpio y las orillas se pintan de color.
+   radial-gradient dibuja una elipse: transparente hasta el 45% y cada
+   vez más intensa hacia las esquinas. Frío la pinta de azul, cálido de
+   naranja y deportivo de negro (ver abajo). */
+.fx-vineta{
+  position:absolute;
+  inset:0;
+  animation:fxAparecer .45s ease-out;
+}
+.fx-frio .fx-vineta{
+  background:radial-gradient(ellipse at center,
+    rgba(40,110,230,0)   45%,
+    rgba(40,110,230,.42) 72%,
+    rgba(10,40,150,.82)  100%);
+}
+.fx-calido .fx-vineta{
+  background:radial-gradient(ellipse at center,
+    rgba(240,120,30,0)   45%,
+    rgba(240,120,30,.42) 72%,
+    rgba(150,50,0,.82)   100%);
+}
+
+/* ---------- DEPORTIVO: transmisión desde el estadio ---------- */
+
+/* 0. Viñeta oscura: oscurece un poco las esquinas, como un juego
+      nocturno, y así las luces de encima resaltan más. */
+.fx-deportivo .fx-vineta{
+  background:radial-gradient(ellipse at center,
+    rgba(0,0,0,0)   50%,
+    rgba(0,0,0,.28) 75%,
+    rgba(0,0,0,.62) 100%);
+}
+
+/* 1. Reflectores: dos haces de luz que salen de las esquinas de arriba y
+      se mueven de lado a lado, como las torres de luz de un estadio.
+      conic-gradient dibuja un cono de luz que nace en un punto (arriba al
+      centro de la pieza) y rotate() lo balancea como péndulo desde ahí. */
+.fx-reflector{
+  position:absolute;
+  top:-3%;
+  width:64%;
+  height:150%;
+  transform-origin:50% 0;
+  background:conic-gradient(from 165deg at 50% 0,
+    rgba(255,248,220,0)   0deg,
+    rgba(255,248,220,.6)  15deg,
+    rgba(255,248,220,0)   30deg,
+    rgba(255,248,220,0)   360deg);
+  /* la luz se desvanece conforme se aleja del foco */
+  -webkit-mask-image:radial-gradient(ellipse 75% 100% at 50% 0, #000 10%, transparent 78%);
+          mask-image:radial-gradient(ellipse 75% 100% at 50% 0, #000 10%, transparent 78%);
+  mix-blend-mode:screen;      /* screen solo aclara: se ve como luz */
+}
+/* el foco: el punto muy brillante donde nace el haz */
+.fx-reflector::before{
+  content:'';
+  position:absolute;
+  left:50%;
+  top:0;
+  width:40px;
+  height:40px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,
+    #fffef5 0 18%,
+    rgba(255,240,190,.55) 40%,
+    rgba(255,240,190,0)   70%);
+}
+/* duraciones distintas para que los dos haces no vayan sincronizados */
+.fx-reflector--izq{
+  left:-14%;
+  animation:fxAparecer .6s ease-out, fxReflectorIzq 5.5s ease-in-out infinite alternate;
+}
+.fx-reflector--der{
+  right:-14%;
+  animation:fxAparecer .6s ease-out, fxReflectorDer 6.8s ease-in-out infinite alternate;
+}
+@keyframes fxReflectorIzq{
+  from{ transform:rotate(-40deg); }
+  to  { transform:rotate(10deg); }
+}
+@keyframes fxReflectorDer{
+  from{ transform:rotate(40deg); }
+  to  { transform:rotate(-10deg); }
+}
+
+/* 2. Destello: una franja de luz que cruza la imagen en diagonal cada
+      pocos segundos, como el brillo de las repeticiones en la tele.
+      Arranca escondida a la izquierda, cruza rápido y espera afuera. */
+.fx-destello{
+  position:absolute;
+  top:-25%;
+  bottom:-25%;
+  left:-60%;
+  width:40%;
+  background:linear-gradient(90deg,
+    rgba(255,255,255,0)   0%,
+    rgba(255,255,255,.35) 50%,
+    rgba(255,255,255,0)   100%);
+  mix-blend-mode:screen;
+  animation:fxDestello 4.5s ease-in-out .8s infinite;
+}
+@keyframes fxDestello{
+  0%  { transform:translateX(0)    skewX(-20deg); }
+  32% { transform:translateX(450%) skewX(-20deg); }
+  100%{ transform:translateX(450%) skewX(-20deg); }
+}
+
+/* 3. Flashes de cámara: los crea js/filtros.js en lugares al azar de la
+      parte de arriba, como los fotógrafos y el público en las gradas. */
+.fx-flashes{
+  position:absolute;
+  inset:0;
+}
+.fx-flash{
+  position:absolute;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    #ffffff 0 16%,
+    rgba(255,255,255,.85) 26%,
+    rgba(255,238,200,.35) 48%,
+    rgba(255,238,200,0)   70%);
+  mix-blend-mode:screen;
+  animation:fxFlash .5s ease-out forwards;
+}
+/* las dos rayitas en cruz del brillo */
+.fx-flash::before,
+.fx-flash::after{
+  content:'';
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:280%;
+  height:2px;
+  background:linear-gradient(90deg, rgba(255,255,255,0), #fff, rgba(255,255,255,0));
+  transform:translate(-50%,-50%);
+}
+.fx-flash::after{ transform:translate(-50%,-50%) rotate(90deg); }
+
+@keyframes fxFlash{
+  0%  { opacity:0; transform:translate(-50%,-50%) scale(.2); }
+  14% { opacity:1; transform:translate(-50%,-50%) scale(1); }
+  100%{ opacity:0; transform:translate(-50%,-50%) scale(1.3) rotate(25deg); }
+}
+
+/* 4. Letrero de transmisión con el punto rojo parpadeando */
+.fx-envivo{
+  position:absolute;
+  top:8px;
+  left:8px;
+  align-items:center;
+  gap:5px;
+  padding:4px 8px 4px 7px;
+  border-radius:4px;
+  background:rgba(8,8,14,.68);
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:.68rem;
+  letter-spacing:1.2px;
+  line-height:1;
+  animation:fxAparecer .4s ease-out;
+}
+.fx-envivo i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#ff2b2b;
+  box-shadow:0 0 6px #ff2b2b;
+  animation:fxLatido 1.1s ease-in-out infinite;
+}
+@keyframes fxLatido{
+  0%, 100%{ opacity:1; }
+  50%     { opacity:.25; }
 }
