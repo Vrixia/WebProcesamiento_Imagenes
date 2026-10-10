@@ -29,12 +29,10 @@
 
       <a href="memorama-juego.html" class="memorama-cta" id="btnEntrar">Ingresa 2 tarjetas</a>
 
-      <div class="memorama-stake">
-       <img src="imagenes/cartas2.png">
-       <span id="cuantasTengo">Tienes 0</span>
-      </div>
+      <!-- Cuántas cartas repetidas tiene (la pastilla la pinta js/cartas.js) -->
+      <div class="repetidas-indicador repetidas-indicador--grande" id="cuantasTengo"></div>
 
-      <p class="memorama-note" id="nota">¡Supera el reto y gana una nueva carta!</p>
+      <p class="memorama-note">¡Supera el reto y gana una nueva carta!</p>
     </div>
   </main>
 
@@ -50,25 +48,19 @@
 
     var etiqueta = document.getElementById('cuantasTengo');
     var boton    = document.getElementById('btnEntrar');
-    var nota     = document.getElementById('nota');
 
     function pintar() {
-      var tengo  = Cartas.repetidas();
-      var cuesta = Cartas.COSTO_MEMORAMA;
+      // Pastilla con las cartas repetidas (está en js/cartas.js)
+      Cartas.pintarIndicador(etiqueta);
 
-      etiqueta.textContent = 'Tienes ' + tengo;
-
-      if (tengo >= cuesta) {
+      if (Cartas.puedeJugarMemorama()) {
         // Alcanza: el botón funciona normal
         boton.classList.remove('esta-apagada');
         boton.removeAttribute('aria-disabled');
-        nota.textContent = '¡Supera el reto y gana una nueva carta!';
       } else {
-        // No alcanza: se apaga el botón y se explica cómo conseguir más
+        // No alcanza: el botón se apaga
         boton.classList.add('esta-apagada');
         boton.setAttribute('aria-disabled', 'true');
-        nota.textContent = 'Necesitas ' + cuesta + ' cartas repetidas para entrar. ' +
-          'Se ganan en la trivia, cuando la carta que te toca ya la tenías.';
       }
     }
 

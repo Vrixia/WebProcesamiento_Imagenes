@@ -23,19 +23,18 @@
 
     <div class="collection-topbar">
       <h1 class="section-title" style="margin:0;">Mi colección:</h1>
-      <div class="count">
-        <img src="imagenes/cartas2.png" width="25px" height="auto">
-        <span id="contador">0 / 12</span>
+      <div class="collection-contadores">
+        <div class="count">
+          <img src="imagenes/cartas2.png" width="25px" height="auto">
+          <span id="contador">0 / 12</span>
+        </div>
+        <!-- Cartas repetidas: las que se gastan para entrar al memorama -->
+        <div class="repetidas-indicador" id="repetidas"></div>
       </div>
     </div>
 
     <!-- La cuadrícula se genera desde JavaScript -->
     <div class="card-grid" id="cuadricula"></div>
-
-    <p class="coleccion-aviso" id="aviso"></p>
-
-    <!-- Cartas repetidas: son las que se gastan para entrar al memorama -->
-    <p class="coleccion-repetidas" id="repetidas"></p>
 
   </main>
 
@@ -57,7 +56,6 @@
 
   var cuadricula = document.getElementById('cuadricula');
   var contador   = document.getElementById('contador');
-  var aviso      = document.getElementById('aviso');
   var repetidas  = document.getElementById('repetidas');
 
   function pintar() {
@@ -90,17 +88,8 @@
     var tengo = Cartas.contarDistintas();
     contador.textContent = tengo + ' / ' + Cartas.LISTA.length;
 
-    if (tengo === 0) {
-      aviso.textContent = 'Todavía no tienes cartas. Consigue de 8 a 10 aciertos en la trivia o gana el memorama para desbloquear la primera.';
-    } else if (tengo === Cartas.LISTA.length) {
-      aviso.textContent = '¡Completaste la colección! Tienes las 12 cartas.';
-    } else {
-      aviso.textContent = 'Te faltan ' + (Cartas.LISTA.length - tengo) + ' cartas por conseguir.';
-    }
-
-    var comodines = Cartas.repetidas();
-    repetidas.textContent = 'Cartas repetidas: ' + comodines +
-      ' · cada partida de memorama cuesta ' + Cartas.COSTO_MEMORAMA + '.';
+    // Pastilla con las cartas repetidas (está en js/cartas.js)
+    Cartas.pintarIndicador(repetidas);
   }
 
   pintar();

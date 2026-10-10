@@ -374,20 +374,6 @@ p.body-text{
   margin:0 0 14px;
 }
 
-/* ---------- Placeholder de imagen (recuadro punteado) ---------- */
-.img-placeholder{
-  border:2px dashed #4a4a63;
-  border-radius:var(--radius-sm);
-  background:#191926;
-  color:#5c5a72;
-  font-size:.75rem;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:10px;
-}
-
 /* ---------- Colores representativos de cada equipo ---------- */
 .team-sultanes{ --team:#16305e; --team-dark:#0a1830; }
 .team-toros{ --team:#43474f; --team-dark:#232529; }
@@ -462,6 +448,13 @@ html.sin-splash .menu-screen{
   font-family:var(--font-display);
   font-size:1.1rem;
 }
+/* Columna de la derecha: cartas conseguidas y, abajo, las repetidas */
+.collection-contadores{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:7px;
+}
 .card-grid{
   display:grid;
   grid-template-columns:repeat(3, 1fr);
@@ -502,23 +495,6 @@ html.sin-splash .menu-screen{
   align-items:center;
   justify-content:center;
   font-size:1.5rem;
-}
-
-.coleccion-aviso{
-  margin-top:18px;
-  margin-bottom:0;
-  font-size:.85rem;
-  line-height:1.5;
-  color:var(--text-muted);
-  text-align:center;
-}
-/* Renglón que dice cuántas cartas repetidas lleva el jugador */
-.coleccion-repetidas{
-  margin:8px 0 0;
-  font-size:.85rem;
-  line-height:1.5;
-  color:var(--text-muted);
-  text-align:center;
 }
 
 .memorama-fab{
@@ -666,17 +642,6 @@ html.sin-splash .menu-screen{
   border-radius:999px;
   letter-spacing:.4px;
   text-transform:uppercase;
-}
-.memorama-stake{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-family:var(--font-display);
-  font-size:1.1rem;
-}
-.memorama-stake img{
-  height:30px;
-  width: auto;
 }
 .memorama-note{
   font-size:.85rem;
@@ -839,15 +804,8 @@ html.sin-splash .menu-screen{
   cursor:default;
 }
 
-/* Cuántas cartas repetidas quedan, al terminar la partida */
-.memorama-saldo{
-  margin:4px 0 14px;
-  font-size:.85rem;
-  line-height:1.5;
-  color:rgba(255,255,255,.75);
-  text-align:center;
-  max-width:300px;
-}
+/* Pastilla de cartas repetidas que quedan, al terminar la partida */
+.memorama-saldo{ margin:6px 0 10px; }
 
 @keyframes latido{
   0%   { transform:scale(1);    opacity:1; }
@@ -977,14 +935,6 @@ html.sin-splash .menu-screen{
 
 /* ---------- Historia ---------- */
 .history-block{ margin-bottom:24px; }
-.history-block .img-placeholder{ width:100%; aspect-ratio:16/9; margin-top:10px; }
-.history-block--split{
-  display:grid;
-  grid-template-columns:1fr 92px;
-  gap:14px;
-  align-items:start;
-}
-.history-block--split .img-placeholder{ aspect-ratio:3/4; margin-top:0; height:100%; }
 
 /* ---------- Páginas de equipo: Equipo / Jugadores / Campeonatos / Videos ---------- */
 .stat-line{
@@ -1111,15 +1061,213 @@ html.sin-splash .menu-screen{
   line-height:1.45;
   color:rgba(244,243,247,.9);
 }
-.roster-fuente{
-  margin:24px 0 0;
-  font-size:.72rem;
-  color:var(--text-dim);
-  text-align:center;
+
+/* =====================================================================
+   CONTENIDO CON FOTOS (historia, equipo y campeonatos)
+   ===================================================================== */
+
+/* Foto con esquinas redondeadas.
+   --proporcion recorta la foto a una medida fija (16/9, 4/3, 3/4...) sin
+   deformarla, y --enfoque elige qué parte queda a la vista al recortar.
+   Las dos se ponen en el style="" de cada foto cuando hacen falta. */
+.foto{
+  position:relative;
+  margin:12px 0 0;
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+}
+.foto img{
+  width:100%;
+  height:auto;
+  aspect-ratio:var(--proporcion, auto);
+  object-fit:cover;
+  object-position:var(--enfoque, 50% 50%);
+  display:block;
+}
+.foto--clara{ background:#fff; }      /* imágenes con fondo blanco (el mapa) */
+
+/* Etiqueta sobre la foto: el lugar o el año */
+.foto-etiqueta{
+  position:absolute;
+  left:10px;
+  bottom:10px;
+  padding:4px 9px;
+  border-radius:7px;
+  background:rgba(10,10,18,.78);
+  color:#fff;
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.3px;
 }
 
-.trophy-card{ margin-bottom:20px; }
-.trophy-card .img-placeholder{ width:100%; aspect-ratio:16/9; margin-top:8px; }
+/* Texto a la izquierda y foto a la derecha */
+.bloque-lado{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 40%;
+  gap:14px;
+  align-items:start;
+}
+.bloque-lado .foto{ margin:2px 0 0; }
+.bloque-lado .foto img{ aspect-ratio:var(--proporcion, 3/4); }
+
+/* Ficha del equipo: cuatro datos grandes en dos columnas */
+.ficha{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:10px;
+  margin:16px 0 4px;
+}
+.ficha div{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius-sm);
+  padding:10px 12px 11px;
+}
+.ficha b{
+  display:block;
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:1.55rem;
+  line-height:1.1;
+  letter-spacing:.4px;
+  color:color-mix(in srgb, var(--team, var(--red-seam)) 45%, #fff);
+}
+.ficha span{
+  display:block;
+  margin-top:2px;
+  font-size:.72rem;
+  line-height:1.35;
+  color:var(--text-muted);
+}
+
+/* Lista de leyendas: número (o año) a la izquierda y texto a la derecha */
+.figuras{
+  list-style:none;
+  margin:4px 0 8px;
+  padding:0;
+  display:grid;
+  gap:8px;
+}
+.figuras li{
+  display:grid;
+  grid-template-columns:52px minmax(0, 1fr);
+  gap:11px;
+  align-items:center;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius-sm);
+  padding:9px 11px;
+}
+.figuras .num{
+  font-family:var(--font-display);
+  font-size:1.25rem;
+  letter-spacing:.4px;
+  text-align:center;
+  color:#fff;
+  background:var(--team, var(--red-seam));
+  border-radius:8px;
+  padding:5px 0 4px;
+}
+.figuras p{
+  margin:0;
+  font-size:.8rem;
+  line-height:1.45;
+  color:var(--text-muted);
+}
+.figuras strong{ color:var(--text); }
+
+/* Años de campeonato: fichas doradas con estrella */
+.anios-titulos{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:4px 0 20px;
+}
+.anios-titulos span{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:6px 11px 5px;
+  border-radius:999px;
+  background:linear-gradient(180deg, #f6d683 0%, #d9a441 100%);
+  color:#2a1d05;
+  font-family:var(--font-display);
+  font-size:1rem;
+  letter-spacing:.6px;
+  box-shadow:0 2px 8px rgba(217,164,65,.25);
+}
+.anios-titulos span::before{ content:'★'; font-size:.75rem; }
+/* Versión discreta: títulos de zona y finales perdidas */
+.anios-titulos--zona span{
+  background:var(--card-bg-2);
+  color:var(--text);
+  border:1px solid var(--card-border);
+  box-shadow:none;
+  font-size:.92rem;
+}
+.anios-titulos--zona span::before{ content:none; }
+
+/* Tarjeta de campeonato: foto arriba (de orilla a orilla) y texto abajo */
+.trophy-card{
+  margin-bottom:18px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+}
+.trophy-card .foto{
+  margin:0;
+  border:0;
+  border-radius:0;
+}
+.trophy-texto{ padding:13px 14px 14px; }
+.trophy-texto .body-text:last-child{ margin-bottom:0; }
+
+/* Línea del tiempo (historia) */
+.linea-tiempo{
+  position:relative;
+  list-style:none;
+  margin:8px 0 6px;
+  padding:0 0 0 22px;
+}
+.linea-tiempo::before{
+  content:'';
+  position:absolute;
+  left:5px;
+  top:8px;
+  bottom:8px;
+  width:2px;
+  border-radius:2px;
+  background:linear-gradient(180deg, var(--red-seam), rgba(200,16,46,.15));
+}
+.linea-tiempo li{
+  position:relative;
+  margin-bottom:11px;
+  font-size:.85rem;
+  line-height:1.45;
+  color:var(--text-muted);
+}
+.linea-tiempo li::before{
+  content:'';
+  position:absolute;
+  left:-22px;
+  top:4px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--bg-app);
+  border:2px solid var(--red-seam);
+}
+.linea-tiempo b{
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:1.02rem;
+  letter-spacing:.5px;
+  color:var(--text);
+  margin-right:6px;
+}
 
 .video-card{ margin-bottom:26px; }
 .video-card h3{
@@ -1571,12 +1719,90 @@ html.rep-sin-scroll .app-main{ overflow:hidden; }
 
 
 /* =====================================================================
+   INDICADOR DE CARTAS REPETIDAS (colección, memorama y trivia)
+   La pastilla la arma Cartas.pintarIndicador() en js/cartas.js:
+   dos reversos de carta encimados + el número + la palabra "repetidas".
+   ===================================================================== */
+.repetidas-indicador{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:4px 12px 4px 6px;
+  border-radius:999px;
+  background:rgba(12,12,20,.72);
+  border:1.5px solid rgba(217,164,65,.6);
+  box-shadow:0 2px 10px rgba(0,0,0,.25);
+  line-height:1;
+  white-space:nowrap;
+}
+.repetidas-icono{
+  position:relative;
+  width:28px;
+  height:26px;
+  flex-shrink:0;
+}
+.repetidas-icono img{
+  position:absolute;
+  top:2px;
+  width:16px;
+  height:21px;
+  object-fit:cover;
+  border-radius:3px;
+  border:1.5px solid #fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.45);
+}
+.repetidas-icono img:first-child{ left:1px;  transform:rotate(-12deg); }
+.repetidas-icono img:last-child { left:10px; transform:rotate(9deg); }
+.repetidas-num{
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  letter-spacing:.5px;
+  color:#f2c262;
+}
+.repetidas-txt{
+  font-size:.66rem;
+  font-weight:700;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+  color:rgba(244,243,247,.8);
+}
+/* Versión grande: pantalla de entrada al memorama */
+.repetidas-indicador--grande{ gap:9px; padding:6px 16px 6px 8px; }
+.repetidas-indicador--grande .repetidas-icono{ width:36px; height:34px; }
+.repetidas-indicador--grande .repetidas-icono img{ width:21px; height:28px; }
+.repetidas-indicador--grande .repetidas-icono img:last-child{ left:13px; }
+.repetidas-indicador--grande .repetidas-num{ font-size:1.6rem; }
+.repetidas-indicador--grande .repetidas-txt{ font-size:.74rem; }
+
+/* Cuando sube (trivia con carta repetida) da un saltito con brillo dorado */
+.repetidas-indicador.sube{ animation:repetidaSube .6s cubic-bezier(.2,.8,.2,1); }
+@keyframes repetidaSube{
+  0%  { transform:scale(1); }
+  35% { transform:scale(1.18); box-shadow:0 0 0 6px rgba(217,164,65,.28); }
+  100%{ transform:scale(1); }
+}
+
+/* Año de la temporada junto a un título (Jugadores 2026) */
+.titulo-temporada{
+  display:inline-block;
+  margin-left:6px;
+  padding:4px 10px 3px;
+  border-radius:8px;
+  background:var(--team, var(--red-seam));
+  color:#fff;
+  font-size:.9rem;
+  letter-spacing:.6px;
+  vertical-align:.3em;
+}
+
+
+/* =====================================================================
    ANIMACIONES Y TRANSICIONES
    ---------------------------------------------------------------------
    1. Transición al cambiar de página
    2. Aparición del contenido al entrar y al hacer scroll
    3. Efectos al pasar el mouse (hover) y al picar (active)
-   4. Detalles: splash, botón BéisbAR, memorama, barra inferior
+   4. Detalles: splash, memorama, barra inferior
    5. Movimiento reducido
    ===================================================================== */
 
@@ -1636,10 +1862,11 @@ html.animar .revelar.visible{
 .boton-beisbar-scanner, .card-slot, .jugador, .roster-indice a, .roster-indice a span,
 .footer-bar a, .bottom-nav a, .bottom-nav a .icon, .video-filters button,
 .memorama-cta, .memorama-btn, .premio-link, .trivia-answers label,
-.header-back svg, .imgheader img{
+.header-back svg, .imgheader img, .trophy-card, .ficha div, .figuras li{
   transition:transform .2s ease, box-shadow .2s ease, filter .2s ease,
              background-color .2s ease, border-color .2s ease, color .2s ease;
 }
+.trophy-card .foto img{ transition:transform .4s ease; }
 
 /* El ícono de la barra de equipos es un <span>: como bloque ya puede moverse */
 .bottom-nav a .icon{ display:block; }
@@ -1684,6 +1911,15 @@ html.animar .revelar.visible{
     box-shadow:0 10px 22px rgba(0,0,0,.4);
   }
   .jugador:hover .jugador-foto img{ transform:scale(1.06); }
+  /* Campeonatos y ficha del equipo: la tarjeta sube y la foto se acerca */
+  .trophy-card:hover{
+    transform:translateY(-3px);
+    border-color:var(--team, var(--red-seam));
+    box-shadow:0 10px 22px rgba(0,0,0,.4);
+  }
+  .trophy-card:hover .foto img{ transform:scale(1.04); }
+  .ficha div:hover,
+  .figuras li:hover{ border-color:var(--team, var(--red-seam)); }
   .roster-indice a:hover{
     background:var(--team);
     border-color:var(--team);
@@ -1706,8 +1942,6 @@ html.animar .revelar.visible{
   }
   .header-back:hover svg{ transform:translateX(-3px); }
   .imgheader a:hover img{ transform:scale(1.04); }
-  /* Memorama: las cartas boca abajo se levantan */
-  .memory-card:not(.volteada):not(.encontrada):hover{ transform:translateY(-3px); }
 }
 
 /* Al picar (mouse o dedo): se hunden */
@@ -1776,25 +2010,6 @@ button:focus-visible{
   to{ opacity:0; transform:scale(1.06); }
 }
 
-/* Botón BéisbAR: una línea roja recorre el recuadro, como un escáner */
-.boton-beisbar-scanner::after{
-  content:'';
-  position:absolute;
-  left:8%;
-  right:8%;
-  top:12%;
-  height:3px;
-  border-radius:3px;
-  background:linear-gradient(90deg, rgba(200,16,46,0), var(--red-seam), rgba(200,16,46,0));
-  box-shadow:0 0 10px rgba(200,16,46,.8);
-  animation:escaneo 2.6s ease-in-out infinite;
-  pointer-events:none;
-}
-@keyframes escaneo{
-  0%, 100%{ top:12%; }
-  50%     { top:85%; }
-}
-
 /* Memorama: el botón de entrar late con un brillo para llamar la atención
    (solo si alcanza para jugar) */
 .memorama-cta:not(.esta-apagada){ animation:brilloCta 2.2s ease-in-out infinite; }
@@ -1835,15 +2050,16 @@ button:focus-visible{
   .splash-logo-box img,
   .splash-logo img,
   .splash-screen.saliendo,
-  .boton-beisbar-scanner::after,
   .memorama-cta,
   .bottom-nav a.is-active::after,
   .video-filters button.is-active,
+  .repetidas-indicador.sube,
   .card-slot.is-locked .candado{ animation:none !important; }
 
   .pill-btn, .btn-submit, .icon-btn, .ayuda-fab, .memorama-fab, .boton-imagen,
   .boton-beisbar-scanner, .card-slot, .jugador, .jugador-foto img, .roster-indice a,
   .footer-bar a, .bottom-nav a .icon, .video-filters button, .memorama-cta,
   .memorama-btn, .premio-link, .trivia-answers label, .header-back svg,
-  .imgheader img{ transition:none !important; }
+  .imgheader img, .trophy-card, .trophy-card .foto img, .ficha div,
+  .figuras li{ transition:none !important; }
 }
