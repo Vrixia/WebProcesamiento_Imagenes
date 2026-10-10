@@ -73,6 +73,45 @@
   import { MindARThree } from 'mindar-image-three';
 
   // -----------------------------------------------------------------
+  // 0) LAS MASCOTAS
+  //
+  // Una por cada imagen que hay dentro de targets/targets.mind.
+  // El ORDEN es el mismo en que subiste las imágenes al compilador de
+  // MindAR: la primera imagen es la mascota 0, la segunda la 1, etc.
+  //
+  // 👉 AJUSTES por mascota, por si alguna no queda como quieres:
+  //   tamano     -> qué tan alta sale comparada con el ancho de la imagen
+  //                 (1 = igual de alta que el ancho de la imagen)
+  //   giroY      -> hacia dónde mira: 0, Math.PI/2, -Math.PI/2 o Math.PI
+  //   pararDePie -> si sale acostada, prueba Math.PI/2 o -Math.PI/2
+  // -----------------------------------------------------------------
+  const MASCOTAS = [
+    { nombre: 'Perro Sultán',     modelo: 'Modelos3D/PerroSultan/PerroSultanGLB.glb',         tamano: 1, giroY: 0, pararDePie: Math.PI / 2 },
+    { nombre: 'Toro Torín',       modelo: 'Modelos3D/ToroTorin/ToroTorinGLB.glb',             tamano: 1, giroY: 0, pararDePie: Math.PI / 2 },
+    { nombre: 'Pollo Algodonero', modelo: 'Modelos3D/PolloAlgodonero/PolloAlgodoneroGLB.glb', tamano: 1, giroY: 0, pararDePie: Math.PI / 2 },
+    { nombre: 'Tico el Teco',     modelo: 'Modelos3D/TicoElTeco/TicoElTecoGLB.glb',           tamano: 1, giroY: 0, pararDePie: Math.PI / 2 },
+  ];
+
+  // Cada modelo trae sus animaciones con su propio nombre (idle, IDLE,
+  // BAILE, BAILAR, SALUDO...). Esta lista dice qué nombres cuentan como
+  // cada una; no importan mayúsculas ni acentos. Las que no estén aquí
+  // (por ejemplo "mixamo.com") se ignoran.
+  const NOMBRES_ANIMACION = {
+    idle:    ['idle', 'reposo'],
+    bailar:  ['bailar', 'baile', 'bailando', 'dance', 'dancing'],
+    saludar: ['saludar', 'saludo', 'saludando', 'wave', 'waving'],
+  };
+
+  // 'BAILE' -> 'bailar', 'Saludo' -> 'saludar', 'mixamo.com' -> null
+  function tipoDeAnimacion(nombre) {
+    const limpio = nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+    for (const tipo in NOMBRES_ANIMACION) {
+      if (NOMBRES_ANIMACION[tipo].includes(limpio)) return tipo;
+    }
+    return null;
+  }
+
+  // -----------------------------------------------------------------
   // 1) Arrancar MindAR apuntando al archivo .mind ya compilado
   // -----------------------------------------------------------------
   const mindarThree = new MindARThree({
@@ -91,96 +130,144 @@
   dirLight.position.set(0.5, 1, 0.7);
   scene.add(dirLight);
 
-  // -----------------------------------------------------------------
-  // 2) Anclar el contenido al target (el logo de Sultanes)
-  // -----------------------------------------------------------------
-  const anchor = mindarThree.addAnchor(0);
-
-  const perroGrupo = new THREE.Group();
-  anchor.group.add(perroGrupo);
-
-  // 👉 AJUSTES que puedes cambiar si el modelo no queda como quieres:
-  const TAMANO      = 0.6;   // qué tanto del ancho del logo ocupa (1 = todo el logo)
-  const GIRO_Y      = 0;     // hacia dónde mira: 0, Math.PI/2, -Math.PI/2 o Math.PI
-  const PARAR_DE_PIE = Math.PI/2;    // si sale acostado, prueba Math.PI/2 o -Math.PI/2
-
-  // -----------------------------------------------------------------
-  // 3) Cargar el modelo GLB (ya trae sus texturas y animaciones dentro)
-  // -----------------------------------------------------------------
-  let mixer = null;              // el "reproductor" de animaciones de Three.js
-  const acciones = {};           // { idle, bailar, saludar }
-  let accionActual = null;       // la que se está reproduciendo ahora
-  let animacionActiva = null;    // 'bailar' | 'saludar' | null  (null = está en idle)
-
-  const reloj = new THREE.Clock();
+  // El título "¡Escanea!" cambia al nombre de la mascota que se está viendo
+  const titulo = document.querySelector('.ar-title');
+  const TITULO_INICIAL = titulo.textContent;
 
   const gltfLoader = new GLTFLoader();
-  gltfLoader.load(
-    'Modelos3D/PerroSultan/PerroSultanGLB.glb',
-    (gltf) => {
-      const modelo = gltf.scene;
-      console.log('[BéisbAR] Modelo GLB cargado ✅');
-      console.log('[BéisbAR] Animaciones encontradas:', gltf.animations.map(a => a.name));
-
-      // --- Autoajuste de tamaño y centrado ---
-      const caja = new THREE.Box3().setFromObject(modelo);
-      const tamano = new THREE.Vector3();
-      const centro = new THREE.Vector3();
-      caja.getSize(tamano);
-      caja.getCenter(centro);
-
-      const escala = TAMANO / Math.max(tamano.x, tamano.y, tamano.z);
-      modelo.scale.setScalar(escala);
-
-      // Lo centra horizontalmente y lo apoya sobre el logo (no flotando)
-      modelo.position.set(
-        -centro.x * escala,
-        -caja.min.y * escala,
-        -centro.z * escala
-      );
-
-      const soporte = new THREE.Group();
-      soporte.rotation.x = PARAR_DE_PIE;
-      soporte.rotation.y = GIRO_Y;
-      soporte.add(modelo);
-      perroGrupo.add(soporte);
-
-      // --- Preparar las animaciones ---
-      mixer = new THREE.AnimationMixer(modelo);
-
-      gltf.animations.forEach((clip) => {
-        const accion = mixer.clipAction(clip);
-        acciones[clip.name] = accion;
-
-        if (clip.name === 'idle') {
-          accion.loop = THREE.LoopRepeat;          // el idle se repite para siempre
-        } else {
-          accion.loop = THREE.LoopOnce;            // bailar y saludar se hacen una vez
-          accion.clampWhenFinished = true;
-        }
-      });
-
-      // Arranca en idle
-      if (acciones['idle']) {
-        accionActual = acciones['idle'];
-        accionActual.play();
-      }
-
-      // Cuando una animación de una sola vez termina, regresa sola a idle
-      mixer.addEventListener('finished', (e) => {
-        // Solo si la que terminó es la que sigue activa (si el usuario ya
-        // cambió a otra o la canceló, este aviso se ignora)
-        if (!animacionActiva) return;
-        if (e.action !== acciones[animacionActiva]) return;
-        volverAIdle();
-      });
-    },
-    undefined,
-    (error) => console.error('[BéisbAR] No se pudo cargar el modelo GLB:', error)
-  );
+  const reloj = new THREE.Clock();
+  let visible = null;    // la mascota que la cámara está viendo ahora (o null)
 
   // -----------------------------------------------------------------
-  // 4) Control de animaciones con los botones
+  // 2) Un ancla por mascota: el ancla N sigue a la imagen N del .mind.
+  //    Si el .mind todavía no trae esa imagen, el ancla nunca se activa
+  //    y no pasa nada (no marca error).
+  // -----------------------------------------------------------------
+  MASCOTAS.forEach((mascota, indice) => {
+    mascota.anchor = mindarThree.addAnchor(indice);
+    mascota.estado = 'sin-cargar';     // 'sin-cargar' | 'cargando' | 'lista' | 'error'
+    mascota.mixer = null;              // el "reproductor" de animaciones de Three.js
+    mascota.acciones = {};             // { idle, bailar, saludar }
+    mascota.accionActual = null;       // la que se está reproduciendo ahora
+    mascota.animacionActiva = null;    // 'bailar' | 'saludar' | null  (null = está en idle)
+
+    // La cámara encontró la imagen de esta mascota
+    mascota.anchor.onTargetFound = () => {
+      visible = mascota;
+      cargarMascota(mascota);          // si aún no estaba cargada, se baja ahora
+      if (mascota.estado !== 'error') titulo.textContent = mascota.nombre;
+      pintarBotones();
+    };
+
+    // La imagen salió de la cámara
+    mascota.anchor.onTargetLost = () => {
+      if (visible === mascota) visible = null;
+      titulo.textContent = TITULO_INICIAL;
+      pintarBotones();
+    };
+  });
+
+  // -----------------------------------------------------------------
+  // 3) Cargar el modelo GLB de una mascota (trae texturas y animaciones).
+  //    Solo se baja cuando se escanea su imagen, para no gastar datos del
+  //    celular en modelos que no se van a ver. El Perro Sultán se baja
+  //    desde el inicio porque es el primero que se prueba.
+  // -----------------------------------------------------------------
+  function cargarMascota(mascota) {
+    if (mascota.estado !== 'sin-cargar') return;
+    mascota.estado = 'cargando';
+
+    gltfLoader.load(
+      mascota.modelo,
+      (gltf) => {
+        const modelo = gltf.scene;
+        console.log('[BéisbAR] ' + mascota.nombre + ' cargado ✅');
+        console.log('[BéisbAR] Animaciones encontradas:', gltf.animations.map(a => a.name));
+
+        // --- Preparar las animaciones ---
+        mascota.mixer = new THREE.AnimationMixer(modelo);
+
+        gltf.animations.forEach((clip) => {
+          const tipo = tipoDeAnimacion(clip.name);       // 'idle' | 'bailar' | 'saludar' | null
+          if (!tipo || mascota.acciones[tipo]) return;   // nombre desconocido o repetido: se ignora
+
+          const accion = mascota.mixer.clipAction(clip);
+          mascota.acciones[tipo] = accion;
+
+          if (tipo === 'idle') {
+            accion.loop = THREE.LoopRepeat;          // el idle se repite para siempre
+          } else {
+            accion.loop = THREE.LoopOnce;            // bailar y saludar se hacen una vez
+            accion.clampWhenFinished = true;
+          }
+        });
+
+        // Arranca en idle (y se aplica ya su primera pose, para medir bien)
+        if (mascota.acciones['idle']) {
+          mascota.accionActual = mascota.acciones['idle'];
+          mascota.accionActual.play();
+          mascota.mixer.update(0);
+        }
+
+        // --- Autoajuste de tamaño y centrado ---
+        // En un modelo con esqueleto, la caja solo sale bien si antes se
+        // acomodan los huesos en la pose actual; si no, mide de menos y la
+        // mascota sale gigante.
+        modelo.updateMatrixWorld(true);
+        modelo.traverse((parte) => {
+          if (parte.isSkinnedMesh) {
+            parte.skeleton.update();
+            parte.computeBoundingBox();
+          }
+        });
+
+        const caja = new THREE.Box3().setFromObject(modelo);
+        const tamano = new THREE.Vector3();
+        const centro = new THREE.Vector3();
+        caja.getSize(tamano);
+        caja.getCenter(centro);
+
+        const escala = mascota.tamano / Math.max(tamano.x, tamano.y, tamano.z);
+        modelo.scale.setScalar(escala);
+
+        // Lo centra horizontalmente y lo apoya sobre la imagen (no flotando)
+        modelo.position.set(
+          -centro.x * escala,
+          -caja.min.y * escala,
+          -centro.z * escala
+        );
+
+        const soporte = new THREE.Group();
+        soporte.rotation.x = mascota.pararDePie;
+        soporte.rotation.y = mascota.giroY;
+        soporte.add(modelo);
+        mascota.anchor.group.add(soporte);
+
+        // Cuando una animación de una sola vez termina, regresa sola a idle
+        mascota.mixer.addEventListener('finished', (e) => {
+          // Solo si la que terminó es la que sigue activa (si el usuario ya
+          // cambió a otra o la canceló, este aviso se ignora)
+          if (!mascota.animacionActiva) return;
+          if (e.action !== mascota.acciones[mascota.animacionActiva]) return;
+          volverAIdle(mascota);
+        });
+
+        mascota.estado = 'lista';
+      },
+      undefined,
+      (error) => {
+        mascota.estado = 'error';
+        console.error('[BéisbAR] No se pudo cargar ' + mascota.modelo + ':', error);
+        if (visible === mascota) titulo.textContent = TITULO_INICIAL;
+      }
+    );
+  }
+
+  cargarMascota(MASCOTAS[0]);
+
+  // -----------------------------------------------------------------
+  // 4) Control de animaciones con los botones.
+  //    Siempre mueven a la mascota que la cámara está viendo.
   // -----------------------------------------------------------------
   const botones = {
     bailar:  document.getElementById('btnBailar'),
@@ -188,42 +275,44 @@
   };
 
   // Cambia de una animación a otra con una transición suave
-  function cambiarA(nuevaAccion, duracion = 0.25) {
-    if (!nuevaAccion || nuevaAccion === accionActual) return;
+  function cambiarA(mascota, nuevaAccion, duracion = 0.25) {
+    if (!nuevaAccion || nuevaAccion === mascota.accionActual) return;
 
     nuevaAccion.reset();
     nuevaAccion.setEffectiveTimeScale(1);
     nuevaAccion.setEffectiveWeight(1);
     nuevaAccion.play();
 
-    if (accionActual) accionActual.crossFadeTo(nuevaAccion, duracion, false);
-    accionActual = nuevaAccion;
+    if (mascota.accionActual) mascota.accionActual.crossFadeTo(nuevaAccion, duracion, false);
+    mascota.accionActual = nuevaAccion;
   }
 
-  function volverAIdle() {
-    animacionActiva = null;
-    cambiarA(acciones['idle'], 0.3);
+  function volverAIdle(mascota) {
+    mascota.animacionActiva = null;
+    cambiarA(mascota, mascota.acciones['idle'], 0.3);
     pintarBotones();
   }
 
-  // Oscurece el botón de la animación que esté activa
+  // Oscurece el botón de la animación activa de la mascota que se ve
   function pintarBotones() {
+    const activa = visible ? visible.animacionActiva : null;
     for (const nombre in botones) {
       if (!botones[nombre]) continue;
-      botones[nombre].classList.toggle('is-activo', animacionActiva === nombre);
+      botones[nombre].classList.toggle('is-activo', activa === nombre);
     }
   }
 
   function alPresionar(nombre) {
-    if (!mixer || !acciones[nombre]) return;   // el modelo todavía no carga
+    const mascota = visible;
+    if (!mascota || !mascota.mixer || !mascota.acciones[nombre]) return;   // no se ve ninguna o aún no carga
 
-    if (animacionActiva === nombre) {
+    if (mascota.animacionActiva === nombre) {
       // Mismo botón otra vez → se cancela y vuelve a idle
-      volverAIdle();
+      volverAIdle(mascota);
     } else {
       // Botón distinto (o ninguna activa) → corta lo anterior y pone esta
-      animacionActiva = nombre;
-      cambiarA(acciones[nombre], 0.2);
+      mascota.animacionActiva = nombre;
+      cambiarA(mascota, mascota.acciones[nombre], 0.2);
       pintarBotones();
     }
   }
@@ -235,11 +324,12 @@
   // 5) Iniciar cámara + escaneo automático
   // -----------------------------------------------------------------
   await mindarThree.start();
-  console.log('[BéisbAR] Cámara y escaneo iniciados ✅ — buscando el logo...');
+  console.log('[BéisbAR] Cámara y escaneo iniciados ✅ — buscando imágenes...');
 
   renderer.setAnimationLoop(() => {
     const dt = reloj.getDelta();
-    if (mixer) mixer.update(dt);     // hace avanzar la animación
+    // Solo se anima la mascota que se ve (ahorra batería)
+    if (visible && visible.mixer) visible.mixer.update(dt);
     renderer.render(scene, camera);
   });
 </script>
