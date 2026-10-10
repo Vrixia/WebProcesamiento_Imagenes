@@ -1446,6 +1446,13 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   font-weight:700;
   letter-spacing:.3px;
 }
+/* En las fotos angostas (texto a un lado) la etiqueta es un poco más chica */
+.bloque-lado .foto-etiqueta{
+  left:6px;
+  bottom:6px;
+  padding:3px 7px;
+  font-size:.64rem;
+}
 
 /* Texto a la izquierda y foto a la derecha */
 .bloque-lado{
