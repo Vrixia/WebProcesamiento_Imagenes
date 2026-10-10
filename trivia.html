@@ -25,8 +25,6 @@
       <span class="pill-btn" style="font-size:1.3rem; padding:12px 34px;">Trivia</span>
     </div>
 
-    <p class="body-text" style="text-align:center; margin-bottom:18px;">10 preguntas al azar de un banco de 20.</p>
-
     <!-- Las preguntas se generan desde JavaScript -->
     <div id="preguntas"></div>
 
@@ -43,6 +41,8 @@
         <img id="premioImg" alt="">
         <p class="premio-nombre" id="premioNombre"></p>
         <p class="premio-estado" id="premioEstado"></p>
+        <!-- Solo aparece si la carta ya la tenía: muestra sus repetidas -->
+        <div class="repetidas-indicador" id="premioRepetidas" style="display:none;"></div>
         <a href="coleccion.html" class="premio-link">Ver mi colección</a>
       </div>
 
@@ -111,7 +111,7 @@
     { p: '¿Qué legendario pelotero cubano dirigió a los Algodoneros al título de 1942?',
       opciones: ['Lázaro Salazar', 'Martín Dihigo', 'Roenis Elías', 'Cool Papa Bell'], correcta: 1 },
 
-    { p: '¿Qué tiene de especial a los Tecolotes de los Dos Laredos?',
+    { p: '¿Qué tienen de especial los Tecolotes de los Dos Laredos?',
       opciones: ['Es el equipo más antiguo de la liga', 'Juega como local en dos países', 'Nunca ha ganado un campeonato', 'Tiene dos mascotas oficiales'], correcta: 1 },
 
     { p: '¿Cuál es la mascota de los Tecolotes de los Dos Laredos?',
@@ -120,7 +120,7 @@
     { p: '¿Cuántos campeonatos de liga tienen los Tecolotes de los Dos Laredos?',
       opciones: ['2', '3', '5', '7'], correcta: 2 },
 
-    { p: '¿Cuál fue el primer equipo mexicano de beisbol formado oficialmente?',
+    { p: '¿Cuál fue el primer equipo de beisbol fundado en la capital del país?',
       opciones: ['Club México, en 1887', 'Diablos Rojos, en 1940', 'Carta Blanca, en 1939', 'Unión Laguna, en 1940'], correcta: 0 },
 
     { p: '¿En qué año la LMB obtuvo la clasificación Clase AAA?',
@@ -139,6 +139,7 @@
   var premioImg    = document.getElementById('premioImg');
   var premioNombre = document.getElementById('premioNombre');
   var premioEstado = document.getElementById('premioEstado');
+  var premioRepetidas = document.getElementById('premioRepetidas');
 
   var seleccionadas = [];
   var bloqueada = false;   // true cuando ya se envió la partida
@@ -234,6 +235,7 @@
 
   // Entrega la carta y la muestra en pantalla
   function entregarCarta() {
+    var antes  = Cartas.repetidas();
     var ganada = Cartas.darAleatoria();
 
     premioImg.src = Cartas.rutaThumb(ganada.carta.id);
@@ -241,10 +243,12 @@
     premioNombre.textContent = ganada.carta.nombre;
     if (ganada.esNueva) {
       premioEstado.textContent = '¡Carta nueva para tu colección!';
+      premioRepetidas.style.display = 'none';
     } else {
-      // Carta duplicada: en vez de la carta se lleva un comodín para el memorama
-      premioEstado.textContent = 'Ya tenías esta carta, así que ganaste 1 carta repetida. ' +
-        'Ahora tienes ' + ganada.repetidas + '.';
+      // Carta duplicada: se suma 1 carta repetida y la pastilla da un saltito
+      premioEstado.textContent = '¡Repetida! +1 carta repetida';
+      premioRepetidas.style.display = '';
+      Cartas.pintarIndicador(premioRepetidas, antes);
     }
     premio.style.display = '';
   }

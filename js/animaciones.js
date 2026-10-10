@@ -25,7 +25,8 @@
 
   // Contenedores cuyos HIJOS aparecen uno por uno, en vez del bloque entero
   var CONTENEDORES = '.opcionesmenuprincipal, .card-grid, .roster-grupo, ' +
-                     '.roster-grid, #preguntas, .memorama-intro, .card-viewer';
+                     '.roster-grid, #preguntas, .memorama-intro, .card-viewer, ' +
+                     '.ficha, .figuras, .linea-tiempo, .anios-titulos';
 
   var RETRASO     = 60;    // ms entre un bloque y el siguiente
   var RETRASO_MAX = 420;   // tope, para que nada tarde demasiado en salir

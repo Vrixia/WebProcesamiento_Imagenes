@@ -10,7 +10,7 @@
     { id: 'cade gota',         nombre: 'Cade Gotta'        },
     { id: 'edward olivares',   nombre: 'Edward Olivares'   },
     { id: 'hernan perez',      nombre: 'Hernán Pérez'      },
-    { id: 'john lester',       nombre: 'John Lester'       },
+    { id: 'john lester',       nombre: 'Josh Lester'       },
     { id: 'justin turner',     nombre: 'Justin Turner'     },
     { id: 'ramiro penia',      nombre: 'Ramiro Peña'       }
   ];
@@ -185,6 +185,37 @@
     return sumar(carta);
   }
 
+  // -----------------------------------------------------------------
+  // INDICADOR DE CARTAS REPETIDAS
+  // Pinta dentro de "elemento" una pastilla con dos reversos de carta
+  // encimados y el número de repetidas. Lo usan la colección, la trivia
+  // y el memorama, así se ve igual en todos lados.
+  //   elemento -> el contenedor (por ejemplo un <div class="repetidas-indicador">)
+  //   anterior -> (opcional) cuántas había antes; si ahora hay más, el
+  //               indicador da un saltito para que se note que subió.
+  // -----------------------------------------------------------------
+  function pintarIndicador(elemento, anterior) {
+    if (!elemento) return;
+    var n = leerRepetidas();
+    var reverso = rutaReverso();
+
+    elemento.innerHTML =
+      '<span class="repetidas-icono" aria-hidden="true">' +
+        '<img src="' + reverso + '" alt=""><img src="' + reverso + '" alt="">' +
+      '</span>' +
+      '<span class="repetidas-num">' + n + '</span>' +
+      '<span class="repetidas-txt">' + (n === 1 ? 'repetida' : 'repetidas') + '</span>';
+
+    elemento.setAttribute('role', 'img');
+    elemento.setAttribute('aria-label', 'Cartas repetidas: ' + n);
+
+    if (typeof anterior === 'number' && n > anterior) {
+      elemento.classList.remove('sube');
+      void elemento.offsetWidth;          // reinicia la animación
+      elemento.classList.add('sube');
+    }
+  }
+
   // Borra todo el progreso: colección y cartas repetidas.
   // Sirve para probar la página desde cero (Cartas.reiniciar() en la consola).
   function reiniciar() {
@@ -215,7 +246,8 @@
     COSTO_MEMORAMA: COSTO_MEMORAMA,
     repetidas: leerRepetidas,
     puedeJugarMemorama: puedeJugarMemorama,
-    pagarMemorama: pagarMemorama
+    pagarMemorama: pagarMemorama,
+    pintarIndicador: pintarIndicador
   };
 
 })();

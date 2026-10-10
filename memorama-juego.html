@@ -48,7 +48,8 @@
       <a href="coleccion.html" class="premio-link">Ver mi colección</a>
     </div>
 
-    <p class="memorama-saldo" id="saldoFinal"></p>
+    <!-- Cartas repetidas que le quedan (la pastilla la pinta js/cartas.js) -->
+    <div class="repetidas-indicador memorama-saldo" id="saldoFinal"></div>
 
     <div class="memorama-overlay-botones">
       <button type="button" class="memorama-btn" id="btnReintentar">Jugar de nuevo</button>
@@ -287,20 +288,11 @@
     overlayFinal.classList.remove('oculto');
   }
 
-  // Dice cuántas cartas repetidas quedan y, si ya no alcanzan para otra
+  // Enseña cuántas cartas repetidas quedan y, si ya no alcanzan para otra
   // partida, apaga el botón de "Jugar de nuevo".
   function pintarSaldo() {
-    var quedan = Cartas.repetidas();
-    var cuesta = Cartas.COSTO_MEMORAMA;
-
-    if (Cartas.puedeJugarMemorama()) {
-      saldoFinal.textContent = 'Te quedan ' + quedan + ' cartas repetidas.';
-      btnReintentar.disabled = false;
-    } else {
-      saldoFinal.textContent = 'Te quedan ' + quedan + ' cartas repetidas, y cada partida cuesta ' +
-        cuesta + '. Gana más en la trivia.';
-      btnReintentar.disabled = true;
-    }
+    Cartas.pintarIndicador(saldoFinal);
+    btnReintentar.disabled = !Cartas.puedeJugarMemorama();
   }
 
   btnReintentar.addEventListener('click', function () {
@@ -314,12 +306,10 @@
     overlayCuenta.classList.add('oculto');
 
     tituloFinal.textContent = 'Te faltan cartas';
-    textoFinal.textContent  = 'Entrar al memorama cuesta ' + Cartas.COSTO_MEMORAMA +
-      ' cartas repetidas y solo tienes ' + Cartas.repetidas() + '.';
+    textoFinal.textContent  = 'Necesitas ' + Cartas.COSTO_MEMORAMA + ' cartas repetidas para jugar.';
     overlayFinal.classList.remove('es-victoria');
     premio.style.display = 'none';
-    saldoFinal.textContent = 'Las cartas repetidas se ganan en la trivia, cuando la carta que te toca ya la tenías.';
-    btnReintentar.disabled = true;
+    pintarSaldo();
     overlayFinal.classList.remove('oculto');
   }
 
