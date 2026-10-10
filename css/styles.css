@@ -936,19 +936,364 @@ html.sin-splash .menu-screen{
 /* ---------- Historia ---------- */
 .history-block{ margin-bottom:24px; }
 
-/* ---------- Páginas de equipo: Equipo / Jugadores / Campeonatos / Videos ---------- */
-.stat-line{
+/* =====================================================================
+   ESTADÍSTICAS (equipo.html de cada equipo)
+   ---------------------------------------------------------------------
+   Las gráficas están hechas solo con HTML y CSS: cada barra es un <span
+   class="barra"> y su tamaño viene en la variable --v, que va de 0 a 1
+   (1 = la barra más grande de esa gráfica). --i es el número de la barra,
+   para que al crecer salgan una tras otra.
+   js/estadisticas.js les pone la animación, la etiqueta que aparece al
+   tocar una barra y el botón para ver la tabla.
+   ===================================================================== */
+
+/* Color de las gráficas: un tono de cada equipo que resalta sobre el fondo
+   oscuro. Los otros equipos van en gris para que el propio destaque. */
+:root{
+  --grafica:      #3987e5;
+  --grafica-gris: #4d4c63;
+  --grafica-base: #3a3a52;   /* línea de abajo de las barras */
+}
+.team-sultanes{ --grafica:#3987e5; }
+.team-toros{ --grafica:#e66767; }
+.team-algodoneros{ --grafica:#d55181; }
+.team-tecolotes{ --grafica:#9085e9; }
+
+/* Cifras: un dato grande con su nombre arriba (temporada y pitcheo) */
+.cifras{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+.cifra{
+  min-width:0;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius-sm);
+  padding:10px 12px 11px;
+}
+.cifra > span:first-child{
+  display:block;
+  font-size:.72rem;
+  line-height:1.3;
+  color:var(--text-muted);
+}
+.cifra b{
+  display:block;
+  margin-top:4px;
+  font-size:1.5rem;
+  font-weight:700;
+  line-height:1.1;
+  color:var(--text);
+}
+.cifra b small{
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--text-muted);
+}
+.cifra-quien{
+  display:block;
+  margin-top:4px;
+  font-size:.74rem;
+  line-height:1.35;
+  color:var(--text-muted);
+}
+
+/* Tarjeta que envuelve cada gráfica */
+.grafica-tarjeta{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius-md);
+  padding:14px 14px 12px;
+}
+.grafica-tarjeta + .grafica-tarjeta{ margin-top:10px; }
+.barra{
+  display:block;
+  background:var(--grafica);
+}
+
+/* Zona Norte: una fila por equipo (lugar, nombre, barra y récord).
+   La barra mide el porcentaje de victorias. */
+.filas{
+  display:grid;
+  gap:3px;
+}
+.fila{
+  display:grid;
+  grid-template-columns:20px 86px minmax(0, 1fr);
+  align-items:center;
+  gap:8px;
+  min-height:24px;
+  font-size:.8rem;
+  color:var(--text-muted);
+}
+.fila-pos{
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.fila-nombre{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.fila-pista{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+}
+.fila .barra{
+  flex:none;
+  width:calc(var(--v) * (100% - 48px));
+  height:12px;
+  border-radius:0 4px 4px 0;      /* redonda en la punta, recta en la base */
+  background:var(--grafica-gris);
+}
+.fila-valor{
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.fila.es-equipo{
+  color:var(--text);
+  font-weight:700;
+}
+.fila.es-equipo .barra{ background:var(--grafica); }
+
+/* Contra toda la liga: 20 barras paradas, ordenadas de mejor a peor */
+.tira-cabeza{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.tira-titulo{
+  margin:0;
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--text);
+}
+.tira-dato{
+  margin:0;
+  font-size:.76rem;
+  color:var(--text-muted);
+  white-space:nowrap;
+}
+.tira-dato b{
+  margin-right:6px;
+  font-size:1.05rem;
+  color:var(--text);
+}
+.tira-barras{
+  display:flex;
+  height:72px;
+  border-bottom:1px solid var(--grafica-base);
+}
+.tira-barras .marca{
+  flex:1 1 0;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.tira-barras .barra{
+  width:calc(100% - 3px);         /* el hueco entre barras */
+  max-width:24px;
+  height:calc(var(--v) * 100%);
+  border-radius:4px 4px 0 0;
+  background:var(--grafica-gris);
+}
+.tira-barras .es-equipo .barra{ background:var(--grafica); }
+.tira-barras .activa .barra{ filter:brightness(1.4); }
+.tira-extremos{
   display:flex;
   justify-content:space-between;
-  padding:10px 0;
-  border-bottom:1px solid var(--card-border);
-  font-size:.88rem;
+  gap:10px;
+  margin-top:7px;
+  font-size:.7rem;
+  color:var(--text-muted);
 }
-.stat-line span:first-child{ color:var(--text-muted); }
-.stat-line span:last-child{ font-weight:700; }
+
+/* Etiqueta que aparece sobre la barra que se toca (la crea el JS) */
+.grafica{ position:relative; }
+.grafica:focus{ outline:none; }
+.grafica:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:4px;
+  border-radius:4px;
+}
+.grafica-tip{
+  position:absolute;
+  z-index:3;
+  top:0;
+  left:0;
+  padding:6px 9px 7px;
+  background:#0c0c14;
+  border:1px solid var(--card-border);
+  border-radius:8px;
+  box-shadow:0 8px 18px rgba(0,0,0,.45);
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .12s ease;
+}
+.grafica-tip.mostrar{ opacity:1; }
+.grafica-tip b{
+  display:block;
+  font-size:.92rem;
+  color:var(--text);
+}
+.grafica-tip span{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:1px;
+  font-size:.72rem;
+  color:var(--text-muted);
+}
+.grafica-tip span::before{          /* rayita con el color de la barra */
+  content:"";
+  flex:none;
+  width:12px;
+  height:2px;
+  border-radius:1px;
+  background:var(--clave, var(--grafica-gris));
+}
+.solo-lectores{                     /* se oye con lector de pantalla, no se ve */
+  position:absolute;
+  width:1px;
+  height:1px;
+  margin:-1px;
+  padding:0;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  white-space:nowrap;
+  border:0;
+}
+
+/* Tabla con los datos de toda la liga */
+.ver-tabla{
+  display:inline-flex;
+  align-items:center;
+  margin-top:10px;
+  padding:7px 14px;
+  border-radius:999px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  color:var(--text);
+  font-size:.78rem;
+  font-weight:600;
+}
+.ver-tabla[aria-expanded="true"]{
+  background:var(--team);
+  border-color:var(--team);
+}
+.tabla-envoltura{ overflow-x:auto; }
+.ver-tabla + .tabla-envoltura{ margin-top:10px; }
+.tabla-envoltura[hidden]{ display:none; }
+.tabla-datos{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.76rem;
+  font-variant-numeric:tabular-nums;
+}
+.tabla-datos caption{
+  padding:0 0 8px;
+  text-align:left;
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--text);
+}
+.tabla-datos th,
+.tabla-datos td{
+  padding:6px 4px;
+  border-bottom:1px solid var(--card-border);
+  text-align:right;
+  white-space:nowrap;
+  color:var(--text-muted);
+}
+.tabla-datos thead th{
+  font-size:.7rem;
+  font-weight:600;
+}
+.tabla-datos abbr{ text-decoration:none; }
+.tabla-datos tbody th{
+  text-align:left;
+  font-weight:400;
+}
+.tabla-datos thead th:first-child{ text-align:left; }
+.tabla-datos tbody tr:last-child > *{ border-bottom:0; }
+.tabla-datos tr.es-equipo > *{
+  color:var(--text);
+  font-weight:700;
+}
+.tabla-datos tr.es-equipo th{ box-shadow:inset 3px 0 0 var(--grafica); padding-left:9px; }
+
+/* Líderes de bateo: los 3 primeros de cada categoría */
+.lideres{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+.lideres .grafica-tarjeta + .grafica-tarjeta{ margin-top:0; }
+.lider-grupo{ padding:12px 12px 11px; }
+.lider-titulo{
+  margin:0 0 9px;
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--text);
+}
+.lider-lista{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:grid;
+  gap:8px;
+}
+.lider-nombre{
+  display:block;
+  margin-bottom:3px;
+  font-size:.72rem;
+  line-height:1.3;
+  color:var(--text-muted);
+}
+.lider-pista{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.lider .barra{
+  flex:none;
+  width:calc(var(--v) * (100% - 40px));
+  height:10px;
+  border-radius:0 4px 4px 0;
+}
+.lider-valor{
+  font-size:.8rem;
+  font-weight:700;
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+
+/* Las barras crecen desde su base cuando la tarjeta aparece en pantalla.
+   js/estadisticas.js pone la clase graficas-animadas en el <html> (solo si
+   el usuario no pidió reducir movimiento) y la clase crecer en la tarjeta. */
+html.graficas-animadas .barra{
+  transition:transform .7s cubic-bezier(.2,.8,.2,1), filter .15s ease;
+  transition-delay:calc(var(--i, 0) * 35ms), 0s;
+}
+html.graficas-animadas .filas .barra,
+html.graficas-animadas .lider .barra{
+  transform:scaleX(0);
+  transform-origin:left center;
+}
+html.graficas-animadas .tira-barras .barra{
+  transform:scaleY(0);
+  transform-origin:center bottom;
+}
+html.graficas-animadas .crecer .barra{ transform:none; }
 
 /* =====================================================================
-   ROSTER (equipos/*/jugadores.html)
+   ROSTER (jugadores.html de cada equipo)
    ===================================================================== */
 
 /* Índice de posiciones: cada enlace baja a su sección */
@@ -1199,15 +1544,6 @@ html.sin-splash .menu-screen{
   box-shadow:0 2px 8px rgba(217,164,65,.25);
 }
 .anios-titulos span::before{ content:'★'; font-size:.75rem; }
-/* Versión discreta: títulos de zona y finales perdidas */
-.anios-titulos--zona span{
-  background:var(--card-bg-2);
-  color:var(--text);
-  border:1px solid var(--card-border);
-  box-shadow:none;
-  font-size:.92rem;
-}
-.anios-titulos--zona span::before{ content:none; }
 
 /* Tarjeta de campeonato: foto arriba (de orilla a orilla) y texto abajo */
 .trophy-card{
@@ -1862,7 +2198,7 @@ html.animar .revelar.visible{
 .boton-beisbar-scanner, .card-slot, .jugador, .roster-indice a, .roster-indice a span,
 .footer-bar a, .bottom-nav a, .bottom-nav a .icon, .video-filters button,
 .memorama-cta, .memorama-btn, .premio-link, .trivia-answers label,
-.header-back svg, .imgheader img, .trophy-card, .ficha div, .figuras li{
+.header-back svg, .imgheader img, .trophy-card, .ficha div, .figuras li, .cifra, .ver-tabla{
   transition:transform .2s ease, box-shadow .2s ease, filter .2s ease,
              background-color .2s ease, border-color .2s ease, color .2s ease;
 }
@@ -1919,7 +2255,9 @@ html.animar .revelar.visible{
   }
   .trophy-card:hover .foto img{ transform:scale(1.04); }
   .ficha div:hover,
+  .cifra:hover,
   .figuras li:hover{ border-color:var(--team, var(--red-seam)); }
+  .ver-tabla:hover{ border-color:var(--team, var(--red-seam)); }
   .roster-indice a:hover{
     background:var(--team);
     border-color:var(--team);
@@ -2061,5 +2399,5 @@ button:focus-visible{
   .footer-bar a, .bottom-nav a .icon, .video-filters button, .memorama-cta,
   .memorama-btn, .premio-link, .trivia-answers label, .header-back svg,
   .imgheader img, .trophy-card, .trophy-card .foto img, .ficha div,
-  .figuras li{ transition:none !important; }
+  .figuras li, .cifra, .ver-tabla{ transition:none !important; }
 }
