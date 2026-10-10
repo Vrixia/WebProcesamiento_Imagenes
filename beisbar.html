@@ -120,6 +120,16 @@
     uiScanning: "no",
     uiLoading: "no",
     uiError: "no",
+    // Suavizado contra el temblor: en cada cuadro de la cámara la posición
+    // calculada de la imagen sale un poquito distinta; este filtro promedia
+    // esos cambios para que la mascota se vea quieta.
+    // 👉 Si todavía tiembla, baja filterMinCF (por ejemplo a 0.0001).
+    //    Si tarda en seguir a la imagen cuando mueves el celular, súbelo (0.001).
+    filterMinCF: 0.0005,
+    filterBeta: 0.001,
+    // Cuadros que la imagen puede perderse de vista antes de esconder la
+    // mascota: así no parpadea si la cámara se mueve un poco
+    missTolerance: 10,
   });
 
   const { renderer, scene, camera } = mindarThree;
