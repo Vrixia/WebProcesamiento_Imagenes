@@ -307,21 +307,27 @@ img{ max-width:100%; display:block; }
 }
 .ayuda-fab img{ width:60%; height:auto; }
 
-/* ---------- Pantalla de ayuda (tutorial de 6 pasos) ---------- */
+/* ---------- Pantalla de ayuda (tutorial paso a paso) ---------- */
 .ayuda-screen{
   flex:1;
+  min-height:0;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:16px;
+  gap:14px;
   background:var(--bg-app);
-  padding:20px;
+  padding:16px 10px 20px;
   cursor:pointer;
 }
+/* Todas las imágenes ocupan el mismo espacio (lo más grande que quepa en la
+   pantalla) y se ven completas aunque cada una tenga distinto tamaño: así el
+   texto de abajo no brinca de lugar al pasar de una a otra. */
 .ayuda-screen img{
-  max-width:100%;
-  border-radius:var(--radius-lg);
+  flex:1 1 0;
+  min-height:0;
+  width:100%;
+  object-fit:contain;
 }
 .ayuda-tap{
   font-size:.85rem;
@@ -393,6 +399,8 @@ h1.section-title{
   text-transform:uppercase;
   margin:0 0 12px;
 }
+/* "Equipo: nombre del equipo" ocupa dos renglones: más juntos se leen mejor */
+h1.titulo-equipo{ line-height:1.15; }
 h2.subsection-title{
   font-family:var(--font-display);
   font-size:1.15rem;
@@ -986,6 +994,7 @@ html.sin-splash .menu-screen{
   gap:8px;
 }
 .trivia-answers label{
+  position:relative;     /* el texto oculto para lectores de pantalla se queda adentro */
   display:flex;
   align-items:center;
   gap:10px;
@@ -1230,6 +1239,8 @@ html.sin-splash .menu-screen{
 }
 .solo-lectores{                     /* se oye con lector de pantalla, no se ve */
   position:absolute;
+  top:0;                            /* pegado arriba: así nunca agranda la página */
+  left:0;
   width:1px;
   height:1px;
   margin:-1px;

@@ -13,13 +13,14 @@
 <div class="phone-shell">
 
   <div class="ayuda-screen" id="ayudaScreen">
-    <img src="imagenes/ayuda1.png" id="ayudaImg" alt="Ayuda, paso 1 de 6">
+    <img src="imagenes/ayuda1.png" id="ayudaImg" alt="Ayuda, paso 1 de 11">
     <p class="ayuda-tap">Pica en cualquier lugar para continuar</p>
   </div>
 
 </div>
 
 <script>
+  // Imágenes del tutorial, en orden. Para agregar otra, súmala al final de la lista.
   var pasosAyuda = [
     'imagenes/ayuda1.png',
     'imagenes/ayuda2.png',
@@ -28,10 +29,19 @@
     'imagenes/ayuda5.png',
     'imagenes/ayuda6.png',
     'imagenes/ayuda7.png',
-    'imagenes/ayuda8.png'
+    'imagenes/ayuda8.png',
+    'imagenes/ayuda9.png',
+    'imagenes/ayuda10.png',
+    'imagenes/ayuda11.png'
   ];
   var pasoActual = 0;
   var imgAyuda = document.getElementById('ayudaImg');
+
+  // Baja desde antes la imagen que sigue, para que al picar cambie al instante
+  function precargar(indice) {
+    if (indice < pasosAyuda.length) new Image().src = pasosAyuda[indice];
+  }
+  precargar(1);
 
   document.getElementById('ayudaScreen').addEventListener('click', function () {
     pasoActual++;
@@ -39,7 +49,8 @@
       window.location.href = 'index.html';
     } else {
       imgAyuda.src = pasosAyuda[pasoActual];
-      imgAyuda.alt = 'Ayuda, paso ' + (pasoActual + 1) + ' de 8';
+      imgAyuda.alt = 'Ayuda, paso ' + (pasoActual + 1) + ' de ' + pasosAyuda.length;
+      precargar(pasoActual + 1);
     }
   });
 </script>
