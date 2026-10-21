@@ -176,12 +176,50 @@ img{ max-width:100%; display:block; }
   margin:0 auto 3px;
 }
 
-/* Cuando ya se envió: las respuestas quedan fijas */
-#preguntas.esta-bloqueada{
-  opacity:.72;
-}
+/* Cuando ya se envió: las respuestas quedan fijas y las que no se marcan
+   como correcta o incorrecta se ven más apagadas */
 #preguntas.esta-bloqueada label{
   cursor:default;
+  opacity:.6;
+}
+
+/* Calificación: verde la correcta, rojo la elegida si estuvo mal.
+   Lleva #preguntas para ganarle al rojo de "respuesta elegida". */
+#preguntas .trivia-answers label.es-correcta,
+#preguntas .trivia-answers label.es-incorrecta{
+  opacity:1;
+  color:var(--text);
+}
+#preguntas .trivia-answers label.es-correcta{
+  background:rgba(47,191,113,.14);
+  border-color:#2fbf71;
+}
+#preguntas .trivia-answers label.es-incorrecta{
+  background:rgba(229,72,77,.14);
+  border-color:#e5484d;
+}
+#preguntas .trivia-answers label.es-correcta input{ accent-color:#2fbf71; }
+
+/* Palomita o tache en un círculo, pegado a la derecha */
+#preguntas .trivia-answers label.es-correcta::after,
+#preguntas .trivia-answers label.es-incorrecta::after{
+  content:"";
+  flex:none;
+  width:22px;
+  height:22px;
+  margin-left:auto;
+  border-radius:50%;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:13px;
+}
+#preguntas .trivia-answers label.es-correcta::after{
+  background-color:#1f9d5a;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
+}
+#preguntas .trivia-answers label.es-incorrecta::after{
+  background-color:#e5484d;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
 }
 .btn-submit:disabled{
   opacity:.45;
@@ -859,6 +897,38 @@ html.sin-splash .menu-screen{
   gap:26px;
   justify-content:center;
   width:100%;
+}
+
+/* Título y, debajo, el botón "Ver equipo" (solo se ve con una mascota) */
+.ar-arriba{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.ar-arriba .ar-title{ margin-bottom:8px; }
+.ar-equipo-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 14px 7px 10px;
+  border-radius:999px;
+  background:#6a5fd0;
+  color:#fff;
+  font-size:.8rem;
+  font-weight:700;
+  box-shadow:0 4px 12px rgba(0,0,0,.28);
+  animation:equipoAparece .35s cubic-bezier(.2,.8,.2,1);
+}
+.ar-equipo-btn[hidden]{ display:none; }
+.ar-equipo-btn img{
+  width:18px;
+  height:18px;
+  object-fit:contain;
+  filter:brightness(0) invert(1);    /* el ícono en blanco */
+}
+@keyframes equipoAparece{
+  from{ opacity:0; transform:translateY(-6px) scale(.9); }
+  to  { opacity:1; transform:none; }
 }
 
 /* Capa del confeti: va encima de todo pero deja pasar los clicks */
@@ -2205,7 +2275,8 @@ html.animar .revelar.visible{
 .boton-beisbar-scanner, .card-slot, .jugador, .roster-indice a, .roster-indice a span,
 .footer-bar a, .bottom-nav a, .bottom-nav a .icon, .video-filters button,
 .memorama-cta, .memorama-btn, .premio-link, .trivia-answers label,
-.header-back svg, .imgheader img, .trophy-card, .ficha div, .figuras li, .cifra, .ver-tabla{
+.header-back svg, .imgheader img, .trophy-card, .ficha div, .figuras li, .cifra, .ver-tabla,
+.ar-equipo-btn{
   transition:transform .2s ease, box-shadow .2s ease, filter .2s ease,
              background-color .2s ease, border-color .2s ease, color .2s ease;
 }
@@ -2299,7 +2370,8 @@ html.animar .revelar.visible{
 .boton-beisbar-scanner:active,
 .card-slot.is-unlocked:active,
 .roster-indice a:active,
-.video-filters button:active{
+.video-filters button:active,
+.ar-equipo-btn:active{
   transform:scale(.95);
   transition-duration:.08s;
 }
@@ -2399,6 +2471,7 @@ button:focus-visible{
   .bottom-nav a.is-active::after,
   .video-filters button.is-active,
   .repetidas-indicador.sube,
+  .ar-equipo-btn,
   .card-slot.is-locked .candado{ animation:none !important; }
 
   .pill-btn, .btn-submit, .icon-btn, .ayuda-fab, .memorama-fab, .boton-imagen,
@@ -2406,5 +2479,5 @@ button:focus-visible{
   .footer-bar a, .bottom-nav a .icon, .video-filters button, .memorama-cta,
   .memorama-btn, .premio-link, .trivia-answers label, .header-back svg,
   .imgheader img, .trophy-card, .trophy-card .foto img, .ficha div,
-  .figuras li, .cifra, .ver-tabla{ transition:none !important; }
+  .figuras li, .cifra, .ver-tabla, .ar-equipo-btn{ transition:none !important; }
 }
