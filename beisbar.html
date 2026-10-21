@@ -172,6 +172,19 @@
   const reloj = new THREE.Clock();
   let visible = null;    // la mascota que la cámara está viendo ahora (o null)
 
+  // Mascotas que están en pantalla, en el orden en que aparecieron. Al pasar
+  // rápido de una imagen a otra, la nueva puede aparecer ANTES de que la
+  // anterior termine de irse; con esta lista el título siempre muestra la
+  // última que apareció y no se regresa a "¡Escanea!" mientras quede alguna.
+  const enPantalla = [];
+
+  function actualizarVisible() {
+    visible = enPantalla.length ? enPantalla[enPantalla.length - 1] : null;
+    titulo.textContent = (visible && visible.estado !== 'error') ? visible.nombre : TITULO_INICIAL;
+    pintarBotones();
+    pintarBotonEquipo();
+  }
+
   // -----------------------------------------------------------------
   // 2) Un ancla por mascota: el ancla N sigue a la imagen N del .mind.
   //    Si el .mind todavía no trae esa imagen, el ancla nunca se activa
@@ -187,21 +200,23 @@
 
     // La cámara encontró la imagen de esta mascota
     mascota.anchor.onTargetFound = () => {
-      visible = mascota;
+      quitarDeLaLista(mascota);
+      enPantalla.push(mascota);
       cargarMascota(mascota);          // si aún no estaba cargada, se baja ahora
-      if (mascota.estado !== 'error') titulo.textContent = mascota.nombre;
-      pintarBotones();
-      pintarBotonEquipo();
+      actualizarVisible();
     };
 
     // La imagen salió de la cámara
     mascota.anchor.onTargetLost = () => {
-      if (visible === mascota) visible = null;
-      titulo.textContent = TITULO_INICIAL;
-      pintarBotones();
-      pintarBotonEquipo();
+      quitarDeLaLista(mascota);
+      actualizarVisible();
     };
   });
+
+  function quitarDeLaLista(mascota) {
+    const i = enPantalla.indexOf(mascota);
+    if (i !== -1) enPantalla.splice(i, 1);
+  }
 
   // -----------------------------------------------------------------
   // 3) Cargar el modelo GLB de una mascota (trae texturas y animaciones).
@@ -294,8 +309,7 @@
       (error) => {
         mascota.estado = 'error';
         console.error('[BéisbAR] No se pudo cargar ' + mascota.modelo + ':', error);
-        if (visible === mascota) titulo.textContent = TITULO_INICIAL;
-        pintarBotonEquipo();
+        if (visible === mascota) actualizarVisible();
       }
     );
   }
