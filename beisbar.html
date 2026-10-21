@@ -33,7 +33,14 @@
       Inicio
     </a>
 
-    <h1 class="ar-title">¡Escanea!</h1>
+    <div class="ar-arriba">
+      <h1 class="ar-title">¡Escanea!</h1>
+      <!-- Sale al escanear una mascota y lleva a la página de su equipo -->
+      <a href="#" class="ar-equipo-btn" id="btnEquipo" hidden>
+        <img src="imagenes/equipo.png" alt="">
+        Ver equipo
+      </a>
+    </div>
 
     <!-- Capa donde se dibuja el confeti. No bloquea clicks (pointer-events:none en el CSS) -->
     <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
@@ -84,12 +91,17 @@
   //                 (1 = igual de alta que el ancho de la imagen)
   //   giroY      -> hacia dónde mira: 0, Math.PI/2, -Math.PI/2 o Math.PI
   //   pararDePie -> si sale acostada, prueba Math.PI/2 o -Math.PI/2
+  //   equipo     -> la página a la que lleva el botón "Ver equipo"
   // -----------------------------------------------------------------
   const MASCOTAS = [
-    { nombre: 'Perro Sultán',     modelo: 'Modelos3D/PerroSultan/PerroSultanGLB.glb',         tamano: 1, giroY: 0, pararDePie: Math.PI / 2 },
-    { nombre: 'Toro Torín',       modelo: 'Modelos3D/ToroTorin/ToroTorinGLB.glb',             tamano: 1, giroY: 0, pararDePie: Math.PI / 2 },
-    { nombre: 'Pollo Algodonero', modelo: 'Modelos3D/PolloAlgodonero/PolloAlgodoneroGLB.glb', tamano: 1, giroY: 0, pararDePie: Math.PI / 2 },
-    { nombre: 'Tico el Teco',     modelo: 'Modelos3D/TicoElTeco/TicoElTecoGLB.glb',           tamano: 1, giroY: 0, pararDePie: Math.PI / 2 },
+    { nombre: 'Perro Sultán',     modelo: 'Modelos3D/PerroSultan/PerroSultanGLB.glb',         tamano: 1, giroY: 0, pararDePie: Math.PI / 2,
+      equipo: 'equipos/sultanes/equipo.html',    nombreEquipo: 'Sultanes de Monterrey' },
+    { nombre: 'Toro Torín',       modelo: 'Modelos3D/ToroTorin/ToroTorinGLB.glb',             tamano: 1, giroY: 0, pararDePie: Math.PI / 2,
+      equipo: 'equipos/toros/equipo.html',       nombreEquipo: 'Toros de Tijuana' },
+    { nombre: 'Pollo Algodonero', modelo: 'Modelos3D/PolloAlgodonero/PolloAlgodoneroGLB.glb', tamano: 1, giroY: 0, pararDePie: Math.PI / 2,
+      equipo: 'equipos/algodoneros/equipo.html', nombreEquipo: 'Algodoneros de Unión Laguna' },
+    { nombre: 'Tico el Teco',     modelo: 'Modelos3D/TicoElTeco/TicoElTecoGLB.glb',           tamano: 1, giroY: 0, pararDePie: Math.PI / 2,
+      equipo: 'equipos/tecolotes/equipo.html',   nombreEquipo: 'Tecolotes de los Dos Laredos' },
   ];
 
   // Cada modelo trae sus animaciones con su propio nombre (idle, IDLE,
@@ -144,6 +156,18 @@
   const titulo = document.querySelector('.ar-title');
   const TITULO_INICIAL = titulo.textContent;
 
+  // Debajo del título, el botón para ir a la página del equipo de esa mascota
+  const btnEquipo = document.getElementById('btnEquipo');
+  function pintarBotonEquipo() {
+    if (visible && visible.estado !== 'error') {
+      btnEquipo.href = visible.equipo;
+      btnEquipo.setAttribute('aria-label', 'Ver la página de los ' + visible.nombreEquipo);
+      btnEquipo.hidden = false;
+    } else {
+      btnEquipo.hidden = true;
+    }
+  }
+
   const gltfLoader = new GLTFLoader();
   const reloj = new THREE.Clock();
   let visible = null;    // la mascota que la cámara está viendo ahora (o null)
@@ -167,6 +191,7 @@
       cargarMascota(mascota);          // si aún no estaba cargada, se baja ahora
       if (mascota.estado !== 'error') titulo.textContent = mascota.nombre;
       pintarBotones();
+      pintarBotonEquipo();
     };
 
     // La imagen salió de la cámara
@@ -174,6 +199,7 @@
       if (visible === mascota) visible = null;
       titulo.textContent = TITULO_INICIAL;
       pintarBotones();
+      pintarBotonEquipo();
     };
   });
 
@@ -269,6 +295,7 @@
         mascota.estado = 'error';
         console.error('[BéisbAR] No se pudo cargar ' + mascota.modelo + ':', error);
         if (visible === mascota) titulo.textContent = TITULO_INICIAL;
+        pintarBotonEquipo();
       }
     );
   }

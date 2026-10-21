@@ -213,6 +213,7 @@
     }
 
     bloquearRespuestas();
+    marcarRespuestas();
 
     marcador.textContent = aciertos + ' / ' + TOTAL;
 
@@ -251,6 +252,34 @@
       Cartas.pintarIndicador(premioRepetidas, antes);
     }
     premio.style.display = '';
+  }
+
+  // En cada pregunta marca la respuesta elegida en verde si fue correcta o
+  // en rojo si no. Cuando fue incorrecta, también marca en verde la correcta.
+  function marcarRespuestas() {
+    var bloques = contenedor.querySelectorAll('.trivia-question');
+
+    seleccionadas.forEach(function (pregunta, i) {
+      var etiquetas = bloques[i].querySelectorAll('label');
+      var elegida = Number(bloques[i].querySelector('input:checked').value);
+
+      pregunta.opcionesRevueltas.forEach(function (opcion, j) {
+        if (opcion.esCorrecta) {
+          marcar(etiquetas[j], 'es-correcta', j === elegida ? 'tu respuesta, correcta' : 'respuesta correcta');
+        } else if (j === elegida) {
+          marcar(etiquetas[j], 'es-incorrecta', 'tu respuesta, incorrecta');
+        }
+      });
+    });
+  }
+
+  // Pone el color (con la clase) y un texto que solo leen los lectores de pantalla
+  function marcar(etiqueta, clase, aviso) {
+    etiqueta.classList.add(clase);
+    var texto = document.createElement('span');
+    texto.className = 'solo-lectores';
+    texto.textContent = ' (' + aviso + ')';
+    etiqueta.appendChild(texto);
   }
 
   // Deja las respuestas fijasno modificables
