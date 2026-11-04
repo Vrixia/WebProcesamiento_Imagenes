@@ -1,22 +1,6 @@
-/* ------------------------------------------------------------------
-   estadisticas.js — le da vida a las gráficas de la página Equipo
-
-   Las gráficas ya vienen hechas en el HTML: cada barra es un <span>
-   y su tamaño está en la variable --v. Este archivo solo agrega:
-
-   1. Las barras crecen cuando su tarjeta entra a la pantalla.
-   2. En las gráficas de toda la liga, al pasar el mouse, tocar una
-      barra o moverse con las flechas del teclado, aparece una etiqueta
-      con el número y el equipo de esa barra.
-   3. Un botón para mostrar u ocultar la tabla con todos los datos.
-
-   Va en el <head>, igual que animaciones.js, para marcar el <html>
-   antes de que se dibuje la página. Así las barras no se ven llenas
-   un instante antes de empezar a crecer.
------------------------------------------------------------------- */
+// Anima las gráficas, pone las etiquetas y el botón de la tabla
 (function () {
-
-  // Si el usuario pidió "reducir movimiento", las barras salen ya completas
+  // Con movimiento reducido las barras salen completas
   var reducir = window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var animar = !reducir && 'IntersectionObserver' in window;
@@ -44,14 +28,11 @@
     for (i = 0; i < tablas.length; i++) prepararTabla(tablas[i]);
   });
 
-
-  /* ---------- 2. Etiqueta de cada barra ---------- */
+  // Etiqueta de cada barra
   function prepararEtiqueta(grafica) {
     var marcas = grafica.querySelectorAll('.marca');
     if (!marcas.length) return;
 
-    // La etiqueta: el número arriba y, abajo, el equipo con su lugar.
-    // Se llena con textContent (nunca con innerHTML).
     var etiqueta = document.createElement('div');
     etiqueta.className = 'grafica-tip';
     etiqueta.setAttribute('aria-hidden', 'true');
@@ -61,18 +42,17 @@
     etiqueta.appendChild(texto);
     grafica.appendChild(etiqueta);
 
-    // Para lectores de pantalla: lee la barra al moverse con el teclado
     var aviso = document.createElement('span');
     aviso.className = 'solo-lectores';
     aviso.setAttribute('aria-live', 'polite');
     grafica.appendChild(aviso);
 
-    grafica.tabIndex = 0;          // se puede llegar con la tecla Tab
-    var propia = 0;                // la barra del equipo de esta página
+    grafica.tabIndex = 0;
+    var propia = 0;
     for (var k = 0; k < marcas.length; k++) {
       if (marcas[k].classList.contains('es-equipo')) propia = k;
     }
-    var actual = -1;               // la barra que tiene la etiqueta ahora
+    var actual = -1;
 
     function mostrar(i, anunciar) {
       if (i < 0) return;
@@ -88,7 +68,6 @@
       etiqueta.style.setProperty('--clave', getComputedStyle(barra).backgroundColor);
       etiqueta.classList.add('mostrar');
 
-      // Centrada arriba de la barra, sin salirse por los lados de la gráfica
       var caja = grafica.getBoundingClientRect();
       var cajaBarra = barra.getBoundingClientRect();
       var ancho = etiqueta.offsetWidth;
@@ -107,7 +86,7 @@
       etiqueta.classList.remove('mostrar');
     }
 
-    // La barra más cercana al mouse o al dedo: no hace falta atinarle exacto
+    // Toma la barra más cercana, no hace falta atinarle
     function cercana(x) {
       var mejor = -1, distancia = Infinity;
       for (var i = 0; i < marcas.length; i++) {
@@ -118,7 +97,6 @@
       return mejor;
     }
 
-    // Mouse: la etiqueta sigue al puntero. Dedo: se muestra al tocar.
     grafica.addEventListener('pointermove', function (evento) {
       if (evento.pointerType !== 'touch') mostrar(cercana(evento.clientX));
     });
@@ -129,8 +107,7 @@
       mostrar(cercana(evento.clientX));
     });
 
-    // Teclado: al llegar con Tab se muestra la barra del equipo,
-    // las flechas izquierda y derecha recorren las demás y Esc la cierra
+    // Teclado: Tab, flechas y Esc
     grafica.addEventListener('focus', function () {
       if (actual < 0) mostrar(propia, true);
     });
@@ -148,8 +125,7 @@
     });
   }
 
-
-  /* ---------- 3. Botón para ver la tabla ---------- */
+  // Botón de la tabla
   function prepararTabla(envoltura) {
     var boton = document.createElement('button');
     boton.type = 'button';

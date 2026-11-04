@@ -20,7 +20,7 @@
 </div>
 
 <script>
-  // Imágenes del tutorial, en orden. Para agregar otra, súmala al final de la lista.
+  // Imágenes del tutorial, en orden
   var pasosAyuda = [
     'imagenes/ayuda1.png',
     'imagenes/ayuda2.png',
@@ -37,7 +37,7 @@
   var pasoActual = 0;
   var imgAyuda = document.getElementById('ayudaImg');
 
-  // Baja desde antes la imagen que sigue, para que al picar cambie al instante
+  // Baja antes la siguiente imagen para que cambie al instante
   function precargar(indice) {
     if (indice < pasosAyuda.length) new Image().src = pasosAyuda[indice];
   }

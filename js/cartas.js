@@ -1,5 +1,4 @@
 (function () {
-
   var LISTA = [
     { id: 'adonis medina',     nombre: 'Adonis Medina'     },
     { id: 'adrian horta',      nombre: 'Adrián Horta'      },
@@ -15,20 +14,12 @@
     { id: 'ramiro penia',      nombre: 'Ramiro Peña'       }
   ];
 
-  var CLAVE = 'beisbarCartas';   // donde se guarda la colección
+  var CLAVE = 'beisbarCartas';
 
-  /* ------------------------------------------------------------------
-     CARTAS REPETIDAS (los "comodines")
-
-     Son las fichas con las que se paga la entrada al memorama.
-       - Todo usuario nuevo arranca con 5.
-       - Entrar al memorama cuesta 2, se gane o se pierda.
-       - La única forma de ganar más es en la trivia: si la carta que
-         te toca ya la tenías en la colección, se te suma 1.
-  ------------------------------------------------------------------ */
+  // Repetidas: se empieza con 5, el memorama cuesta 2 y se ganan en la trivia
   var CLAVE_REPETIDAS  = 'beisbarRepetidas';
-  var REPETIDAS_INICIO = 5;   // con cuántas empieza un usuario nuevo
-  var COSTO_MEMORAMA   = 2;   // cuántas cuesta una partida de memorama
+  var REPETIDAS_INICIO = 5;
+  var COSTO_MEMORAMA   = 2;
 
   function rutaThumb(id, base) {
     return (base || '') + 'imagenes/Coleccion/thumbs/' + encodeURIComponent(id) + '.png';
@@ -50,7 +41,7 @@
       var datos = JSON.parse(crudo);
       return (datos && typeof datos === 'object') ? datos : {};
     } catch (e) {
-      // Modo incógnito o almacenamiento bloqueado: se juega sin guardar
+      // En incógnito se juega sin guardar
       return {};
     }
   }
@@ -64,14 +55,11 @@
     }
   }
 
-  // ----- Cartas repetidas -----
-
   function leerRepetidas() {
     try {
       var crudo = localStorage.getItem(CLAVE_REPETIDAS);
 
-      // null = nunca se ha guardado nada, o sea que es un usuario nuevo:
-      // se le entregan sus 5 de arranque y quedan guardadas.
+      // Usuario nuevo: recibe sus 5 repetidas
       if (crudo === null) {
         guardarRepetidas(REPETIDAS_INICIO);
         return REPETIDAS_INICIO;
@@ -80,7 +68,6 @@
       var n = parseInt(crudo, 10);
       return (isNaN(n) || n < 0) ? 0 : n;
     } catch (e) {
-      // Modo incógnito: no se puede guardar, pero igual deja jugar
       return REPETIDAS_INICIO;
     }
   }
@@ -94,21 +81,17 @@
     }
   }
 
-  // ¿Alcanza para entrar al memorama?
   function puedeJugarMemorama() {
     return leerRepetidas() >= COSTO_MEMORAMA;
   }
 
-  // Cobra la entrada del memorama. Devuelve false si no alcanzaba
-  // (en ese caso no descuenta nada).
+  // No cobra si no alcanza
   function pagarMemorama() {
     var n = leerRepetidas();
     if (n < COSTO_MEMORAMA) return false;
     guardarRepetidas(n - COSTO_MEMORAMA);
     return true;
   }
-
-  // Consultas
 
   function buscar(id) {
     for (var i = 0; i < LISTA.length; i++) {
@@ -122,7 +105,6 @@
     return !!datos[id];
   }
 
-  // Cuántas cartas distintas tiene (X / 12)
   function contarDistintas() {
     var datos = leer();
     var n = 0;
@@ -132,7 +114,6 @@
     return n;
   }
 
-  // Cuántas cartas tiene en total, contando repetidas
   function contarTotal() {
     var datos = leer();
     var n = 0;
@@ -153,7 +134,6 @@
     return lasQueFaltan().length === 0;
   }
 
-  // Entregar cartas
   function sumar(carta) {
     var datos = leer();
     var yaLaTenia = !!datos[carta.id];
@@ -162,8 +142,7 @@
     return { carta: carta, esNueva: !yaLaTenia };
   }
 
-  // TRIVIA: carta al azar. Puede tocar una que el jugador ya tenga.
-  // Cuando eso pasa, en vez de una carta nueva se lleva +1 carta repetida.
+  // Trivia: carta al azar; si ya la tenía, +1 repetida
   function darAleatoria() {
     var carta = LISTA[Math.floor(Math.random() * LISTA.length)];
     var resultado = sumar(carta);
@@ -172,12 +151,11 @@
       guardarRepetidas(leerRepetidas() + 1);
     }
 
-    resultado.repetidas = leerRepetidas();   // cuántas lleva ya
+    resultado.repetidas = leerRepetidas();
     return resultado;
   }
 
-  // MEMORAMA: garantiza que sea una carta nueva
-  // Devuelve null solo si ya completó las 12.
+  // Memorama: siempre una carta nueva
   function darNueva() {
     var faltan = lasQueFaltan();
     if (faltan.length === 0) return null;
@@ -185,15 +163,7 @@
     return sumar(carta);
   }
 
-  // -----------------------------------------------------------------
-  // INDICADOR DE CARTAS REPETIDAS
-  // Pinta dentro de "elemento" una pastilla con dos reversos de carta
-  // encimados y el número de repetidas. Lo usan la colección, la trivia
-  // y el memorama, así se ve igual en todos lados.
-  //   elemento -> el contenedor (por ejemplo un <div class="repetidas-indicador">)
-  //   anterior -> (opcional) cuántas había antes; si ahora hay más, el
-  //               indicador da un saltito para que se note que subió.
-  // -----------------------------------------------------------------
+  // Pinta la pastilla de repetidas; si subió, da un saltito
   function pintarIndicador(elemento, anterior) {
     if (!elemento) return;
     var n = leerRepetidas();
@@ -211,13 +181,12 @@
 
     if (typeof anterior === 'number' && n > anterior) {
       elemento.classList.remove('sube');
-      void elemento.offsetWidth;          // reinicia la animación
+      void elemento.offsetWidth;
       elemento.classList.add('sube');
     }
   }
 
-  // Borra todo el progreso: colección y cartas repetidas.
-  // Sirve para probar la página desde cero (Cartas.reiniciar() en la consola).
+  // Para probar desde cero: Cartas.reiniciar() en la consola
   function reiniciar() {
     try {
       localStorage.removeItem(CLAVE);
@@ -225,7 +194,6 @@
     } catch (e) {}
   }
 
-  // -----------------------------------------------------------------
   window.Cartas = {
     LISTA: LISTA,
     rutaThumb: rutaThumb,
@@ -242,7 +210,6 @@
     darNueva: darNueva,
     reiniciar: reiniciar,
 
-    // Cartas repetidas (comodines del memorama)
     COSTO_MEMORAMA: COSTO_MEMORAMA,
     repetidas: leerRepetidas,
     puedeJugarMemorama: puedeJugarMemorama,

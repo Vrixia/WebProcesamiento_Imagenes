@@ -29,7 +29,6 @@
 
       <a href="memorama-juego.html" class="memorama-cta" id="btnEntrar">Ingresa 2 tarjetas</a>
 
-      <!-- Cuántas cartas repetidas tiene (la pastilla la pinta js/cartas.js) -->
       <div class="repetidas-indicador repetidas-indicador--grande" id="cuantasTengo"></div>
 
       <p class="memorama-note">¡Supera el reto y gana una nueva carta!</p>
@@ -45,26 +44,21 @@
 <script src="js/cartas.js"></script>
 <script>
   (function () {
-
     var etiqueta = document.getElementById('cuantasTengo');
     var boton    = document.getElementById('btnEntrar');
 
     function pintar() {
-      // Pastilla con las cartas repetidas (está en js/cartas.js)
       Cartas.pintarIndicador(etiqueta);
 
       if (Cartas.puedeJugarMemorama()) {
-        // Alcanza: el botón funciona normal
         boton.classList.remove('esta-apagada');
         boton.removeAttribute('aria-disabled');
       } else {
-        // No alcanza: el botón se apaga
         boton.classList.add('esta-apagada');
         boton.setAttribute('aria-disabled', 'true');
       }
     }
 
-    // Si el botón está apagado, no deja pasar
     boton.addEventListener('click', function (evento) {
       if (boton.classList.contains('esta-apagada')) {
         evento.preventDefault();
@@ -72,8 +66,7 @@
     });
 
     pintar();
-    // pageshow (y no solo load) para que el contador se actualice también
-    // cuando el usuario regresa con el botón "atrás" del navegador
+    // pageshow para que se actualice al regresar con atrás
     window.addEventListener('pageshow', pintar);
   })();
 </script>

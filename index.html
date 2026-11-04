@@ -9,8 +9,7 @@
 <link rel="stylesheet" href="css/styles.css">
 <script src="js/animaciones.js"></script>
 <script>
-  // Se ejecuta antes de dibujar nada. Si el splash ya se vio en esta sesion,
-  // marca el <html> y el CSS se encarga de enseñar el menú de una vez.
+  // Si ya vio el splash, entra directo al menú
   try {
     if (sessionStorage.getItem('beisbarSplashVisto') === 'si') {
       document.documentElement.className += ' sin-splash';
@@ -22,7 +21,7 @@
 
 <div class="phone-shell">
 
-  <!-- ============ PANTALLA 1: SPLASH ============ -->
+  <!-- Splash -->
   <div class="splash splash-screen" id="splashScreen">
     <div class="splash-logo-box">
       <img src="imagenes/LogoBeisbAR.png">
@@ -34,7 +33,7 @@
     <p class="splash-tap">Pica en cualquier lugar para continuar</p>
   </div>
 
-  <!-- ============ PANTALLA 2: MENÚ PRINCIPAL ============ -->
+  <!-- Menú principal -->
   <div class="menu-screen" id="menuScreen">
 
     <header class="app-header header--navy">
@@ -46,7 +45,6 @@
 
     <main class="app-main" style="position:relative;">
 
-      <!-- Fila superior: Trivia + acceso a Colección de cartas -->
       <div class="menu-top-row">
         <a href="trivia.html" class="pill-btn" style="flex:1;">
           Trivia
@@ -80,7 +78,6 @@
         </a>
       </div>
 
-
       <hr class="linea-punteada">
       <div class="boton-beisbar">
         <span class="boton-beisbar-titulo">BéisbAR</span>
@@ -92,8 +89,7 @@
 
     </main>
 
-    <!-- Botón de ayuda. Cuelga de .menu-screen para quedarse fijo mientras
-         el contenido hace scroll (y para no aparecer encima del splash). -->
+    <!-- Fuera del contenido para que se quede fijo -->
     <a href="ayuda.html" class="ayuda-fab" aria-label="Ayuda">
       <img src="imagenes/ayuda.png" alt="Ayuda">
     </a>
@@ -102,23 +98,13 @@
 </div>
 
 <script>
-/* ------------------------------------------------------------------
-   El splash (logo grande con el degradado vino) se muestra UNA sola
-   vez: cuando el usuario apenas abre la pagina web.
-
-   Se usa sessionStorage y no localStorage porque sessionStorage se
-   borra solo al cerrar la pestaña. Asi:
-     - Abre la web  -> ve el splash, pica, pasa al menu.
-     - Le da a Inicio desde cualquier pantalla -> entra directo al menu.
-     - Cierra la pestaña y vuelve a entrar -> ve el splash otra vez.
------------------------------------------------------------------- */
+// El splash sale una vez por sesión (sessionStorage se borra al cerrar la pestaña)
 (function () {
-
   var CLAVE  = 'beisbarSplashVisto';
   var splash = document.getElementById('splashScreen');
   var menu   = document.getElementById('menuScreen');
 
-  // sessionStorage puede fallar en modo incognito, por eso va en try/catch.
+  // En incógnito puede fallar
   function yaLoVio() {
     try { return sessionStorage.getItem(CLAVE) === 'si'; }
     catch (e) { return false; }
@@ -128,18 +114,16 @@
   }
 
   function mostrarMenu() {
-    if (splash.classList.contains('saliendo')) return;   // ya se picó
+    if (splash.classList.contains('saliendo')) return;
     recordar();
 
-    // Con "reducir movimiento" se cambia de golpe; si no, el splash se
-    // agranda y se desvanece (animación .saliendo del CSS) y luego aparece el menú
     var reducir = window.matchMedia &&
                   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reducir) {
       cambiarAlMenu();
     } else {
       splash.classList.add('saliendo');
-      setTimeout(cambiarAlMenu, 330);   // lo mismo que dura la animación
+      setTimeout(cambiarAlMenu, 330);   // lo que dura la animación
     }
   }
 
@@ -149,8 +133,6 @@
   }
 
   if (yaLoVio()) {
-    // La clase 'sin-splash' del <head> ya enseñó el menú; solo falta
-    // dejar el estado consistente por si algo consulta las clases.
     splash.classList.add('is-hidden');
     menu.classList.add('is-visible');
   } else {
