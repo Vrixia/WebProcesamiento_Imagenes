@@ -28,18 +28,16 @@
           <img src="imagenes/cartas2.png" width="25px" height="auto">
           <span id="contador">0 / 12</span>
         </div>
-        <!-- Cartas repetidas: las que se gastan para entrar al memorama -->
         <div class="repetidas-indicador" id="repetidas"></div>
       </div>
     </div>
 
-    <!-- La cuadrícula se genera desde JavaScript -->
+    <!-- Se llena desde JavaScript -->
     <div class="card-grid" id="cuadricula"></div>
 
   </main>
 
-  <!-- Botón del memorama. Cuelga de .phone-shell (no de .app-main) para que
-       se quede fijo en pantalla mientras el contenido hace scroll. -->
+  <!-- Fuera de .app-main para que se quede fijo -->
   <a href="memorama.html" class="memorama-fab" aria-label="Entrar al memorama">
     <img src="imagenes/memorama.png">
   </a>
@@ -53,7 +51,6 @@
 <script src="js/cartas.js"></script>
 <script>
 (function () {
-
   var cuadricula = document.getElementById('cuadricula');
   var contador   = document.getElementById('contador');
   var repetidas  = document.getElementById('repetidas');
@@ -65,7 +62,7 @@
       var laTengo = Cartas.tiene(carta.id);
 
       if (laTengo) {
-        // Carta desbloqueada, se ve y se puede abrir en 3D
+        // Carta que ya tiene
         var enlace = document.createElement('a');
         enlace.className = 'card-slot is-unlocked';
         enlace.href = 'carta.html?id=' + encodeURIComponent(carta.id);
@@ -88,14 +85,12 @@
     var tengo = Cartas.contarDistintas();
     contador.textContent = tengo + ' / ' + Cartas.LISTA.length;
 
-    // Pastilla con las cartas repetidas (está en js/cartas.js)
     Cartas.pintarIndicador(repetidas);
   }
 
   pintar();
 
-  // Al volver con el botón "atrás", el navegador puede mostrar la página
-  // guardada en memoria (persisted): ahí sí se repinta, por si se ganaron cartas.
+  // Se repinta al volver con el botón atrás
   window.addEventListener('pageshow', function (evento) {
     if (evento.persisted) pintar();
   });

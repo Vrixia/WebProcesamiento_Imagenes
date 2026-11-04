@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 
-<!-- Mapa de importaciones: le dice al navegador de dónde bajar three.js, sus addons (GLTFLoader) y MindAR -->
+<!-- De aquí salen three.js y MindAR -->
 <script type="importmap">
 {
   "imports": {
@@ -25,7 +25,7 @@
 
   <div class="ar-screen">
 
-    <!-- Aquí MindAR va a inyectar automáticamente el <video> de la cámara y el <canvas> 3D -->
+    <!-- MindAR mete aquí la cámara y el 3D -->
     <div id="ar-container" class="ar-camera-container"></div>
 
     <a href="index.html" class="header-back" style="position:absolute; top:18px; left:18px; color:#151420;">
@@ -35,14 +35,14 @@
 
     <div class="ar-arriba">
       <h1 class="ar-title">¡Escanea!</h1>
-      <!-- Sale al escanear una mascota y lleva a la página de su equipo -->
+      <!-- Aparece al escanear una mascota -->
       <a href="#" class="ar-equipo-btn" id="btnEquipo" hidden>
         <img src="imagenes/equipo.png" alt="">
         Ver equipo
       </a>
     </div>
 
-    <!-- Capa donde se dibuja el confeti. No bloquea clicks (pointer-events:none en el CSS) -->
+    <!-- Aquí se dibuja el confeti -->
     <canvas id="confetiCanvas" class="confeti-canvas"></canvas>
 
     <div class="ar-actions">
@@ -79,20 +79,7 @@
   import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   import { MindARThree } from 'mindar-image-three';
 
-  // -----------------------------------------------------------------
-  // 0) LAS MASCOTAS
-  //
-  // Una por cada imagen que hay dentro de targets/targets.mind.
-  // El ORDEN es el mismo en que subiste las imágenes al compilador de
-  // MindAR: la primera imagen es la mascota 0, la segunda la 1, etc.
-  //
-  // 👉 AJUSTES por mascota, por si alguna no queda como quieres:
-  //   tamano     -> qué tan alta sale comparada con el ancho de la imagen
-  //                 (1 = igual de alta que el ancho de la imagen)
-  //   giroY      -> hacia dónde mira: 0, Math.PI/2, -Math.PI/2 o Math.PI
-  //   pararDePie -> si sale acostada, prueba Math.PI/2 o -Math.PI/2
-  //   equipo     -> la página a la que lleva el botón "Ver equipo"
-  // -----------------------------------------------------------------
+  // Mismo orden que las imágenes de targets.mind
   const MASCOTAS = [
     { nombre: 'Perro Sultán',     modelo: 'Modelos3D/PerroSultan/PerroSultanGLB.glb',         tamano: 1, giroY: 0, pararDePie: Math.PI / 2,
       equipo: 'equipos/sultanes/equipo.html',    nombreEquipo: 'Sultanes de Monterrey' },
@@ -104,17 +91,13 @@
       equipo: 'equipos/tecolotes/equipo.html',   nombreEquipo: 'Tecolotes de los Dos Laredos' },
   ];
 
-  // Cada modelo trae sus animaciones con su propio nombre (idle, IDLE,
-  // BAILE, BAILAR, SALUDO...). Esta lista dice qué nombres cuentan como
-  // cada una; no importan mayúsculas ni acentos. Las que no estén aquí
-  // (por ejemplo "mixamo.com") se ignoran.
+  // Nombres que puede tener cada animación en los modelos
   const NOMBRES_ANIMACION = {
     idle:    ['idle', 'reposo'],
     bailar:  ['bailar', 'baile', 'bailando', 'dance', 'dancing'],
     saludar: ['saludar', 'saludo', 'saludando', 'wave', 'waving'],
   };
 
-  // 'BAILE' -> 'bailar', 'Saludo' -> 'saludar', 'mixamo.com' -> null
   function tipoDeAnimacion(nombre) {
     const limpio = nombre.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
     for (const tipo in NOMBRES_ANIMACION) {
@@ -123,40 +106,30 @@
     return null;
   }
 
-  // -----------------------------------------------------------------
-  // 1) Arrancar MindAR apuntando al archivo .mind ya compilado
-  // -----------------------------------------------------------------
   const mindarThree = new MindARThree({
     container: document.querySelector("#ar-container"),
     imageTargetSrc: "targets/targets.mind",
     uiScanning: "no",
     uiLoading: "no",
     uiError: "no",
-    // Suavizado contra el temblor: en cada cuadro de la cámara la posición
-    // calculada de la imagen sale un poquito distinta; este filtro promedia
-    // esos cambios para que la mascota se vea quieta.
-    // 👉 Si todavía tiembla, baja filterMinCF (por ejemplo a 0.0001).
-    //    Si tarda en seguir a la imagen cuando mueves el celular, súbelo (0.001).
+    // Suavizado para que la mascota no tiemble
     filterMinCF: 0.0005,
     filterBeta: 0.001,
-    // Cuadros que la imagen puede perderse de vista antes de esconder la
-    // mascota: así no parpadea si la cámara se mueve un poco
+    // Cuadros que aguanta sin ver la imagen antes de esconder la mascota
     missTolerance: 10,
   });
 
   const { renderer, scene, camera } = mindarThree;
 
-  // Luces: necesarias porque el material del modelo reacciona a la luz
+  // Sin luces el modelo se vería negro
   scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.2));
   const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
   dirLight.position.set(0.5, 1, 0.7);
   scene.add(dirLight);
 
-  // El título "¡Escanea!" cambia al nombre de la mascota que se está viendo
   const titulo = document.querySelector('.ar-title');
   const TITULO_INICIAL = titulo.textContent;
 
-  // Debajo del título, el botón para ir a la página del equipo de esa mascota
   const btnEquipo = document.getElementById('btnEquipo');
   function pintarBotonEquipo() {
     if (visible && visible.estado !== 'error') {
@@ -170,12 +143,9 @@
 
   const gltfLoader = new GLTFLoader();
   const reloj = new THREE.Clock();
-  let visible = null;    // la mascota que la cámara está viendo ahora (o null)
+  let visible = null;    // la mascota que se ve ahora
 
-  // Mascotas que están en pantalla, en el orden en que aparecieron. Al pasar
-  // rápido de una imagen a otra, la nueva puede aparecer ANTES de que la
-  // anterior termine de irse; con esta lista el título siempre muestra la
-  // última que apareció y no se regresa a "¡Escanea!" mientras quede alguna.
+  // Así el título no regresa a ¡Escanea! al cambiar rápido de imagen
   const enPantalla = [];
 
   function actualizarVisible() {
@@ -185,24 +155,20 @@
     pintarBotonEquipo();
   }
 
-  // -----------------------------------------------------------------
-  // 2) Un ancla por mascota: el ancla N sigue a la imagen N del .mind.
-  //    Si el .mind todavía no trae esa imagen, el ancla nunca se activa
-  //    y no pasa nada (no marca error).
-  // -----------------------------------------------------------------
+  // Cada ancla sigue a una imagen del .mind
   MASCOTAS.forEach((mascota, indice) => {
     mascota.anchor = mindarThree.addAnchor(indice);
-    mascota.estado = 'sin-cargar';     // 'sin-cargar' | 'cargando' | 'lista' | 'error'
-    mascota.mixer = null;              // el "reproductor" de animaciones de Three.js
-    mascota.acciones = {};             // { idle, bailar, saludar }
-    mascota.accionActual = null;       // la que se está reproduciendo ahora
-    mascota.animacionActiva = null;    // 'bailar' | 'saludar' | null  (null = está en idle)
+    mascota.estado = 'sin-cargar';     // sin-cargar, cargando, lista o error
+    mascota.mixer = null;
+    mascota.acciones = {};
+    mascota.accionActual = null;
+    mascota.animacionActiva = null;
 
-    // La cámara encontró la imagen de esta mascota
+    // La cámara encontró la imagen
     mascota.anchor.onTargetFound = () => {
       quitarDeLaLista(mascota);
       enPantalla.push(mascota);
-      cargarMascota(mascota);          // si aún no estaba cargada, se baja ahora
+      cargarMascota(mascota);
       actualizarVisible();
     };
 
@@ -218,12 +184,7 @@
     if (i !== -1) enPantalla.splice(i, 1);
   }
 
-  // -----------------------------------------------------------------
-  // 3) Cargar el modelo GLB de una mascota (trae texturas y animaciones).
-  //    Solo se baja cuando se escanea su imagen, para no gastar datos del
-  //    celular en modelos que no se van a ver. El Perro Sultán se baja
-  //    desde el inicio porque es el primero que se prueba.
-  // -----------------------------------------------------------------
+  // Cada modelo se baja hasta que se escanea, para no gastar datos
   function cargarMascota(mascota) {
     if (mascota.estado !== 'sin-cargar') return;
     mascota.estado = 'cargando';
@@ -235,35 +196,31 @@
         console.log('[BéisbAR] ' + mascota.nombre + ' cargado ✅');
         console.log('[BéisbAR] Animaciones encontradas:', gltf.animations.map(a => a.name));
 
-        // --- Preparar las animaciones ---
         mascota.mixer = new THREE.AnimationMixer(modelo);
 
         gltf.animations.forEach((clip) => {
-          const tipo = tipoDeAnimacion(clip.name);       // 'idle' | 'bailar' | 'saludar' | null
-          if (!tipo || mascota.acciones[tipo]) return;   // nombre desconocido o repetido: se ignora
+          const tipo = tipoDeAnimacion(clip.name);
+          if (!tipo || mascota.acciones[tipo]) return;   // si no se reconoce, se ignora
 
           const accion = mascota.mixer.clipAction(clip);
           mascota.acciones[tipo] = accion;
 
           if (tipo === 'idle') {
-            accion.loop = THREE.LoopRepeat;          // el idle se repite para siempre
+            accion.loop = THREE.LoopRepeat;
           } else {
-            accion.loop = THREE.LoopOnce;            // bailar y saludar se hacen una vez
+            accion.loop = THREE.LoopOnce;
             accion.clampWhenFinished = true;
           }
         });
 
-        // Arranca en idle (y se aplica ya su primera pose, para medir bien)
+        // Empieza en idle
         if (mascota.acciones['idle']) {
           mascota.accionActual = mascota.acciones['idle'];
           mascota.accionActual.play();
           mascota.mixer.update(0);
         }
 
-        // --- Autoajuste de tamaño y centrado ---
-        // En un modelo con esqueleto, la caja solo sale bien si antes se
-        // acomodan los huesos en la pose actual; si no, mide de menos y la
-        // mascota sale gigante.
+        // Hay que acomodar el esqueleto antes de medir, si no sale gigante
         modelo.updateMatrixWorld(true);
         modelo.traverse((parte) => {
           if (parte.isSkinnedMesh) {
@@ -281,7 +238,7 @@
         const escala = mascota.tamano / Math.max(tamano.x, tamano.y, tamano.z);
         modelo.scale.setScalar(escala);
 
-        // Lo centra horizontalmente y lo apoya sobre la imagen (no flotando)
+        // Centrada y parada sobre la imagen
         modelo.position.set(
           -centro.x * escala,
           -caja.min.y * escala,
@@ -294,10 +251,8 @@
         soporte.add(modelo);
         mascota.anchor.group.add(soporte);
 
-        // Cuando una animación de una sola vez termina, regresa sola a idle
+        // Al terminar de bailar o saludar regresa a idle
         mascota.mixer.addEventListener('finished', (e) => {
-          // Solo si la que terminó es la que sigue activa (si el usuario ya
-          // cambió a otra o la canceló, este aviso se ignora)
           if (!mascota.animacionActiva) return;
           if (e.action !== mascota.acciones[mascota.animacionActiva]) return;
           volverAIdle(mascota);
@@ -316,16 +271,12 @@
 
   cargarMascota(MASCOTAS[0]);
 
-  // -----------------------------------------------------------------
-  // 4) Control de animaciones con los botones.
-  //    Siempre mueven a la mascota que la cámara está viendo.
-  // -----------------------------------------------------------------
+  // Botones de animación
   const botones = {
     bailar:  document.getElementById('btnBailar'),
     saludar: document.getElementById('btnSaludar'),
   };
 
-  // Cambia de una animación a otra con una transición suave
   function cambiarA(mascota, nuevaAccion, duracion = 0.25) {
     if (!nuevaAccion || nuevaAccion === mascota.accionActual) return;
 
@@ -344,7 +295,6 @@
     pintarBotones();
   }
 
-  // Oscurece el botón de la animación activa de la mascota que se ve
   function pintarBotones() {
     const activa = visible ? visible.animacionActiva : null;
     for (const nombre in botones) {
@@ -355,13 +305,12 @@
 
   function alPresionar(nombre) {
     const mascota = visible;
-    if (!mascota || !mascota.mixer || !mascota.acciones[nombre]) return;   // no se ve ninguna o aún no carga
+    if (!mascota || !mascota.mixer || !mascota.acciones[nombre]) return;
 
     if (mascota.animacionActiva === nombre) {
-      // Mismo botón otra vez → se cancela y vuelve a idle
+      // Mismo botón otra vez: se cancela
       volverAIdle(mascota);
     } else {
-      // Botón distinto (o ninguna activa) → corta lo anterior y pone esta
       mascota.animacionActiva = nombre;
       cambiarA(mascota, mascota.acciones[nombre], 0.2);
       pintarBotones();
@@ -371,33 +320,25 @@
   botones.bailar.addEventListener('click',  () => alPresionar('bailar'));
   botones.saludar.addEventListener('click', () => alPresionar('saludar'));
 
-  // -----------------------------------------------------------------
-  // 5) Iniciar cámara + escaneo automático
-  // -----------------------------------------------------------------
+  // Prender la cámara
   await mindarThree.start();
   console.log('[BéisbAR] Cámara y escaneo iniciados ✅ — buscando imágenes...');
 
   renderer.setAnimationLoop(() => {
     const dt = reloj.getDelta();
-    // Solo se anima la mascota que se ve (ahorra batería)
+    // Solo se anima la mascota que se ve
     if (visible && visible.mixer) visible.mixer.update(dt);
     renderer.render(scene, camera);
   });
 </script>
 
-<!-- ===================================================================
-     CONFETI: sistema de partículas dibujado en su propio <canvas> 2D.
-     Es independiente de MindAR/Three.js, así que funciona esté o no
-     detectado el logo.
-     =================================================================== -->
+<!-- Confeti -->
 <script>
 (function () {
-
   var canvas = document.getElementById('confetiCanvas');
   var ctx    = canvas.getContext('2d');
   var boton  = document.getElementById('btnConfeti');
 
-  // --- Las 12 imágenes de confeti ---
   var rutas = [];
   for (var i = 1; i <= 12; i++) {
     rutas.push('Particulas/PartículasConfeti' + i + '.png');
@@ -408,22 +349,19 @@
     return img;
   });
 
-  // --- Ajustes que puedes cambiar a gusto ---
-  var POR_DISPARO   = 45;    // cuántas partículas salen por cada click
-  var MAX_TOTAL     = 700;   // tope para que no se sature si lo pican mucho
-  var GRAVEDAD      = 900;   // qué tan rápido caen
-  var VIDA_MINIMA   = 2.8;   // segundos que dura una partícula (mínimo)
-  var VIDA_EXTRA    = 1.4;   // segundos extra aleatorios
+  // Ajustes del confeti
+  var POR_DISPARO   = 45;    // partículas por clic
+  var MAX_TOTAL     = 700;
+  var GRAVEDAD      = 900;
+  var VIDA_MINIMA   = 2.8;
+  var VIDA_EXTRA    = 1.4;
 
   var particulas = [];
   var animando   = false;
   var ultimoTiempo = 0;
   var anchoCSS = 0, altoCSS = 0;
 
-  // -----------------------------------------------------------------
-  // Ajustar el canvas al tamaño real de la pantalla (y a la densidad
-  // de píxeles del celular, para que no se vea borroso)
-  // -----------------------------------------------------------------
+  // Resolución real de la pantalla para que no se vea borroso
   function ajustarTamano() {
     var dpr = window.devicePixelRatio || 1;
     var rect = canvas.getBoundingClientRect();
@@ -437,16 +375,13 @@
   window.addEventListener('orientationchange', ajustarTamano);
   ajustarTamano();
 
-  // -----------------------------------------------------------------
-  // Lanzar una tanda de confeti (dos "cañones", desde abajo a los lados)
-  // -----------------------------------------------------------------
+  // Sale de dos cañones, uno de cada lado
   function lanzarConfeti() {
     ajustarTamano();
 
     for (var i = 0; i < POR_DISPARO; i++) {
       var desdeIzquierda = (i % 2 === 0);
 
-      // Ángulo de salida: hacia arriba y en diagonal al centro
       var angulo = desdeIzquierda
         ? (-Math.PI / 3)     + (Math.random() * 0.5 - 0.25)
         : (-Math.PI * 2 / 3) + (Math.random() * 0.5 - 0.25);
@@ -458,23 +393,21 @@
         y: altoCSS * (0.85 + Math.random() * 0.1),
         vx: Math.cos(angulo) * velocidad,
         vy: Math.sin(angulo) * velocidad,
-        rot: Math.random() * Math.PI * 2,          // rotación inicial
-        velRot: (Math.random() - 0.5) * 8,          // qué tan rápido gira
-        giro: Math.random() * Math.PI * 2,          // para el "aleteo"
+        rot: Math.random() * Math.PI * 2,
+        velRot: (Math.random() - 0.5) * 8,
+        giro: Math.random() * Math.PI * 2,
         velGiro: 4 + Math.random() * 4,
-        tam: 10 + Math.random() * 14,               // escala distinta por partícula
+        tam: 10 + Math.random() * 14,
         img: imagenes[Math.floor(Math.random() * imagenes.length)],
         vida: 0,
         vidaMax: VIDA_MINIMA + Math.random() * VIDA_EXTRA
       });
     }
 
-    // Si se acumularon demasiadas, se quitan las más viejas
     if (particulas.length > MAX_TOTAL) {
       particulas.splice(0, particulas.length - MAX_TOTAL);
     }
 
-    // Arrancar el bucle solo si no estaba corriendo ya
     if (!animando) {
       animando = true;
       ultimoTiempo = performance.now();
@@ -482,13 +415,10 @@
     }
   }
 
-  // -----------------------------------------------------------------
-  // Bucle de animación
-  // -----------------------------------------------------------------
   function bucle(ahora) {
     var dt = (ahora - ultimoTiempo) / 1000;
     ultimoTiempo = ahora;
-    if (dt > 0.05) dt = 0.05;   // evita saltos si el celular se traba un momento
+    if (dt > 0.05) dt = 0.05;   // por si el celular se traba
 
     ctx.clearRect(0, 0, anchoCSS, altoCSS);
 
@@ -501,7 +431,7 @@
         continue;
       }
 
-      // Física: resistencia del aire + gravedad
+      // Resistencia del aire y gravedad
       p.vx *= 0.985;
       p.vy = p.vy * 0.985 + GRAVEDAD * dt;
       p.x  += p.vx * dt;
@@ -509,7 +439,7 @@
       p.rot  += p.velRot * dt;
       p.giro += p.velGiro * dt;
 
-      // Se desvanece en el último 30% de su vida
+      // Se desvanece al final
       var restante = 1 - (p.vida / p.vidaMax);
       var alpha = restante < 0.3 ? (restante / 0.3) : 1;
 
@@ -519,7 +449,7 @@
       ctx.globalAlpha = alpha;
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rot);
-      // Aplastar horizontalmente simula que el papelito se voltea en el aire
+      // Aplastarlo simula que el papel se voltea
       ctx.scale(Math.max(Math.abs(Math.cos(p.giro)), 0.15), 1);
       ctx.drawImage(p.img, -p.tam / 2, -p.tam / 2, p.tam, p.tam);
       ctx.restore();
@@ -528,7 +458,6 @@
     if (particulas.length > 0) {
       requestAnimationFrame(bucle);
     } else {
-      // Ya no queda nada: limpiar y detener el bucle (ahorra batería)
       ctx.clearRect(0, 0, anchoCSS, altoCSS);
       animando = false;
     }

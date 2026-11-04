@@ -21,7 +21,7 @@
   <main class="app-main" style="background:linear-gradient(180deg, #ff8fae 0%, #9f2f4e 90%); margin:0; padding-top:30px;">
     <p class="memorama-timer" id="reloj">00:30</p>
 
-    <!-- El tablero se genera desde JavaScript -->
+    <!-- Se llena desde JavaScript -->
     <div class="memory-grid" id="tablero"></div>
   </main>
 
@@ -29,18 +29,17 @@
     <a href="index.html">Inicio</a>
   </footer>
 
-  <!-- Cuenta regresiva de inicio -->
+  <!-- Cuenta regresiva -->
   <div class="memorama-overlay" id="overlayCuenta">
     <p class="memorama-overlay-texto">Prepárate</p>
     <p class="memorama-cuenta" id="numeroCuenta">3</p>
   </div>
 
-  <!-- Aviso de victoria o de tiempo agotado -->
+  <!-- Resultado -->
   <div class="memorama-overlay oculto" id="overlayFinal">
     <p class="memorama-overlay-titulo" id="tituloFinal">¡Ganaste!</p>
     <p class="memorama-overlay-texto" id="textoFinal">Completaste el memorama.</p>
 
-    <!-- Carta ganada (solo al ganar) -->
     <div class="premio" id="premio" style="display:none;">
       <img id="premioImg" alt="">
       <p class="premio-nombre" id="premioNombre"></p>
@@ -48,7 +47,6 @@
       <a href="coleccion.html" class="premio-link">Ver mi colección</a>
     </div>
 
-    <!-- Cartas repetidas que le quedan (la pastilla la pinta js/cartas.js) -->
     <div class="repetidas-indicador memorama-saldo" id="saldoFinal"></div>
 
     <div class="memorama-overlay-botones">
@@ -62,26 +60,19 @@
 <script src="js/cartas.js"></script>
 <script>
 (function () {
-
-  // ---------------------------------------------------------------
-  // Configuración
-  // ---------------------------------------------------------------
   var JUGADORES = [
     'cade_gotta', 'hector_espino', 'justin_turner', 'martin_dihigo',
     'oliver_perez', 'ramiro_cuevas', 'ramiro_pena', 'roenis_elias'
   ];
   var RUTA      = 'imagenes/Memorama/';
   var REVERSO   = 'imagenes/Memorama/LogoReversoCartasP.png';
-  var SEGUNDOS  = 30;    // duración de la partida
-  var CUENTA    = 3;     // segundos de cuenta regresiva al entrar
-  var ESPERA    = 900;   // milisegundos que se quedan visibles dos cartas que no son par
+  var SEGUNDOS  = 30;    // en segundos
+  var CUENTA    = 3;     // en segundos
+  var ESPERA    = 900;   // en milisegundos
 
-  // ---------------------------------------------------------------
-  // Estado del juego
-  // ---------------------------------------------------------------
   var primeraCarta     = null;
   var segundaCarta     = null;
-  var bloqueado        = true;   // arranca bloqueado por la cuenta regresiva
+  var bloqueado        = true;
   var paresEncontrados = 0;
   var tiempoRestante   = SEGUNDOS;
   var intervaloReloj   = null;
@@ -100,9 +91,7 @@
   var saldoFinal     = document.getElementById('saldoFinal');
   var btnReintentar  = document.getElementById('btnReintentar');
 
-  // ---------------------------------------------------------------
-  // Barajar (algoritmo de Fisher-Yates)
-  // ---------------------------------------------------------------
+  // Revuelve una lista (Fisher-Yates)
   function barajar(lista) {
     for (var i = lista.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -113,7 +102,7 @@
     return lista;
   }
 
-  // Armar el tablero con cada carta 2 veces revueltas
+  // Cada jugador va dos veces
  
   function construirTablero() {
     var mazo = barajar(JUGADORES.concat(JUGADORES));
@@ -138,14 +127,11 @@
     });
   }
 
-
-  // Voltear una carta
-
   function alVoltear(carta) {
-    if (bloqueado) return;                                  // hay dos cartas resolviéndose
-    if (carta === primeraCarta) return;                     // ya está elegida
-    if (carta.classList.contains('volteada')) return;       // ya estaba boca arriba
-    if (carta.classList.contains('encontrada')) return;     // ya formó par
+    if (bloqueado) return;
+    if (carta === primeraCarta) return;
+    if (carta.classList.contains('volteada')) return;
+    if (carta.classList.contains('encontrada')) return;
 
     carta.classList.add('volteada');
 
@@ -155,7 +141,7 @@
     }
 
     segundaCarta = carta;
-    bloqueado = true;   // se bloquea mientras se comprueba
+    bloqueado = true;
 
     if (primeraCarta.dataset.jugador === segundaCarta.dataset.jugador) {
       acertar();
@@ -170,7 +156,6 @@
 
     paresEncontrados++;
 
-    // Se deja un tiempo la carta al hacer el match
     setTimeout(function () {
       a.classList.add('encontrada');
       b.classList.add('encontrada');
@@ -200,8 +185,6 @@
     bloqueado = false;
   }
 
-  // Reloj de la partida
-
   function pintarReloj() {
     var minutos = Math.floor(tiempoRestante / 60);
     var segundos = tiempoRestante % 60;
@@ -224,8 +207,6 @@
     }, 1000);
   }
 
-  // Cuenta regresiva del inicio
-
   function arrancarCuenta() {
     var restante = CUENTA;
     numeroCuenta.textContent = restante;
@@ -235,7 +216,7 @@
 
       if (restante > 0) {
         numeroCuenta.textContent = restante;
-        // reinicia la animación de pulso
+        // Truco para reiniciar la animación
         numeroCuenta.classList.remove('late');
         void numeroCuenta.offsetWidth;
         numeroCuenta.classList.add('late');
@@ -244,14 +225,12 @@
         numeroCuenta.textContent = '¡Ya!';
         setTimeout(function () {
           overlayCuenta.classList.add('oculto');
-          bloqueado = false;      // ahora sí se puede jugar
+          bloqueado = false;
           arrancarReloj();
         }, 500);
       }
     }, 1000);
   }
-
-  // Fin de la partida
 
   function terminar(gano) {
     clearInterval(intervaloReloj);
@@ -261,7 +240,7 @@
       tituloFinal.textContent = '¡Ganaste!';
       overlayFinal.classList.add('es-victoria');
 
-      // Al ganar se entrega una carta que el jugador no tenga
+      // Al ganar, una carta que no tenga
       var ganada = Cartas.darNueva();
 
       if (ganada) {
@@ -271,7 +250,6 @@
         premioNombre.textContent = ganada.carta.nombre;
         premio.style.display = '';
       } else {
-        // Ya tenía las 12: no hay carta nueva que dar
         textoFinal.textContent = 'Completaste el memorama con ' + tiempoRestante +
           ' segundos de sobra, y ya tienes la colección completa.';
         premio.style.display = 'none';
@@ -288,8 +266,6 @@
     overlayFinal.classList.remove('oculto');
   }
 
-  // Enseña cuántas cartas repetidas quedan y, si ya no alcanzan para otra
-  // partida, apaga el botón de "Jugar de nuevo".
   function pintarSaldo() {
     Cartas.pintarIndicador(saldoFinal);
     btnReintentar.disabled = !Cartas.puedeJugarMemorama();
@@ -300,7 +276,6 @@
     window.location.reload();
   });
 
-  // Pantalla que aparece si se entra sin tener las 2 cartas repetidas
   function sinCartas() {
     clearInterval(intervaloCuenta);
     overlayCuenta.classList.add('oculto');
@@ -313,10 +288,7 @@
     overlayFinal.classList.remove('oculto');
   }
 
-  // Arranque
-  //
-  // Entrar al memorama cuesta 2 cartas repetidas y se cobran AQUÍ, al
-  // empezar la partida. Por eso se gastan igual si se gana o se pierde.
+  // Aquí se cobran las 2 repetidas, se gane o se pierda
 
   if (!Cartas.pagarMemorama()) {
     sinCartas();

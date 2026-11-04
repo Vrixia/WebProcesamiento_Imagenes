@@ -1,37 +1,7 @@
-/* ------------------------------------------------------------------
-   reproductor.js — controles propios para los videos
-
-   ¿Por qué no se usan los controles que trae el navegador?
-   Porque su botón de pantalla completa agranda SOLO el <video>. Las
-   luces, el tinte y la viñeta de los filtros son capas que van encima
-   del video (las crea filtros.js), así que en pantalla completa se
-   quedaban afuera. Ese botón no se puede cambiar, y en Safari y Firefox
-   ni siquiera se puede esconder.
-
-   Con controles propios, la pantalla completa se le pide al recuadro
-   entero (.video-stage), que lleva adentro el video Y sus capas.
-
-   Lo que arma este archivo dentro de cada .video-stage:
-
-     .video-stage          ← esto es lo que se pone en pantalla completa
-       .rep-lienzo         ← mide exactamente lo mismo que la imagen
-         <video>
-         .fx-capa          ← (la agrega filtros.js, junto al video)
-       .rep-centro         ← botón grande de play
-       .rep-controles      ← barra: play, avance, tiempo, sonido y pantalla
-
-   IMPORTANTE: en el HTML este archivo va ANTES que filtros.js, para que
-   filtros.js encuentre el lienzo y ponga sus capas junto al video.
-
-   Si este archivo no cargara, el <video> conserva sus controles normales
-   (el atributo controls sigue en el HTML), así que nunca se queda sin poder
-   reproducirse.
------------------------------------------------------------------- */
+// Controles propios para que la pantalla completa incluya las capas de los filtros
 (function () {
+  var OCULTAR_DESPUES = 2500;
 
-  var OCULTAR_DESPUES = 2500;   // ms sin moverse para esconder la barra
-
-  // Íconos de Material Design, dibujados con SVG
   var ICONOS = {
     play:     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
     pausa:    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>',
@@ -48,27 +18,20 @@
     if (video) prepararReproductor(recuadros[i], video);
   }
 
-  // ===============================================================
-  // Un reproductor por cada recuadro
-  // ===============================================================
   function prepararReproductor(recuadro, video) {
-
-    // 1. Apagar los controles del navegador (y sus botones de pantalla
-    //    completa, picture-in-picture y transmitir, que dejarían fuera las capas)
+    // Sin los controles del navegador, que dejaban fuera los filtros en pantalla completa
     video.controls = false;
     video.removeAttribute('controls');
     video.setAttribute('controlslist', 'nofullscreen nodownload noremoteplayback');
     video.disablePictureInPicture = true;
     video.disableRemotePlayback = true;
-    video.setAttribute('playsinline', '');   // en iPhone, que no se abra solo
+    video.setAttribute('playsinline', '');
 
-    // 2. Envolver el video en el lienzo
     var lienzo = document.createElement('div');
     lienzo.className = 'rep-lienzo';
     recuadro.insertBefore(lienzo, video);
     lienzo.appendChild(video);
 
-    // 3. Botón grande del centro y barra de controles
     var centro = crearBoton('rep-centro', 'Reproducir', ICONOS.play);
 
     var barra = document.createElement('div');
@@ -83,7 +46,7 @@
     avance.type = 'range';
     avance.className = 'rep-avance';
     avance.min = 0;
-    avance.max = 1000;     // de 0 a 1000 para que se mueva fino
+    avance.max = 1000;
     avance.step = 1;
     avance.value = 0;
     avance.setAttribute('aria-label', 'Avance del video');
@@ -100,7 +63,7 @@
     recuadro.appendChild(centro);
     recuadro.appendChild(barra);
 
-    // ---------------- Play y pausa ----------------
+    // Play y pausa
     function alternarPlay() {
       if (video.paused || video.ended) {
         var promesa = video.play();
@@ -113,8 +76,7 @@
     centro.addEventListener('click', alternarPlay);
     btnPlay.addEventListener('click', alternarPlay);
 
-    // Tocar la imagen también pausa o reproduce. Pero si la barra está
-    // escondida, el primer toque solo la vuelve a mostrar (como en YouTube).
+    // Si la barra está escondida, el primer toque solo la muestra
     lienzo.addEventListener('click', function () {
       if (recuadro.classList.contains('rep-oculto')) {
         mostrarControles();
@@ -123,8 +85,6 @@
       alternarPlay();
     });
 
-    // El estado se pinta con los eventos del propio video, así queda
-    // bien sin importar qué lo haya pausado (el botón, el final, etc.)
     function pintarEstado() {
       var pausado = video.paused || video.ended;
       recuadro.classList.toggle('rep-pausado', pausado);
@@ -136,8 +96,8 @@
     video.addEventListener('pause', pintarEstado);
     video.addEventListener('ended', pintarEstado);
 
-    // ---------------- Barra de avance y tiempo ----------------
-    var arrastrando = false;   // mientras el dedo mueve la barra, no se la pelea el video
+    // Barra de avance
+    var arrastrando = false;   // para que no se pelee con el video
 
     function pintarTiempo() {
       var duracion = video.duration || 0;
@@ -157,10 +117,10 @@
       mostrarControles();
     });
     avance.addEventListener('change', function () {
-      arrastrando = false;   // 'change' llega cuando se suelta la barra
+      arrastrando = false;
     });
 
-    // ---------------- Sonido ----------------
+    // Sonido
     btnSonido.addEventListener('click', function () {
       video.muted = !video.muted;
     });
@@ -169,7 +129,7 @@
       btnSonido.setAttribute('aria-label', video.muted ? 'Activar sonido' : 'Silenciar');
     });
 
-    // ---------------- Pantalla completa ----------------
+    // Pantalla completa
     btnPantalla.addEventListener('click', function () {
       if (recuadro.classList.contains('rep-pantalla')) {
         salirPantalla(recuadro);
@@ -178,10 +138,7 @@
       }
     });
 
-    // En pantalla completa la forma de la pantalla casi nunca es igual a la
-    // del video. El lienzo se ajusta al tamaño más grande que cabe sin
-    // deformar la imagen, y así las capas de efectos quedan justo encima
-    // del video y no sobre las franjas negras.
+    // El lienzo se ajusta para que las capas queden justo sobre el video
     function ajustarLienzo() {
       if (!recuadro.classList.contains('rep-pantalla')) {
         lienzo.style.width = '';
@@ -196,17 +153,15 @@
       lienzo.style.height = (ancho / proporcion) + 'px';
     }
     video.addEventListener('loadedmetadata', ajustarLienzo);
-    recuadro.ajustarLienzo = ajustarLienzo;   // para llamarlo al entrar y salir
+    recuadro.ajustarLienzo = ajustarLienzo;
 
-    // ResizeObserver avisa cada vez que el recuadro cambia de tamaño:
-    // al entrar o salir de pantalla completa y al girar el celular.
     if (window.ResizeObserver) {
       new ResizeObserver(ajustarLienzo).observe(recuadro);
     } else {
       window.addEventListener('resize', ajustarLienzo);
     }
 
-    // ---------------- Esconder la barra mientras se reproduce ----------------
+    // Esconder la barra
     var temporizador = null;
 
     function mostrarControles() {
@@ -219,23 +174,16 @@
       }
     }
 
-    // Con mouse, moverlo encima del video muestra la barra
     recuadro.addEventListener('pointermove', function (evento) {
       if (evento.pointerType === 'mouse') mostrarControles();
     });
-    // Usar cualquier control la mantiene visible
     barra.addEventListener('pointerdown', mostrarControles);
 
     pintarEstado();
     pintarTiempo();
   }
 
-  // ===============================================================
-  // Pantalla completa (compartida por todos los recuadros)
-  // ===============================================================
-
-  // El elemento que está en pantalla completa ahora mismo, o null.
-  // webkit... es el nombre viejo que todavía usa Safari en algunas versiones.
+  // webkit es para Safari
   function pantallaActual() {
     return document.fullscreenElement || document.webkitFullscreenElement || null;
   }
@@ -243,8 +191,7 @@
   function entrarPantalla(recuadro, video) {
     var pedir = recuadro.requestFullscreen || recuadro.webkitRequestFullscreen;
 
-    // iPhone no deja poner en pantalla completa nada que no sea el <video>
-    // solo. Ahí se simula: el recuadro se estira para cubrir toda la ventana.
+    // iPhone solo deja agrandar el video, así que se simula
     if (!pedir) {
       pantallaSimulada(recuadro, true);
       return;
@@ -279,12 +226,10 @@
 
   function pantallaSimulada(recuadro, prender) {
     recuadro.classList.toggle('rep-pantalla-simulada', prender);
-    // Mientras dure, la página de atrás no hace scroll
     document.documentElement.classList.toggle('rep-sin-scroll', prender);
     marcarPantalla(recuadro, prender);
   }
 
-  // Pone o quita la clase rep-pantalla y cambia el ícono del botón
   function marcarPantalla(recuadro, prender) {
     recuadro.classList.toggle('rep-pantalla', prender);
     var boton = recuadro.querySelector('.rep-btn-pantalla');
@@ -295,8 +240,6 @@
     if (recuadro.ajustarLienzo) recuadro.ajustarLienzo();
   }
 
-  // El navegador avisa cuando se entra o se sale de pantalla completa
-  // (también si se sale con la tecla Esc o con el gesto de "atrás")
   function alCambiarPantalla() {
     var actual = pantallaActual();
     for (var i = 0; i < recuadros.length; i++) {
@@ -308,16 +251,13 @@
   document.addEventListener('fullscreenchange', alCambiarPantalla);
   document.addEventListener('webkitfullscreenchange', alCambiarPantalla);
 
-  // Esc también cierra la pantalla completa simulada
   document.addEventListener('keydown', function (evento) {
     if (evento.key !== 'Escape') return;
     var simulada = document.querySelector('.rep-pantalla-simulada');
     if (simulada) pantallaSimulada(simulada, false);
   });
 
-  // En Android, al entrar a pantalla completa se gira a lo ancho si el video
-  // es horizontal, como hace YouTube. En computadora y iPhone esto no existe:
-  // la promesa falla y simplemente no pasa nada.
+  // En Android gira a lo ancho, como YouTube
   function girarHorizontal(video) {
     try {
       if (screen.orientation && screen.orientation.lock && video.videoWidth >= video.videoHeight) {
@@ -332,9 +272,6 @@
     } catch (e) {}
   }
 
-  // ===============================================================
-  // Utilidades
-  // ===============================================================
   function crearBoton(clases, etiqueta, icono) {
     var boton = document.createElement('button');
     boton.type = 'button';
@@ -344,7 +281,7 @@
     return boton;
   }
 
-  // 75.3 segundos -> "1:15"
+  // 75.3 segundos -> 1:15
   function formato(segundos) {
     if (!isFinite(segundos)) segundos = 0;
     var m = Math.floor(segundos / 60);

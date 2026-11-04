@@ -1,10 +1,6 @@
-/* ==========================================================================
-   BéisbAR MX — Hoja de estilos global
-   Tipografía: Anton (títulos) + Inter (cuerpo) — cargadas vía Google Fonts
-   ========================================================================== */
 
 :root{
-  /* Paleta base de la app */
+  /* Colores de la app */
   --bg-app:        #101018;
   --bg-app-2:      #171725;
   --bg-header:     #0c1830;
@@ -29,7 +25,7 @@
   --font-display:  "Anton", "Arial Narrow", sans-serif;
   --font-body:      "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Color de acento "de equipo" — sobreescrito por .team-* en páginas de equipo */
+  /* Cada equipo lo cambia por su color */
   --team: var(--maroon);
   --team-dark: var(--maroon-dark);
 }
@@ -49,13 +45,10 @@ a{ color:inherit; text-decoration:none; }
 button{ font-family:inherit; cursor:pointer; }
 img{ max-width:100%; display:block; }
 
-/* ---------- Marco tipo "teléfono" que envuelve cada pantalla ---------- */
+/* Marco tipo teléfono */
 .phone-shell{
   max-width:430px;
-  /* Altura fija: asi el scroll ocurre DENTRO de .app-main y la barra
-     de abajo se queda siempre pegada al borde inferior de la pantalla.
-     100dvh es la altura real en celular (descuenta la barra del navegador);
-     100vh queda como respaldo para navegadores que no entiendan dvh. */
+  /* Altura fija para que solo el contenido haga scroll (dvh descuenta la barra del navegador) */
   height:100vh;
   height:100dvh;
   margin:0 auto;
@@ -78,7 +71,7 @@ img{ max-width:100%; display:block; }
   }
 }
 
-/* ---------- Encabezado superior de la app ---------- */
+/* Encabezado */
 .app-header{
   background:linear-gradient(180deg, var(--maroon) 0%, var(--maroon-dark) 100%);
   padding:6px 20px 9px;
@@ -118,7 +111,7 @@ img{ max-width:100%; display:block; }
 }
 .header-back svg{ width:16px; height:16px; }
 
-/* ---------- Contenido principal, con scroll ---------- */
+/* Contenido con scroll */
 .app-main{
   flex:1;
   min-height:0;
@@ -133,7 +126,7 @@ img{ max-width:100%; display:block; }
   margin-bottom: 4%;
 }
 
-/* ---------- Botón inferior "Inicio" (footer simple de una sola acción) ---------- */
+/* Botón Inicio de abajo */
 .footer-bar{
   flex-shrink:0;
   background:#e8e6ea;
@@ -149,7 +142,7 @@ img{ max-width:100%; display:block; }
   color:#141420;
 }
 
-/* ---------- Barra de navegación inferior (pantallas de equipo) ---------- */
+/* Barra de equipos */
 .bottom-nav{
   flex-shrink:0;
   background:#e8e6ea;
@@ -176,15 +169,13 @@ img{ max-width:100%; display:block; }
   margin:0 auto 3px;
 }
 
-/* Cuando ya se envió: las respuestas quedan fijas y las que no se marcan
-   como correcta o incorrecta se ven más apagadas */
+/* Respuestas ya enviadas */
 #preguntas.esta-bloqueada label{
   cursor:default;
   opacity:.6;
 }
 
-/* Calificación: verde la correcta, rojo la elegida si estuvo mal.
-   Lleva #preguntas para ganarle al rojo de "respuesta elegida". */
+/* Verde la correcta, rojo la elegida si estuvo mal */
 #preguntas .trivia-answers label.es-correcta,
 #preguntas .trivia-answers label.es-incorrecta{
   opacity:1;
@@ -200,7 +191,7 @@ img{ max-width:100%; display:block; }
 }
 #preguntas .trivia-answers label.es-correcta input{ accent-color:#2fbf71; }
 
-/* Palomita o tache en un círculo, pegado a la derecha */
+/* Palomita o tache */
 #preguntas .trivia-answers label.es-correcta::after,
 #preguntas .trivia-answers label.es-incorrecta::after{
   content:"";
@@ -226,7 +217,7 @@ img{ max-width:100%; display:block; }
   cursor:default;
 }
 
-/* ---------- Resultado de la trivia ---------- */
+/* Resultado de la trivia */
 .trivia-resultado{
   margin-top:26px;
   padding:20px;
@@ -243,7 +234,7 @@ img{ max-width:100%; display:block; }
   margin:0 0 8px;
 }
 
-/* ---------- Botón rojo "Trivia" ---------- */
+/* Botón Trivia */
 .pill-btn{
   display:inline-flex;
   align-items:center;
@@ -276,7 +267,7 @@ img{ max-width:100%; display:block; }
   border-radius:999px;
 }
 
-/* ---------- Botón circular (colección / cámara) ---------- */
+/* Botones redondos */
 .icon-btn{
   width:44px;
   height:44px;
@@ -290,7 +281,7 @@ img{ max-width:100%; display:block; }
 }
 .icon-btn img{ width:30px; height:auto; }
 
-/* ---------- Botón flotante de ayuda (esquina inferior izquierda) ---------- */
+/* Botón de ayuda */
 .ayuda-fab{
   position:absolute;
   left:18px;
@@ -307,7 +298,7 @@ img{ max-width:100%; display:block; }
 }
 .ayuda-fab img{ width:60%; height:auto; }
 
-/* ---------- Pantalla de ayuda (tutorial paso a paso) ---------- */
+/* Pantalla de ayuda */
 .ayuda-screen{
   flex:1;
   min-height:0;
@@ -320,9 +311,7 @@ img{ max-width:100%; display:block; }
   padding:16px 10px 20px;
   cursor:pointer;
 }
-/* Todas las imágenes ocupan el mismo espacio (lo más grande que quepa en la
-   pantalla) y se ven completas aunque cada una tenga distinto tamaño: así el
-   texto de abajo no brinca de lugar al pasar de una a otra. */
+/* Todas las imágenes ocupan lo mismo, así el texto no brinca */
 .ayuda-screen img{
   flex:1 1 0;
   min-height:0;
@@ -336,7 +325,7 @@ img{ max-width:100%; display:block; }
   animation:pulse 1.8s ease-in-out infinite;
 }
 
-/* ---------- Fila superior del menú principal ---------- */
+/* Menú principal */
 .menu-top-row{
   display:flex;
   align-items:center;
@@ -344,7 +333,7 @@ img{ max-width:100%; display:block; }
   margin-bottom:6px;
 }
 
-/* ---------- Fila de botones de categoría (Historia + equipos) ---------- */
+/* Botones de Historia y equipos */
 .opcionesmenuprincipal{
   display:flex;
   align-items:center;
@@ -391,7 +380,7 @@ img{ max-width:100%; display:block; }
   object-fit: contain;
 }
 
-/* ---------- Títulos de sección estándar ---------- */
+/* Títulos */
 h1.section-title{
   font-family:var(--font-display);
   font-size:1.8rem;
@@ -399,7 +388,6 @@ h1.section-title{
   text-transform:uppercase;
   margin:0 0 12px;
 }
-/* "Equipo: nombre del equipo" ocupa dos renglones: más juntos se leen mejor */
 h1.titulo-equipo{ line-height:1.15; }
 h2.subsection-title{
   font-family:var(--font-display);
@@ -408,9 +396,7 @@ h2.subsection-title{
   text-transform:uppercase;
   margin:0 0 8px;
   color:var(--team, var(--red-seam));
-  /* El color del equipo mezclado con blanco: misma tonalidad, pero legible
-     sobre el fondo oscuro. Si el navegador no entiende color-mix, ignora
-     esta línea y se queda con la de arriba. */
+  /* Color del equipo aclarado para que se lea sobre el fondo oscuro */
   color:color-mix(in srgb, var(--team, var(--red-seam)) 45%, #fff);
 }
 p.body-text{
@@ -420,13 +406,13 @@ p.body-text{
   margin:0 0 14px;
 }
 
-/* ---------- Colores representativos de cada equipo ---------- */
+/* Colores de cada equipo */
 .team-sultanes{ --team:#16305e; --team-dark:#0a1830; }
 .team-toros{ --team:#43474f; --team-dark:#232529; }
 .team-algodoneros{ --team:#84234a; --team-dark:#3f0f22; }
 .team-tecolotes{ --team:#2f2472; --team-dark:#17123a; }
 
-/* ---------- Splash screen ---------- */
+/* Splash */
 .splash{
   flex:1;
   display:flex;
@@ -467,8 +453,7 @@ p.body-text{
 
 .menu-screen{ display:none; }
 
-/* Cuando el splash ya se vio en esta sesion, el <head> pone la clase
-   'sin-splash' en el <html> y se entra directo al menu, sin parpadeo. */
+/* Si ya se vio el splash, se entra directo al menú */
 html.sin-splash .splash-screen{ display:none; }
 html.sin-splash .menu-screen{
   display:flex;
@@ -480,7 +465,7 @@ html.sin-splash .menu-screen{
 .menu-screen.is-visible{ display:flex; flex-direction:column; flex:1; min-height:0; position:relative; }
 .splash-screen.is-hidden{ display:none; }
 
-/* ---------- Colección de cartas ---------- */
+/* Colección */
 .collection-topbar{
   display:flex;
   align-items:center;
@@ -494,7 +479,6 @@ html.sin-splash .menu-screen{
   font-family:var(--font-display);
   font-size:1.1rem;
 }
-/* Columna de la derecha: cartas conseguidas y, abajo, las repetidas */
 .collection-contadores{
   display:flex;
   flex-direction:column;
@@ -530,7 +514,6 @@ html.sin-splash .menu-screen{
   border:3px solid #33334a;
   background:#28283a;
 }
-/* El reverso se ve apagado detrás del candado */
 .card-slot.is-locked img{
   filter:grayscale(.7) brightness(.4);
 }
@@ -546,8 +529,7 @@ html.sin-splash .menu-screen{
 .memorama-fab{
   position:absolute;
   right:18px;
-  /* 22% de la altura del marco = parte media de abajo.
-     El max() evita que se encime con la barra inferior en pantallas chicas. */
+  /* Para que no se encime con la barra de abajo en pantallas chicas */
   bottom:max(96px, 22%);
   z-index:30;
   width:54px;
@@ -566,7 +548,7 @@ html.sin-splash .menu-screen{
   height: auto;
 }
 
-/* ---------- Vista de carta individual (3D) ---------- */
+/* Carta en 3D */
 .card-viewer{
   display:flex;
   flex-direction:column;
@@ -614,7 +596,7 @@ html.sin-splash .menu-screen{
   pointer-events:none;
 }
 
-/* ---------- Carta ganada (trivia y memorama) ---------- */
+/* Carta ganada */
 .premio{
   margin-top:18px;
   display:flex;
@@ -657,7 +639,7 @@ html.sin-splash .menu-screen{
 }
 .rotate-hint svg{ width:34px; height:34px; color:#8a7ee8; }
 
-/* ---------- Memorama ---------- */
+/* Memorama */
 .memorama-intro{
   display:flex;
   flex-direction:column;
@@ -694,8 +676,7 @@ html.sin-splash .menu-screen{
   color:var(--text-muted);
 }
 
-/* Botón de entrada apagado: no alcanzan las cartas repetidas.
-   pointer-events:none impide el clic incluso antes de que corra el JavaScript. */
+/* Botón apagado cuando no alcanzan las repetidas */
 .memorama-cta.esta-apagada{
   background:#4a4a58;
   border-color:rgba(255,255,255,.25);
@@ -722,7 +703,7 @@ html.sin-splash .menu-screen{
   gap:12px;
 }
 
-/* ---- Carta: contenedor que da la perspectiva 3D ---- */
+/* Volteo 3D de las cartas */
 .memory-card{
   aspect-ratio:3/4;
   perspective:700px;
@@ -733,7 +714,6 @@ html.sin-splash .menu-screen{
   transition:opacity .4s ease, transform .4s ease;
 }
 
-/* ---- La pieza que realmente gira ---- */
 .memory-card-inner{
   position:relative;
   width:100%;
@@ -745,7 +725,6 @@ html.sin-splash .menu-screen{
   transform:rotateY(180deg);
 }
 
-/* ---- Las dos caras, una encima de la otra ---- */
 .memory-face{
   position:absolute;
   inset:0;
@@ -762,19 +741,18 @@ html.sin-splash .menu-screen{
   object-fit:cover;
   display:block;
 }
-/* La cara del jugador arranca girada, así queda oculta hasta el volteo */
+/* La cara del jugador empieza girada para quedar oculta */
 .memory-front{
   transform:rotateY(180deg);
 }
 
-/* ---- Par encontrado: desaparece ---- */
 .memory-card.encontrada{
   opacity:0;
   transform:scale(.75);
   pointer-events:none;
 }
 
-/* ---- Avisos a pantalla completa (cuenta regresiva y resultado) ---- */
+/* Cuenta regresiva y resultado */
 .memorama-overlay{
   position:absolute;
   inset:0;
@@ -850,7 +828,6 @@ html.sin-splash .menu-screen{
   cursor:default;
 }
 
-/* Pastilla de cartas repetidas que quedan, al terminar la partida */
 .memorama-saldo{ margin:6px 0 10px; }
 
 @keyframes latido{
@@ -859,7 +836,7 @@ html.sin-splash .menu-screen{
   100% { transform:scale(1);    opacity:1; }
 }
 
-/* ---------- BéisbAR (escaneo con cámara) ---------- */
+/* BéisbAR */
 .ar-screen{
   flex:1;
   background:#000;
@@ -871,7 +848,6 @@ html.sin-splash .menu-screen{
   position:relative;
   overflow:hidden;
 }
-/* Contenedor donde MindAR inyecta el <video> de la cámara y el <canvas> 3D */
 .ar-camera-container{
   position:absolute;
   inset:0;
@@ -887,7 +863,6 @@ html.sin-splash .menu-screen{
   height:100% !important;
   object-fit:cover;
 }
-/* Todo lo demás (botón inicio, título, acciones) queda por encima de la cámara */
 .ar-screen > *:not(.ar-camera-container){
   position:relative;
   z-index:1;
@@ -907,7 +882,6 @@ html.sin-splash .menu-screen{
   width:100%;
 }
 
-/* Título y, debajo, el botón "Ver equipo" (solo se ve con una mascota) */
 .ar-arriba{
   display:flex;
   flex-direction:column;
@@ -932,14 +906,14 @@ html.sin-splash .menu-screen{
   width:18px;
   height:18px;
   object-fit:contain;
-  filter:brightness(0) invert(1);    /* el ícono en blanco */
+  filter:brightness(0) invert(1);
 }
 @keyframes equipoAparece{
   from{ opacity:0; transform:translateY(-6px) scale(.9); }
   to  { opacity:1; transform:none; }
 }
 
-/* Capa del confeti: va encima de todo pero deja pasar los clicks */
+/* El confeti no bloquea los clics */
 .ar-screen > canvas.confeti-canvas{
   position:absolute;
   inset:0;
@@ -978,7 +952,7 @@ html.sin-splash .menu-screen{
 
 .ar-action-group{ display:flex; flex-direction:column; align-items:center; }
 
-/* ---------- Trivia ---------- */
+/* Trivia */
 .trivia-question{
   margin-bottom:20px;
 }
@@ -994,7 +968,7 @@ html.sin-splash .menu-screen{
   gap:8px;
 }
 .trivia-answers label{
-  position:relative;     /* el texto oculto para lectores de pantalla se queda adentro */
+  position:relative;     /* si no, el texto oculto agranda la página en el celular */
   display:flex;
   align-items:center;
   gap:10px;
@@ -1012,33 +986,21 @@ html.sin-splash .menu-screen{
   margin-bottom:14px;
 }
 
-/* ---------- Historia ---------- */
+/* Historia */
 .history-block{ margin-bottom:24px; }
 
-/* =====================================================================
-   ESTADÍSTICAS (equipo.html de cada equipo)
-   ---------------------------------------------------------------------
-   Las gráficas están hechas solo con HTML y CSS: cada barra es un <span
-   class="barra"> y su tamaño viene en la variable --v, que va de 0 a 1
-   (1 = la barra más grande de esa gráfica). --i es el número de la barra,
-   para que al crecer salgan una tras otra.
-   js/estadisticas.js les pone la animación, la etiqueta que aparece al
-   tocar una barra y el botón para ver la tabla.
-   ===================================================================== */
+/* Estadísticas: cada barra mide según la variable --v (de 0 a 1) */
 
-/* Color de las gráficas: un tono de cada equipo que resalta sobre el fondo
-   oscuro. Los otros equipos van en gris para que el propio destaque. */
 :root{
   --grafica:      #3987e5;
   --grafica-gris: #4d4c63;
-  --grafica-base: #3a3a52;   /* línea de abajo de las barras */
+  --grafica-base: #3a3a52;
 }
 .team-sultanes{ --grafica:#3987e5; }
 .team-toros{ --grafica:#e66767; }
 .team-algodoneros{ --grafica:#d55181; }
 .team-tecolotes{ --grafica:#9085e9; }
 
-/* Cifras: un dato grande con su nombre arriba (temporada y pitcheo) */
 .cifras{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -1078,7 +1040,6 @@ html.sin-splash .menu-screen{
   color:var(--text-muted);
 }
 
-/* Tarjeta que envuelve cada gráfica */
 .grafica-tarjeta{
   background:var(--card-bg);
   border:1px solid var(--card-border);
@@ -1091,8 +1052,6 @@ html.sin-splash .menu-screen{
   background:var(--grafica);
 }
 
-/* Zona Norte: una fila por equipo (lugar, nombre, barra y récord).
-   La barra mide el porcentaje de victorias. */
 .filas{
   display:grid;
   gap:3px;
@@ -1125,7 +1084,7 @@ html.sin-splash .menu-screen{
   flex:none;
   width:calc(var(--v) * (100% - 48px));
   height:12px;
-  border-radius:0 4px 4px 0;      /* redonda en la punta, recta en la base */
+  border-radius:0 4px 4px 0;
   background:var(--grafica-gris);
 }
 .fila-valor{
@@ -1138,7 +1097,6 @@ html.sin-splash .menu-screen{
 }
 .fila.es-equipo .barra{ background:var(--grafica); }
 
-/* Contra toda la liga: 20 barras paradas, ordenadas de mejor a peor */
 .tira-cabeza{
   display:flex;
   align-items:baseline;
@@ -1175,7 +1133,7 @@ html.sin-splash .menu-screen{
   justify-content:center;
 }
 .tira-barras .barra{
-  width:calc(100% - 3px);         /* el hueco entre barras */
+  width:calc(100% - 3px);
   max-width:24px;
   height:calc(var(--v) * 100%);
   border-radius:4px 4px 0 0;
@@ -1192,7 +1150,6 @@ html.sin-splash .menu-screen{
   color:var(--text-muted);
 }
 
-/* Etiqueta que aparece sobre la barra que se toca (la crea el JS) */
 .grafica{ position:relative; }
 .grafica:focus{ outline:none; }
 .grafica:focus-visible{
@@ -1229,7 +1186,7 @@ html.sin-splash .menu-screen{
   font-size:.72rem;
   color:var(--text-muted);
 }
-.grafica-tip span::before{          /* rayita con el color de la barra */
+.grafica-tip span::before{
   content:"";
   flex:none;
   width:12px;
@@ -1237,9 +1194,9 @@ html.sin-splash .menu-screen{
   border-radius:1px;
   background:var(--clave, var(--grafica-gris));
 }
-.solo-lectores{                     /* se oye con lector de pantalla, no se ve */
+.solo-lectores{
   position:absolute;
-  top:0;                            /* pegado arriba: así nunca agranda la página */
+  top:0;                            /* pegado arriba para no agrandar la página */
   left:0;
   width:1px;
   height:1px;
@@ -1251,7 +1208,6 @@ html.sin-splash .menu-screen{
   border:0;
 }
 
-/* Tabla con los datos de toda la liga */
 .ver-tabla{
   display:inline-flex;
   align-items:center;
@@ -1309,7 +1265,6 @@ html.sin-splash .menu-screen{
 }
 .tabla-datos tr.es-equipo th{ box-shadow:inset 3px 0 0 var(--grafica); padding-left:9px; }
 
-/* Líderes de bateo: los 3 primeros de cada categoría */
 .lideres{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -1355,9 +1310,7 @@ html.sin-splash .menu-screen{
   font-variant-numeric:tabular-nums;
 }
 
-/* Las barras crecen desde su base cuando la tarjeta aparece en pantalla.
-   js/estadisticas.js pone la clase graficas-animadas en el <html> (solo si
-   el usuario no pidió reducir movimiento) y la clase crecer en la tarjeta. */
+/* Las barras crecen al aparecer (las clases las pone estadisticas.js) */
 html.graficas-animadas .barra{
   transition:transform .7s cubic-bezier(.2,.8,.2,1), filter .15s ease;
   transition-delay:calc(var(--i, 0) * 35ms), 0s;
@@ -1373,11 +1326,8 @@ html.graficas-animadas .tira-barras .barra{
 }
 html.graficas-animadas .crecer .barra{ transform:none; }
 
-/* =====================================================================
-   ROSTER (jugadores.html de cada equipo)
-   ===================================================================== */
+/* Roster */
 
-/* Índice de posiciones: cada enlace baja a su sección */
 .roster-indice{
   display:flex;
   flex-wrap:wrap;
@@ -1407,7 +1357,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
 
 .roster-grupo{
   margin-top:24px;
-  scroll-margin-top:14px;    /* al saltar con el índice, el título no queda pegado arriba */
+  scroll-margin-top:14px;    /* para que el título no quede pegado arriba */
 }
 .roster-grupo h2 small{
   font-family:var(--font-body);
@@ -1416,7 +1366,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   color:var(--text-muted);
 }
 
-/* Dos columnas de tarjetas */
 .roster-grid{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -1432,8 +1381,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   overflow:hidden;
 }
 
-/* La foto. Las de fondo blanco se funden con el blanco; las que vienen
-   recortadas (fondo transparente) llevan atrás el color del equipo. */
+/* Las fotos recortadas llevan atrás el color del equipo */
 .jugador-foto{
   position:relative;
   aspect-ratio:1 / 1;
@@ -1488,14 +1436,9 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   color:rgba(244,243,247,.9);
 }
 
-/* =====================================================================
-   CONTENIDO CON FOTOS (historia, equipo y campeonatos)
-   ===================================================================== */
+/* Contenido con fotos */
 
-/* Foto con esquinas redondeadas.
-   --proporcion recorta la foto a una medida fija (16/9, 4/3, 3/4...) sin
-   deformarla, y --enfoque elige qué parte queda a la vista al recortar.
-   Las dos se ponen en el style="" de cada foto cuando hacen falta. */
+/* --proporcion recorta la foto y --enfoque elige qué parte se ve */
 .foto{
   position:relative;
   margin:12px 0 0;
@@ -1512,9 +1455,8 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   object-position:var(--enfoque, 50% 50%);
   display:block;
 }
-.foto--clara{ background:#fff; }      /* imágenes con fondo blanco (el mapa) */
+.foto--clara{ background:#fff; }
 
-/* Etiqueta sobre la foto: el lugar o el año */
 .foto-etiqueta{
   position:absolute;
   left:10px;
@@ -1527,7 +1469,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   font-weight:700;
   letter-spacing:.3px;
 }
-/* En las fotos angostas (texto a un lado) la etiqueta es un poco más chica */
 .bloque-lado .foto-etiqueta{
   left:6px;
   bottom:6px;
@@ -1535,7 +1476,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   font-size:.64rem;
 }
 
-/* Texto a la izquierda y foto a la derecha */
 .bloque-lado{
   display:grid;
   grid-template-columns:minmax(0, 1fr) 40%;
@@ -1545,7 +1485,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
 .bloque-lado .foto{ margin:2px 0 0; }
 .bloque-lado .foto img{ aspect-ratio:var(--proporcion, 3/4); }
 
-/* Ficha del equipo: cuatro datos grandes en dos columnas */
 .ficha{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -1575,7 +1514,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   color:var(--text-muted);
 }
 
-/* Lista de leyendas: número (o año) a la izquierda y texto a la derecha */
 .figuras{
   list-style:none;
   margin:4px 0 8px;
@@ -1611,7 +1549,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
 }
 .figuras strong{ color:var(--text); }
 
-/* Años de campeonato: fichas doradas con estrella */
 .anios-titulos{
   display:flex;
   flex-wrap:wrap;
@@ -1633,7 +1570,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
 }
 .anios-titulos span::before{ content:'★'; font-size:.75rem; }
 
-/* Tarjeta de campeonato: foto arriba (de orilla a orilla) y texto abajo */
 .trophy-card{
   margin-bottom:18px;
   background:var(--card-bg);
@@ -1649,7 +1585,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
 .trophy-texto{ padding:13px 14px 14px; }
 .trophy-texto .body-text:last-child{ margin-bottom:0; }
 
-/* Línea del tiempo (historia) */
 .linea-tiempo{
   position:relative;
   list-style:none;
@@ -1702,7 +1637,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   margin:0 0 10px;
 }
 .video-stage{
-  position:relative;          /* ancla de la capa de efectos (.fx-capa) */
+  position:relative;
   width:100%;
   aspect-ratio:16/9;
   border-radius:var(--radius-md);
@@ -1714,16 +1649,14 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   margin-bottom:10px;
   color:#fff;
 }
-/* El <video> llena su lienzo (ver REPRODUCTOR PROPIO). El filtro de COLOR
-   se le pone al <video> y no al recuadro, para que no tiña ni desenfoque
-   las capas de efectos. */
+/* El filtro de color va en el video y no en el recuadro, para no teñir las capas */
 .video-stage video{
   width:100%;
   height:100%;
   object-fit:cover;
   display:block;
   background:#000;
-  transition:filter .35s ease;   /* el color entra y sale suave */
+  transition:filter .35s ease;
 }
 .video-filters{
   display:flex;
@@ -1751,21 +1684,9 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   background:var(--team, var(--red-seam));
 }
 
-/* =====================================================================
-   EFECTOS DE LOS FILTROS DE VIDEO
-   ---------------------------------------------------------------------
-   js/filtros.js mete un <div class="fx-capa"> encima de cada video y le
-   pone al recuadro una clase según el filtro: fx-deportivo, fx-frio,
-   fx-calido o fx-borroso. Aquí se decide qué se ve con cada una.
-   ===================================================================== */
+/* Efectos de los filtros de video */
 
-/* La capa cubre el video completo. pointer-events:none hace que los
-   clics la atraviesen: play, pausa y volumen siguen funcionando.
-
-   OJO: esta capa NO lleva z-index. Un z-index crearía un grupo aislado y
-   los mix-blend-mode de adentro se mezclarían contra el vacío en vez de
-   contra el video: el tinte se vería como una lámina de color encima.
-   Sin z-index igual queda arriba del video, porque va después en el HTML. */
+/* Deja pasar los clics. Sin z-index a propósito: si no, el blend no se mezcla con el video */
 .fx-capa{
   position:absolute;
   inset:0;
@@ -1773,7 +1694,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   pointer-events:none;
 }
 
-/* Todo apagado por defecto: cada filtro prende solo sus piezas */
 .fx-capa > *{ display:none; }
 
 .fx-deportivo .fx-vineta,
@@ -1792,11 +1712,9 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   to  { opacity:1; }
 }
 
-/* ---------- FRÍO y CÁLIDO ---------- */
+/* Frío y cálido */
 
-/* Tinte: baña toda la imagen de azul o de naranja.
-   mix-blend-mode:soft-light mezcla el color con el video en vez de
-   taparlo: respeta las sombras y las luces, como un filtro de cámara. */
+/* soft-light mezcla el color con el video en vez de taparlo */
 .fx-tinte{
   position:absolute;
   inset:0;
@@ -1806,10 +1724,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
 .fx-frio   .fx-tinte{ background:rgba(70,150,255,.45); }
 .fx-calido .fx-tinte{ background:rgba(255,155,60,.45); }
 
-/* Viñeta: el centro queda limpio y las orillas se pintan de color.
-   radial-gradient dibuja una elipse: transparente hasta el 45% y cada
-   vez más intensa hacia las esquinas. Frío la pinta de azul, cálido de
-   naranja y deportivo de negro (ver abajo). */
 .fx-vineta{
   position:absolute;
   inset:0;
@@ -1828,10 +1742,8 @@ html.graficas-animadas .crecer .barra{ transform:none; }
     rgba(150,50,0,.82)   100%);
 }
 
-/* ---------- DEPORTIVO: transmisión desde el estadio ---------- */
+/* Deportivo */
 
-/* 0. Viñeta oscura: oscurece un poco las esquinas, como un juego
-      nocturno, y así las luces de encima resaltan más. */
 .fx-deportivo .fx-vineta{
   background:radial-gradient(ellipse at center,
     rgba(0,0,0,0)   50%,
@@ -1839,10 +1751,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
     rgba(0,0,0,.62) 100%);
 }
 
-/* 1. Reflectores: dos haces de luz que salen de las esquinas de arriba y
-      se mueven de lado a lado, como las torres de luz de un estadio.
-      conic-gradient dibuja un cono de luz que nace en un punto (arriba al
-      centro de la pieza) y rotate() lo balancea como péndulo desde ahí. */
+/* Reflectores que se balancean como péndulo */
 .fx-reflector{
   position:absolute;
   top:-3%;
@@ -1854,18 +1763,16 @@ html.graficas-animadas .crecer .barra{ transform:none; }
     rgba(255,248,220,.6)  15deg,
     rgba(255,248,220,0)   30deg,
     rgba(255,248,220,0)   360deg);
-  /* la luz se desvanece conforme se aleja del foco */
   -webkit-mask-image:radial-gradient(ellipse 75% 100% at 50% 0, #000 10%, transparent 78%);
           mask-image:radial-gradient(ellipse 75% 100% at 50% 0, #000 10%, transparent 78%);
-  mix-blend-mode:screen;      /* screen solo aclara: se ve como luz */
+  mix-blend-mode:screen;
 }
-/* el foco: el punto muy brillante donde nace el haz */
 .fx-reflector::before{
   content:'';
   position:absolute;
   left:50%;
   top:0;
-  width:17%;               /* en proporción, para que crezca en pantalla completa */
+  width:17%;
   aspect-ratio:1 / 1;
   transform:translate(-50%,-50%);
   border-radius:50%;
@@ -1874,7 +1781,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
     rgba(255,240,190,.55) 40%,
     rgba(255,240,190,0)   70%);
 }
-/* duraciones distintas para que los dos haces no vayan sincronizados */
+/* Duraciones distintas para que no vayan sincronizados */
 .fx-reflector--izq{
   left:-14%;
   animation:fxAparecer .6s ease-out, fxReflectorIzq 5.5s ease-in-out infinite alternate;
@@ -1892,9 +1799,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   to  { transform:rotate(-10deg); }
 }
 
-/* 2. Destello: una franja de luz que cruza la imagen en diagonal cada
-      pocos segundos, como el brillo de las repeticiones en la tele.
-      Arranca escondida a la izquierda, cruza rápido y espera afuera. */
+/* Destello que cruza la imagen */
 .fx-destello{
   position:absolute;
   top:-25%;
@@ -1914,8 +1819,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   100%{ transform:translateX(450%) skewX(-20deg); }
 }
 
-/* 3. Flashes de cámara: los crea js/filtros.js en lugares al azar de la
-      parte de arriba, como los fotógrafos y el público en las gradas. */
+/* Flashes (los crea filtros.js) */
 .fx-flashes{
   position:absolute;
   inset:0;
@@ -1931,7 +1835,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   mix-blend-mode:screen;
   animation:fxFlash .5s ease-out forwards;
 }
-/* las dos rayitas en cruz del brillo */
 .fx-flash::before,
 .fx-flash::after{
   content:'';
@@ -1951,10 +1854,10 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   100%{ opacity:0; transform:translate(-50%,-50%) scale(1.3) rotate(25deg); }
 }
 
-/* 4. Letrero de transmisión con el punto rojo parpadeando */
+/* Letrero EN VIVO */
 .fx-envivo{
   position:absolute;
-  top:3.8%;                /* en % y em para que todo crezca junto */
+  top:3.8%;
   left:2.15%;
   align-items:center;
   gap:.5em;
@@ -1981,36 +1884,22 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   50%     { opacity:.25; }
 }
 
-/* ---------- Video en pausa: el deportivo se queda quieto ----------
-   js/filtros.js le pone la clase fx-pausado al recuadro mientras el video
-   está en pausa. animation-play-state:paused congela cada animación justo
-   donde va, y al quitar la clase siguen desde ese mismo punto.
-   Los reflectores tienen DOS animaciones (aparecer y balancearse): con
-   "running, paused" se deja terminar la de aparecer y se congela solo el
-   balanceo, para que se vean aunque se elija el filtro con el video quieto. */
+/* En pausa se congelan las animaciones del deportivo */
 .fx-pausado .fx-reflector{ animation-play-state:running, paused; }
 .fx-pausado .fx-destello,
 .fx-pausado .fx-flash,
 .fx-pausado .fx-envivo i{ animation-play-state:paused; }
 
-/* =====================================================================
-   REPRODUCTOR PROPIO (js/reproductor.js)
-   ---------------------------------------------------------------------
-   Los controles del navegador agrandaban solo el <video> en pantalla
-   completa y dejaban fuera las capas de efectos. Estos controles ponen
-   en pantalla completa el recuadro entero, con video y capas.
-   ===================================================================== */
+/* Reproductor propio (reproductor.js) */
 
-/* El lienzo envuelve al video y a su capa de efectos */
 .rep-lienzo{
   position:relative;
   width:100%;
   height:100%;
   cursor:pointer;
-  touch-action:manipulation;   /* dos toques rápidos no hacen zoom a la página */
+  touch-action:manipulation;   /* evita el zoom con doble toque */
 }
 
-/* Botón grande del centro: solo se ve con el video en pausa */
 .rep-centro{
   position:absolute;
   left:50%;
@@ -2026,7 +1915,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:3;               /* encima de las capas de efectos */
+  z-index:3;
   opacity:0;
   pointer-events:none;
   transform:scale(.85);
@@ -2036,7 +1925,7 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   width:30px;
   height:30px;
   fill:currentColor;
-  margin-left:3px;         /* el triángulo de play se ve más centrado así */
+  margin-left:3px;
 }
 .rep-pausado .rep-centro{
   opacity:1;
@@ -2044,7 +1933,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   transform:scale(1);
 }
 
-/* Barra de abajo: play, avance, tiempo, sonido y pantalla completa */
 .rep-controles{
   position:absolute;
   left:0;
@@ -2055,7 +1943,6 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   align-items:center;
   gap:4px;
   padding:22px 6px 4px;
-  /* degradado oscuro para que los íconos blancos se lean sobre cualquier imagen */
   background:linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,0));
   transition:opacity .25s ease;
 }
@@ -2086,33 +1973,32 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   min-width:0;
   height:18px;
   margin:0 4px;
-  accent-color:var(--red-seam);   /* pinta la barra con el rojo de la app */
+  accent-color:var(--red-seam);
   cursor:pointer;
 }
 .rep-tiempo{
   flex-shrink:0;
   margin-right:2px;
   font-size:.7rem;
-  font-variant-numeric:tabular-nums;   /* los números no "bailan" al cambiar */
+  font-variant-numeric:tabular-nums;
   color:rgba(255,255,255,.92);
   white-space:nowrap;
 }
 
-/* Mientras se reproduce y nadie mueve nada, la barra se esconde */
+/* La barra se esconde mientras se reproduce */
 .rep-oculto .rep-controles{
   opacity:0;
   pointer-events:none;
 }
 .rep-oculto .rep-lienzo{ cursor:none; }
 
-/* ---------- Pantalla completa (real o simulada) ---------- */
+/* Pantalla completa */
 .video-stage.rep-pantalla{
   border-radius:0;
   margin:0;
 }
 
-/* Simulada (iPhone, que no deja agrandar nada más que el video solo):
-   el recuadro se estira sobre toda la ventana */
+/* En iPhone se simula estirando el recuadro */
 .video-stage.rep-pantalla-simulada{
   position:fixed;
   inset:0;
@@ -2122,10 +2008,8 @@ html.graficas-animadas .crecer .barra{ transform:none; }
   z-index:1000;
   touch-action:none;
 }
-/* ...y la página de atrás no se desplaza mientras tanto */
 html.rep-sin-scroll .app-main{ overflow:hidden; }
 
-/* A esa escala, los controles y el letrero crecen un poco */
 .rep-pantalla .rep-controles{
   gap:10px;
   padding:40px 18px 14px;
@@ -2141,12 +2025,7 @@ html.rep-sin-scroll .app-main{ overflow:hidden; }
 .rep-pantalla .rep-centro svg{ width:44px; height:44px; }
 .rep-pantalla .fx-envivo{ font-size:clamp(.68rem, 1.4vw, 1.2rem); }
 
-
-/* =====================================================================
-   INDICADOR DE CARTAS REPETIDAS (colección, memorama y trivia)
-   La pastilla la arma Cartas.pintarIndicador() en js/cartas.js:
-   dos reversos de carta encimados + el número + la palabra "repetidas".
-   ===================================================================== */
+/* Indicador de cartas repetidas */
 .repetidas-indicador{
   display:inline-flex;
   align-items:center;
@@ -2190,7 +2069,6 @@ html.rep-sin-scroll .app-main{ overflow:hidden; }
   text-transform:uppercase;
   color:rgba(244,243,247,.8);
 }
-/* Versión grande: pantalla de entrada al memorama */
 .repetidas-indicador--grande{ gap:9px; padding:6px 16px 6px 8px; }
 .repetidas-indicador--grande .repetidas-icono{ width:36px; height:34px; }
 .repetidas-indicador--grande .repetidas-icono img{ width:21px; height:28px; }
@@ -2198,7 +2076,6 @@ html.rep-sin-scroll .app-main{ overflow:hidden; }
 .repetidas-indicador--grande .repetidas-num{ font-size:1.6rem; }
 .repetidas-indicador--grande .repetidas-txt{ font-size:.74rem; }
 
-/* Cuando sube (trivia con carta repetida) da un saltito con brillo dorado */
 .repetidas-indicador.sube{ animation:repetidaSube .6s cubic-bezier(.2,.8,.2,1); }
 @keyframes repetidaSube{
   0%  { transform:scale(1); }
@@ -2206,7 +2083,6 @@ html.rep-sin-scroll .app-main{ overflow:hidden; }
   100%{ transform:scale(1); }
 }
 
-/* Año de la temporada junto a un título (Jugadores 2026) */
 .titulo-temporada{
   display:inline-block;
   margin-left:6px;
@@ -2219,31 +2095,12 @@ html.rep-sin-scroll .app-main{ overflow:hidden; }
   vertical-align:.3em;
 }
 
+/* Animaciones y transiciones */
 
-/* =====================================================================
-   ANIMACIONES Y TRANSICIONES
-   ---------------------------------------------------------------------
-   1. Transición al cambiar de página
-   2. Aparición del contenido al entrar y al hacer scroll
-   3. Efectos al pasar el mouse (hover) y al picar (active)
-   4. Detalles: splash, memorama, barra inferior
-   5. Movimiento reducido
-   ===================================================================== */
-
-/* ---------- 1. Transición entre páginas ----------
-   @view-transition le pide al navegador que, al pasar de una página a otra
-   del mismo sitio, haga una animación en vez de un corte seco. Lo entienden
-   Chrome, Edge y Safari recientes; los demás cambian de página como siempre
-   (y ahí se nota la aparición del punto 2).
-   Va dentro de (prefers-reduced-motion: no-preference): solo se activa si
-   el usuario NO pidió reducir el movimiento en su sistema. */
+/* Transición entre páginas */
 @media (prefers-reduced-motion: no-preference){
   @view-transition{ navigation:auto; }
 
-  /* El contenido lleva su propio nombre para animarse aparte del resto:
-     el de la página que se va sube y se desvanece, el de la que llega
-     aparece. El encabezado y la barra de abajo casi no cambian entre
-     páginas, así que se ven quietos. */
   .app-main{ view-transition-name:contenido; }
 
   ::view-transition-old(root),
@@ -2252,21 +2109,14 @@ html.rep-sin-scroll .app-main{ overflow:hidden; }
   ::view-transition-old(contenido){ animation:vtSalir .22s ease-in both; }
   ::view-transition-new(contenido){ animation:vtEntrar .32s ease-out both; }
 
-  /* Saltar a una sección del roster con el índice: desplazamiento suave */
   .app-main{ scroll-behavior:smooth; }
 }
 @keyframes vtSalir{ to{ opacity:0; transform:translateY(-14px); } }
 @keyframes vtEntrar{ from{ opacity:0; } }
 
-/* En la pantalla completa simulada (iPhone) el video usa position:fixed;
-   se le quita el nombre al contenido para que nada lo encierre. */
 html.rep-sin-scroll .app-main{ view-transition-name:none; }
 
-/* ---------- 2. Aparición del contenido ----------
-   js/animaciones.js le pone la clase .animar al <html> y .revelar a cada
-   bloque del contenido. Cada bloque arranca transparente y un poco abajo;
-   cuando entra a la pantalla recibe .visible y sube a su lugar. Al terminar
-   se le quitan las clases, para que no estorben a sus efectos de hover. */
+/* Aparición del contenido (las clases las pone animaciones.js) */
 html.animar .revelar{
   opacity:0;
   transform:translateY(18px);
@@ -2277,11 +2127,7 @@ html.animar .revelar.visible{
   transition:opacity .5s ease, transform .55s cubic-bezier(.2,.8,.2,1);
 }
 
-/* ---------- 3. Hover y al picar ----------
-   Con mouse, los elementos se levantan o brillan al pasar encima.
-   En celular no existe el hover: ahí, al picar (:active), se hunden un poco
-   para que se sienta la respuesta. @media (hover:hover) evita que en el
-   celular el efecto se quede "pegado" después de tocar. */
+/* Hover solo con mouse; en celular se hunden al picar */
 .pill-btn, .btn-submit, .icon-btn, .ayuda-fab, .memorama-fab, .boton-imagen,
 .boton-beisbar-scanner, .card-slot, .jugador, .roster-indice a, .roster-indice a span,
 .footer-bar a, .bottom-nav a, .bottom-nav a .icon, .video-filters button,
@@ -2293,11 +2139,9 @@ html.animar .revelar.visible{
 }
 .trophy-card .foto img{ transition:transform .4s ease; }
 
-/* El ícono de la barra de equipos es un <span>: como bloque ya puede moverse */
 .bottom-nav a .icon{ display:block; }
 
 @media (hover:hover){
-  /* Botones rojos: suben y brillan */
   .pill-btn:hover,
   .btn-submit:not(:disabled):hover,
   .memorama-cta:hover,
@@ -2307,14 +2151,12 @@ html.animar .revelar.visible{
     filter:brightness(1.12);
     box-shadow:0 8px 20px rgba(200,16,46,.35);
   }
-  /* Botones redondos: crecen y giran un poquito */
   .icon-btn:hover,
   .ayuda-fab:hover,
   .memorama-fab:hover{
     transform:scale(1.1) rotate(-6deg);
     box-shadow:0 0 0 4px rgba(138,126,232,.25), 0 6px 16px rgba(0,0,0,.35);
   }
-  /* Botones del menú (Historia y equipos) */
   .boton-imagen:hover{
     transform:translateY(-3px) scale(1.03);
     filter:brightness(1.1) drop-shadow(0 8px 14px rgba(0,0,0,.45));
@@ -2323,20 +2165,17 @@ html.animar .revelar.visible{
     transform:scale(1.04);
     box-shadow:0 0 0 6px rgba(255,255,255,.15);
   }
-  /* Colección: la carta se levanta y se inclina; el candado tiembla */
   .card-slot.is-unlocked:hover{
     transform:translateY(-4px) rotate(-1.5deg);
     box-shadow:0 10px 22px rgba(0,0,0,.45), 0 0 0 2px rgba(138,126,232,.6);
   }
   .card-slot.is-locked:hover .candado{ animation:candadoTiembla .45s ease; }
-  /* Roster: la tarjeta sube y la foto se acerca */
   .jugador:hover{
     transform:translateY(-3px);
     border-color:var(--team);
     box-shadow:0 10px 22px rgba(0,0,0,.4);
   }
   .jugador:hover .jugador-foto img{ transform:scale(1.06); }
-  /* Campeonatos y ficha del equipo: la tarjeta sube y la foto se acerca */
   .trophy-card:hover{
     transform:translateY(-3px);
     border-color:var(--team, var(--red-seam));
@@ -2353,11 +2192,9 @@ html.animar .revelar.visible{
     color:#fff;
   }
   .roster-indice a:hover span{ background:#fff; color:var(--team); }
-  /* Barras de abajo */
   .footer-bar a:hover{ background:rgba(0,0,0,.07); }
   .bottom-nav a:hover{ color:var(--team, #141420); }
   .bottom-nav a:hover .icon{ transform:translateY(-3px); }
-  /* Filtros de video, respuestas de la trivia, flecha de volver, logo */
   .video-filters button:hover{
     transform:scale(1.1);
     border-color:rgba(255,255,255,.45);
@@ -2371,7 +2208,6 @@ html.animar .revelar.visible{
   .imgheader a:hover img{ transform:scale(1.04); }
 }
 
-/* Al picar (mouse o dedo): se hunden */
 .pill-btn:active,
 .btn-submit:not(:disabled):active,
 .memorama-cta:active,
@@ -2395,15 +2231,14 @@ html.animar .revelar.visible{
 .bottom-nav a:active .icon{ transform:scale(.85); }
 .trivia-answers label:active{ transform:scale(.98); }
 
-/* Trivia: la respuesta elegida se marca con el rojo de la app.
-   :has() revisa si el <label> tiene adentro un radio marcado. */
+/* La respuesta elegida se marca en rojo */
 .trivia-answers label:has(input:checked){
   color:var(--text);
   background:rgba(200,16,46,.13);
   border-color:var(--red-seam);
 }
 
-/* Navegación con teclado: contorno visible en lo que tiene el foco */
+/* Contorno al navegar con teclado */
 a:focus-visible,
 button:focus-visible{
   outline:2px solid var(--gold);
@@ -2421,10 +2256,8 @@ button:focus-visible{
   75%     { transform:rotate(-6deg); }
 }
 
-/* ---------- 4. Detalles ---------- */
+/* Detalles */
 
-/* Splash: los logos entran creciendo; al picar, la pantalla se agranda y se
-   desvanece (la clase .saliendo la pone el script de index.html) */
 .splash-logo-box img{ animation:splashLogo .8s cubic-bezier(.2,.8,.2,1) both; }
 .splash-logo img{ animation:splashLogo .8s .15s cubic-bezier(.2,.8,.2,1) both; }
 .splash-screen.saliendo{
@@ -2438,15 +2271,12 @@ button:focus-visible{
   to{ opacity:0; transform:scale(1.06); }
 }
 
-/* Memorama: el botón de entrar late con un brillo para llamar la atención
-   (solo si alcanza para jugar) */
 .memorama-cta:not(.esta-apagada){ animation:brilloCta 2.2s ease-in-out infinite; }
 @keyframes brilloCta{
   0%, 100%{ box-shadow:0 0 0 0 rgba(200,16,46,.45); }
   50%     { box-shadow:0 0 0 10px rgba(200,16,46,0); }
 }
 
-/* Barra de equipos: una rayita marca la pestaña activa y entra creciendo */
 .bottom-nav a{ position:relative; }
 .bottom-nav a.is-active::after{
   content:'';
@@ -2463,17 +2293,12 @@ button:focus-visible{
   from{ transform:scaleX(0); opacity:0; }
 }
 
-/* Filtro de video: el botón da un pequeño salto al prenderse */
 .video-filters button.is-active{ animation:filtroSalto .3s ease; }
 @keyframes filtroSalto{
   50%{ transform:scale(1.18); }
 }
 
-/* ---------- 5. Movimiento reducido ----------
-   Si el usuario activó "reducir movimiento" en su teléfono o computadora,
-   se quitan las animaciones decorativas de esta sección y los cambios de
-   hover pasan de golpe, sin desplazamiento. (La transición de páginas ya
-   quedó apagada arriba, y js/animaciones.js tampoco anima nada.) */
+/* Movimiento reducido */
 @media (prefers-reduced-motion: reduce){
   .splash-logo-box img,
   .splash-logo img,
