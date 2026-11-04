@@ -145,7 +145,7 @@
   const reloj = new THREE.Clock();
   let visible = null;    // la mascota que se ve ahora
 
-  // Así el título no regresa a ¡Escanea! al cambiar rápido de imagen
+  // para que el texto de arriba funcione bien con cambios rapidos de imagenes
   const enPantalla = [];
 
   function actualizarVisible() {
@@ -193,7 +193,7 @@
       mascota.modelo,
       (gltf) => {
         const modelo = gltf.scene;
-        console.log('[BéisbAR] ' + mascota.nombre + ' cargado ✅');
+        console.log('[BéisbAR] ' + mascota.nombre + ' cargado ');
         console.log('[BéisbAR] Animaciones encontradas:', gltf.animations.map(a => a.name));
 
         mascota.mixer = new THREE.AnimationMixer(modelo);
@@ -322,7 +322,7 @@
 
   // Prender la cámara
   await mindarThree.start();
-  console.log('[BéisbAR] Cámara y escaneo iniciados ✅ — buscando imágenes...');
+  console.log('[BéisbAR] Cámara y escaneo iniciados');
 
   renderer.setAnimationLoop(() => {
     const dt = reloj.getDelta();

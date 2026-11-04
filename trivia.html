@@ -194,7 +194,7 @@
       if (pregunta.opcionesRevueltas[marcada.value].esCorrecta) aciertos++;
     });
 
-    // Si falta alguna, avisa sin bloquear
+    // Si falta alguna avisa sin bloquear la trivia
     if (sinContestar > 0) {
       mensaje.textContent = 'Te falta contestar ' + sinContestar +
         (sinContestar === 1 ? ' pregunta.' : ' preguntas.');
